@@ -1,0 +1,135 @@
+from django import forms
+from carteira import models
+from dal import autocomplete
+
+
+        
+########################################## ATIVOS ###################################################  
+class AtivosForm(forms.ModelForm):
+    class Meta:
+        model = models.Ativos
+        fields=['ativo','ticket','classe','cnpj','setor','qtdAtivo','investimento','dividendos']
+        widgets={
+            'ativo':forms.TextInput(attrs={'class':'form-control'}), #alterando atribuutos do campo
+            'ticket':forms.TextInput(attrs={'class':'form-control'}),
+            'cnpj':forms.TextInput(attrs={'class':'form-control'}),
+            'qtdAtivo': forms.NumberInput(attrs={'class': 'form-control'}),
+            'dividendos': forms.NumberInput(attrs={'class': 'form-control'}),
+            'investimento': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+        
+    classe_options = [
+         (False, 'Classe do ativo'),
+        ('Ação', 'Ação'),
+        ('FII', 'FII'),
+
+    ]
+    classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
+    
+     # Definindo o campo setor como um ModelChoiceField que busca dados da tabela Setor
+    setor = forms.ModelChoiceField(
+        queryset=models.SetorAtivo.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        empty_label="Selecione o setor",
+       
+    )
+        
+    def __init__(self, *args, **kwargs):
+        is_edit = kwargs.pop('is_edit', False)  # Parâmetro extra para verificar o contexto (adição ou edição de registro)
+        super().__init__(*args, **kwargs)
+   
+        # Remove os campos que não devem aparecer no formulário no modo adição
+        if not is_edit:
+            for field in ['qtdAtivo', 'dividendos', 'investimento']:
+                self.fields.pop(field)
+        
+########################################## SETOR ###################################################   
+class SetorForm(forms.ModelForm):
+    class Meta:
+        model = models.SetorAtivo
+        fields=['setor','setor_classe']
+        widgets={
+            'setor':forms.TextInput(attrs={'class':'form-control'}), #alterando atribuutos do campo
+        }
+        
+    classe_options = [
+         (False, 'Classe do ativo'),
+        ('Ação', 'Ação'),
+        ('FII', 'FII'),
+
+    ]
+    setor_classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
+
+########################################## OPERACAO ###################################################  
+class OperacaoForm(forms.ModelForm):
+    class Meta:
+        model = models.Operacao
+        fields = ['classe', 'ticket', 'tipo_operacao', 'data_operacao', 'qtd', 'valor_cota']
+        widgets = {
+            #'ticket': forms.TextInput(attrs={'class': 'form-control'}),
+            'data_operacao': forms.DateInput(
+                attrs={
+                    'class': 'form-control',
+                    'type': 'text',  # Usando texto para poder customizar o formato no frontend
+                    'placeholder': 'dd/mm/aaaa',
+                },
+                format='%d/%m/%Y'  # Formato da data exibido no campo
+            ),
+            'qtd': forms.NumberInput(attrs={'class': 'form-control'}),  # Usando NumberInput
+            'valor_cota': forms.NumberInput(
+                attrs={
+                        'class': 'form-control',
+                        'step': '0.01',  # Permite valores decimais com precisão de centavos
+                        'inputmode': 'decimal',  # Melhora a experiência do usuário para entrada de números decimais
+                }), 
+            
+            'valor_total': forms.NumberInput(
+                attrs={
+                        'class': 'form-control',
+                        'step': '0.01', 
+                        'inputmode': 'decimal',  
+                }),  
+        }
+
+    # Definindo as opções dos campos select
+    
+    classe_options = [
+        (False, 'Classe do ativo'),
+        ('Ação', 'Ação'),
+        ('FII', 'FII'),
+    ]
+    
+    op_options = [
+        (False, 'Tipo de operação'),
+        ('Compra', 'Compra'),
+        ('Venda', 'Venda'),
+        ('Bonificação', 'Bonificação'),
+        ('Dação', 'Dação'),
+        ('Desdobramento', 'Desdobramento'),
+    ]
+
+    # Campos de escolha com widgets apropriados
+    classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
+    tipo_operacao = forms.ChoiceField(choices=op_options, widget=forms.Select(attrs={'class': 'form-control'}))
+    ticket = forms.ChoiceField(
+    choices=[(ativo.ticket, ativo.ticket) for ativo in models.Ativos.objects.all()],
+    widget=forms.Select(attrs={'class': 'form-control'}),
+    label="Ativo"
+)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Verifica se a instância está sendo editada
+        is_editing = self.instance and self.instance.pk
+
+        # Lista de escolhas
+        tickets = [(ativo.ticket, ativo.ticket) for ativo in models.Ativos.objects.all()]
+
+        # Adiciona o item em branco apenas no modo de adição
+        if not is_editing:
+            tickets.insert(0, ("", "Selecione um ativo"))
+
+        # Define as escolhas do campo ticket
+        self.fields['ticket'].choices = tickets
+
+    

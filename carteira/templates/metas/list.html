@@ -1,0 +1,44 @@
+{% extends "global/base.html" %}
+{% block title %}Operação{% endblock title %}
+{% block content %}
+{% include "global/componentes/menssage.html" %}
+<p class="h3">Operação</p>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form action="#" method="GET">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="name" placeholder="Pesquisar marca" value="{{ request.GET.name }}"/>
+                    {% if request.GET.name %}
+                        <a href="#" class="btn btn-primary">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    {% else %}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <a href="#" class="btn btn-success float-end" 
+            data-bs-toggle="modal" 
+            data-bs-target="#cadastroModal"
+            {% comment %} hx-get = {% url "create_ativo" %} {% endcomment %}
+            hx-target = "#addContent"
+            hx-swap = "innerHTML">
+                <i class="bi bi-plus"></i>Cadastrar
+            </a>
+        </div>
+    </div>
+    <div class="table-responsive">
+    {% if lists %}
+       {% include "metas/table.html" %}
+    {% else %}
+        <p class="h3">Nenhum registro encontrado.</p>
+    {% endif %}
+    </div>
+    {% include "global/componentes/modal_forms.html" %}
+    {% include "global/componentes/pagination.html" %}
+
+{% endblock %}

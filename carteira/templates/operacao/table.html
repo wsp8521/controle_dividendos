@@ -1,0 +1,49 @@
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Ativo</th>
+            <th>Classe</th>
+            <th>Operacção</th>
+            <th>Data Operação</th>
+            <th>Qtde</th>
+            <th>Valor</th>
+            <th>Valor total</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody >
+        {% for list in lists %}
+            <tr>
+                <td>{{ list.ticket }}</td>
+                <td>{{ list.classe }}</td>
+                <td>{{ list.tipo_operacao }}</td>
+                <td>{{ list.data_operacao|date:"d/m/Y" }}</td>
+                <td>{{ list.qtd }}</td>
+                <td>R$ {{ list.valor_cota|floatformat:2 }}</td> <!-- Formato de moeda -->
+                <td>R$ {{ list.valor_total|floatformat:2 }}</td> <!-- Formato de moeda -->
+    
+                <td style="width:8em">
+
+                    <!--btn visualizar-->
+                    <a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i></a>
+
+                    <!--btn Atualizar-->
+                    <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" 
+                    data-bs-target="#cadastroModal"
+                    hx-get = {% url "update_operacao" list.pk %}
+                    hx-target = "#addContent"
+                    hx-swap = "innerHTML"
+                    ><i class="bi bi-pencil-fill"></i></a>
+
+                    <!--btn deleter-->
+                    <a  onclick="modal(this)" 
+                    data-page="operacao" 
+                    data-name="{{list.ticket}}" 
+                    data-id="{{list.pk}}"
+                     href="#" 
+                     class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

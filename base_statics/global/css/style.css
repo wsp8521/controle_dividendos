@@ -1,0 +1,9 @@
+.ag-theme-custom {
+    --ag-background-color: #f5f5f5; /* Cor de fundo geral */
+    --ag-header-background-color: #d9edf7; /* Cor de fundo do cabeçalho */
+    --ag-odd-row-background-color: #ffffff; /* Cor para linhas ímpares */
+    --ag-even-row-background-color: #e9ecef; /* Cor para linhas pares */
+}
+#modalAtivoForm{
+    max-height: 400px; overflow-y:auto
+}
