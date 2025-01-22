@@ -15,8 +15,8 @@ class ProventosAdmin(admin.ModelAdmin):
 
 @admin.register(Operacao)
 class OperacaoAdmin(admin.ModelAdmin):
-    list_display=("id", "ticket", "classe", "tipo_operacao","data_operacao", "qtd", "valor_cota", "valor_total", "created_at","update_at")
-    list_display_links=("ticket",)
+    list_display=("id", "id_ativo", "classe", "tipo_operacao","data_operacao", "qtd", "valor_cota", "valor_total", "created_at","update_at")
+    list_display_links=("id_ativo",)
     
 
 @admin.register(MetaAtivo)

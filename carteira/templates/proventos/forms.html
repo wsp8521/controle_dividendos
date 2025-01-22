@@ -1,9 +1,9 @@
 <div class="modal-header">
     <h5 class="modal-title" id="cadastroModalLabel">
         {% if form.instance.pk %}
-            Editar Ativo
+            Editar Proventos
         {% else %}
-            Cadastrar Novo Ativo
+            Cadastrar Novo Proventos
         {% endif %}
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
@@ -12,7 +12,7 @@
 <div class="modal-body">
     <!-- Formulário de Cadastro -->
     <form  method="POST"
-    action="{% if form.instance.pk %}{% url 'update_ativo' form.instance.pk %}{% else %}{% url 'create_ativo' %}{% endif %}">
+    action="{% if form.instance.pk %}{% url 'update_proventos' form.instance.pk %}{% else %}{% url 'create_proventos' %}{% endif %}">
      
         {% csrf_token %}
         {% for field in form %}
@@ -21,20 +21,6 @@
             {{ field.label_tag }}
             {{ field }}
            
-                <!-- Campo de Setor -->
-
-                <!-- Botão Adicionar Setor -->
-                {% if field.name == 'setor' %}
-                <a href="#" class="btn btn-info" id="add-sector-btn" 
-                data-bs-toggle="modal" 
-                data-bs-target="#cadastroModal"
-                hx-get = {% url "create_setor" %}
-                hx-target = "#addContent"
-                hx-swap = "innerHTML">
-                    <i class="bi bi-plus"></i>Cadastrar
-                </a>
-                {% endif %}
-        
             {{ field.errors }}
             {% if field.help_text %}
               <small class="text-muted">{{ field.help_text|safe }}</small>

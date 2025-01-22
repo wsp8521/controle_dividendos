@@ -41,6 +41,7 @@ class ProventosRender(ListView):
             valor_por_cota = float(provento.valor_recebido) / qtd_cota if qtd_cota > 0 else 0
 
             dados_tabela.append({
+                "pk": provento.id,  # Chave primária
                 'ativo': provento.ticket,
                 'classe': provento.classe,
                 'tipo': provento.tipo_provento,
@@ -53,35 +54,31 @@ class ProventosRender(ListView):
         context['lists'] = dados_tabela
         return context
     
-
-
-
-
-    
+ 
 # #CRETE
-# class CadastroOperacao(SuccessMessageMixin, CreateView):
-#     model = Operacao
-#     form_class = OperacaoForm
-#     template_name = 'operacao/forms.html'
-#     success_url = reverse_lazy('list_operacao')
-#     success_message = 'Cadastro realizado com sucesso'
+class CadastroProventos(SuccessMessageMixin, CreateView):
+    model = Proventos
+    form_class = ProventosForm
+    template_name = 'proventos/forms.html'
+    success_url = reverse_lazy('list_proventos')
+    success_message = 'Cadastro realizado com sucesso'
 
-#     def form_valid(self, form):
-#         object = form.save(commit=False)
-#         object.fk_user = self.request.user  # Define o usuário autenticado
-#         object.save()
-#         return super().form_valid(form) #redirecionar o usuário para a URL de sucesso definida (success_url) 
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.fk_user = self.request.user  # Define o usuário autenticado
+        object.save()
+        return super().form_valid(form) #redirecionar o usuário para a URL de sucesso definida (success_url) 
     
-# #UPDATE
-# class OperacaoUpdate(SuccessMessageMixin, UpdateView):
-#     model = Operacao
-#     template_name ='operacao/forms.html'
-#     form_class = OperacaoForm
-#     success_url = reverse_lazy('list_operacao')
-#     success_message ='Atualizada realizado com sucesso'
+#UPDATE
+class ProventosUpdate(SuccessMessageMixin, UpdateView):
+    model = Proventos
+    template_name ='proventos/forms.html'
+    form_class = ProventosForm
+    success_url = reverse_lazy('list_proventos')
+    success_message ='Atualizada realizado com sucesso'
 
-# #DELETE
-# class OperacaoDelete( SuccessMessageMixin, DeleteView):
-#     model=Operacao
-#     success_url = reverse_lazy('list_operacao')
-#     success_message='Cadastro excluído com sucesso.'
+#DELETE
+class ProventosDelete( SuccessMessageMixin, DeleteView):
+    model=Proventos
+    success_url = reverse_lazy('list_proventos')
+    success_message='Cadastro excluído com sucesso.'

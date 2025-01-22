@@ -25,24 +25,20 @@
                 <td>{{ list.data_pgto|date:"d/m/Y"}}</td>
                 <td style="width:8em">
 
-
-                   
-                   
-
                     <!--btn visualizar-->
                     <a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i></a>
 
                     <!--btn Atualizar-->
                     <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" 
                     data-bs-target="#cadastroModal"
-                    {% comment %} hx-get = {% url "update_ativo" list.pk %} {% endcomment %}
+                    hx-get = {% url "update_proventos" list.pk %} 
                     hx-target = "#addContent"
                     hx-swap = "innerHTML"
                     ><i class="bi bi-pencil-fill"></i></a>
 
                     <!--btn deleter-->
                     <a  onclick="modal(this)" 
-                    data-page="ativo" 
+                    data-page="proventos" 
                     data-name="{{list.ativo}}" 
                     data-id="{{list.pk}}"
                      href="#" 

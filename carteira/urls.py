@@ -17,12 +17,11 @@ urlpatterns = [
     path('operacao/delete/<int:pk>', views.OperacaoDelete.as_view(), name='delete_operacao'),
     
     
-    
     #CRUD PROVENTOS
     path('proventos/', views.ProventosRender.as_view(), name='list_proventos'),
-    # path('operacao/create', views.CadastroOperacao.as_view(), name='create_operacao'),
-    # path('operacao/update/<int:pk>', views.OperacaoUpdate.as_view(), name='update_operacao'),
-    # path('operacao/delete/<int:pk>', views.OperacaoDelete.as_view(), name='delete_operacao'),
+    path('proventos/create', views.CadastroProventos.as_view(), name='create_proventos'),
+    path('proventos/update/<int:pk>', views.ProventosUpdate.as_view(), name='update_proventos'),
+    path('proventos/delete/<int:pk>', views.ProventosDelete.as_view(), name='delete_proventos'),
     
     
     #CRUD SETOR

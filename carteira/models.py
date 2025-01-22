@@ -79,8 +79,7 @@ class Operacao(models.Model):
         ordering=['-data_operacao']
         
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_operacao",  null=True) #relacionando campo com a pk da tbl user
-    id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT), #relacionando campo com a pk da tbl ativo
-    ticket = models.CharField(max_length=10)
+    id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Ativo') #relacionando campo com a pk da tbl ativo
     classe = models.CharField(max_length=10)
     tipo_operacao = models.CharField(max_length=20, verbose_name='tipo de operação')
     data_operacao = models.DateField(verbose_name='data da operação')
@@ -105,7 +104,7 @@ class Operacao(models.Model):
     
     
     def __str__(self):
-        return self.ticket
+        return self.classe
     
 ####################################### META #############################################    
 class MetaAtivo(models.Model):

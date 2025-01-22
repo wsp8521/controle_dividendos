@@ -32,12 +32,15 @@ class AtivoRender(ListView):
             cotacao = obter_cotacao(ativo.ticket)
             lista_ativos.append({
                 "pk": ativo.id,  # Chave primária
-                "ativo": ativo.ativo,
+                "ativo": ativo.atiivo,
                 "setor": ativo.setor,
                 "cnpj":ativo.cnpj,
                 "ticket": ativo.ticket,
                 "classe": ativo.classe,
-                "cotacao": cotacao
+                "cotacao": cotacao,
+                "qtd": ativo.qtdAtivo if ativo.qtdAtivo is not None else 0 ,
+                "investimento": ativo.investimento if ativo.investimento else 0 ,
+                "dividendos": ativo.dividendos if ativo.dividendos else 0 ,
                 
             })
 
