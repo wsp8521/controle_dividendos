@@ -11,7 +11,7 @@ class OperacaoRender(ListView):
     model = Operacao
     template_name = 'operacao/list.html'
     context_object_name = 'lists'
-    ordering = 'data_operacao'
+    ordering = '-data_operacao'
     paginate_by = 20
 
     def get_queryset(self):

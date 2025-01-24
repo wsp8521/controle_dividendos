@@ -45,8 +45,7 @@ class Proventos(models.Model):
         ordering=['-data_pgto']
         
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_provento",  null=True) #relacionando campo com a pk da tbl user
-    id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True) #relacionando campo com a pk da tbl ativo
-    ticket = models.CharField(max_length=10)
+    id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Ativos") #relacionando campo com a pk da tbl ativo
     classe = models.CharField(max_length=10)
     tipo_provento = models.CharField(max_length=20, verbose_name='tipo de provento')
     valor_recebido = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='valor recebido')
@@ -81,10 +80,11 @@ class Operacao(models.Model):
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_operacao",  null=True) #relacionando campo com a pk da tbl user
     id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Ativo') #relacionando campo com a pk da tbl ativo
     classe = models.CharField(max_length=10)
-    tipo_operacao = models.CharField(max_length=20, verbose_name='tipo de operação')
+    tipo_operacao = models.CharField(max_length=20, verbose_name='tipo de operação', blank=True, null=True)
     data_operacao = models.DateField(verbose_name='data da operação')
     qtd = models.IntegerField(verbose_name='quantidade')
     valor_cota = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='valor da cota')
+    fonte_recurso = models.CharField(max_length=20, verbose_name='Fonte de recurso', null=True, blank=True )
     valor_total = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='Total da Operaçao')
     ano= models.IntegerField(verbose_name='ano', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')

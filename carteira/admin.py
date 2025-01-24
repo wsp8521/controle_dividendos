@@ -9,8 +9,8 @@ class AtivosAdmin(admin.ModelAdmin):
     
 @admin.register(Proventos)
 class ProventosAdmin(admin.ModelAdmin):
-    list_display=("id", "ticket", "classe", "valor_recebido","data_pgto", "created_at","update_at")
-    list_display_links=("ticket",)
+    list_display=("id", "id_ativo", "classe", "valor_recebido","data_pgto", "created_at","update_at")
+    list_display_links=("id_ativo",)
     
 
 @admin.register(Operacao)

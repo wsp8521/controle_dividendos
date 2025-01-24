@@ -33,7 +33,7 @@ class ProventosRender(ListView):
         for provento in proventos:
             try:
                 # Busca o ativo relacionado ao provento pelo ticket
-                ativo = Ativos.objects.get(ticket=provento.ticket, fk_user=self.request.user)
+                ativo = Ativos.objects.get(ticket=provento.id_ativo, fk_user=self.request.user)
                 qtd_cota = ativo.qtdAtivo or 0  # Caso `qtdAtivo` seja nulo
             except Ativos.DoesNotExist:
                 qtd_cota = 0
@@ -42,7 +42,7 @@ class ProventosRender(ListView):
 
             dados_tabela.append({
                 "pk": provento.id,  # Chave primária
-                'ativo': provento.ticket,
+                'ativo': provento.id_ativo,
                 'classe': provento.classe,
                 'tipo': provento.tipo_provento,
                 'valor': provento.valor_recebido,

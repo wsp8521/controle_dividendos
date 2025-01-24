@@ -64,7 +64,7 @@ class SetorForm(forms.ModelForm):
 class OperacaoForm(forms.ModelForm):
     class Meta:
         model = models.Operacao
-        fields = ['classe', 'id_ativo', 'tipo_operacao', 'data_operacao', 'qtd', 'valor_cota']
+        fields = ['classe', 'id_ativo', 'tipo_operacao', 'data_operacao', 'qtd', 'valor_cota', 'fonte_recurso']
         widgets = {
             #'ticket': forms.TextInput(attrs={'class': 'form-control'}),
             'data_operacao': forms.DateInput(
@@ -102,6 +102,13 @@ class OperacaoForm(forms.ModelForm):
         ('FII', 'FII'),
     ]
     
+    font_recuso=[
+        (False, 'Fonte de recurso'),
+        ('Aporte', 'Aporte'),
+        ('Bonificação', 'Bonificação'),
+        ('Dividendos', 'Dividendos'),
+    ]
+    
     op_options = [
         (False, 'Tipo de operação'),
         ('Compra', 'Compra'),
@@ -114,27 +121,7 @@ class OperacaoForm(forms.ModelForm):
     # Campos de escolha com widgets apropriados
     classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
     tipo_operacao = forms.ChoiceField(choices=op_options, widget=forms.Select(attrs={'class': 'form-control'}))
+    fonte_recurso = forms.ChoiceField(choices=font_recuso, widget=forms.Select(attrs={'class': 'form-control'}))
    
     
-#     ticket = forms.ChoiceField(
-#     choices=[(ativo.ticket, ativo.ticket) for ativo in models.Ativos.objects.all()],
-#     widget=forms.Select(attrs={'class': 'form-control'}),
-#     label="Ativo"
-# )
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-
-#         # Verifica se a instância está sendo editada
-#         is_editing = self.instance and self.instance.pk
-
-#         # Lista de escolhas
-#         tickets = [(ativo.ticket, ativo.ticket) for ativo in models.Ativos.objects.all()]
-
-#         # Adiciona o item em branco apenas no modo de adição
-#         if not is_editing:
-#             tickets.insert(0, ("", "Selecione um ativo"))
-
-#         # Define as escolhas do campo ticket
-#         self.fields['ticket'].choices = tickets
-
     

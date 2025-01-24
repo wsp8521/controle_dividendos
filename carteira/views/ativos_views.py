@@ -32,7 +32,7 @@ class AtivoRender(ListView):
             cotacao = obter_cotacao(ativo.ticket)
             lista_ativos.append({
                 "pk": ativo.id,  # Chave primária
-                "ativo": ativo.atiivo,
+                "ativo": ativo.ativo,
                 "setor": ativo.setor,
                 "cnpj":ativo.cnpj,
                 "ticket": ativo.ticket,
