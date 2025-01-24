@@ -21,7 +21,7 @@ class OperacaoAdmin(admin.ModelAdmin):
 
 @admin.register(MetaAtivo)
 class MetaAtivoAdmin(admin.ModelAdmin):
-    list_display=("id", "ano", "qtd_fii", "qtd_acoes","total", "created_at","update_at")
+    list_display=("id","classe","ano","meta_anual","meta_alcancada","meta_geral","meta_geral_alcancada" )
     list_display_links=("ano",)
     
 @admin.register(SetorAtivo)

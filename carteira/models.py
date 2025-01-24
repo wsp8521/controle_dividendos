@@ -34,6 +34,7 @@ class Ativos(models.Model):
     dividendos= models.DecimalField(max_digits=20, decimal_places=2, blank=True, null= True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
     update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')
+        
     def __str__(self):
         return self.ticket
  
@@ -114,13 +115,17 @@ class MetaAtivo(models.Model):
         ordering=['-ano']
         
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_meta",  null=True) #relacionando campo com a pk da tbl user
-    ano = models.IntegerField()
-    qtd_fii = models.IntegerField(verbose_name='quantidade de fii')
-    qtd_acoes = models.IntegerField(verbose_name='quantidade de ações')
-    total = models.IntegerField(verbose_name='total de ativos')
+    ano = models.IntegerField(verbose_name="Ano", null=True, blank=True)
+    classe = models.CharField(max_length=10, null=True, blank=True)
+    meta_anual = models.IntegerField(verbose_name="Meta Anual", null=True, blank=True)
+    meta_alcancada = models.IntegerField(verbose_name="Meta anual alçancada", null=True, blank=True)
+    status_anual = models.CharField(max_length=10, verbose_name="Status Anual", null=True, blank=True)
+    meta_geral = models.IntegerField(verbose_name="Meta geral", null=True, blank=True)
+    meta_geral_alcancada = models.IntegerField(verbose_name="Meta geral alcançada", null=True, blank=True)
+    status_geral = models.CharField(max_length=10, verbose_name="Status Anual", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
     update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')
-    
+
     def __str__(self):
         return self.ano
     
