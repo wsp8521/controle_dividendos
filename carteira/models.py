@@ -68,7 +68,7 @@ class Proventos(models.Model):
     
     
     def __str__(self):
-        return self.ticket
+        return self.classe
     
 ####################################### OPERACAO #############################################    
 class Operacao(models.Model):
