@@ -7,3 +7,6 @@
 #modalAtivoForm{
     max-height: 400px; overflow-y:auto
 }
+
+
+.header-meta{margin:20px; padding:10px; border: 1px solid #ffffff; background-color: #d9edf7; color: #000000;}

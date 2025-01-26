@@ -1,6 +1,7 @@
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from carteira.models import Operacao, Proventos
+from carteira.models import Operacao, Proventos, MetaAtivo
+from django.db.models import Sum, Q
 
 
 # Executa antes de uma Operacao ser salva
@@ -82,3 +83,28 @@ def update_proventos(sender, instance, created, **kwargs):
         ativo.dividendos += prov_diferenca
     ativo.save()
 
+
+#atualiza metas dos ativos
+@receiver(post_save, sender=Operacao)
+def atualizar_meta_ativos(sender, instance, **kwargs):
+    if instance.fk_user:
+        total_qtd = Operacao.objects.filter(
+            fk_user=instance.fk_user,
+            classe=instance.classe,
+            ano=instance.ano
+        ).exclude(tipo_operacao="V").aggregate(Sum('qtd'))['qtd__sum'] or 0
+        
+        # Calcula a soma das metas anuais dos anos anteriores (excluindo o ano atual)
+        meta_anual_anterior = MetaAtivo.objects.filter(
+            fk_user=instance.fk_user,
+            classe=instance.classe
+        ).exclude(ano=instance.ano).aggregate(Sum('meta_alcancada'))['meta_alcancada__sum'] or 0
+        
+        MetaAtivo.objects.filter(
+            fk_user=instance.fk_user,
+            ano=instance.ano,
+            classe=instance.classe,
+        ).update(
+            meta_alcancada=total_qtd,
+            meta_geral_alcancada=meta_anual_anterior + total_qtd  # Somando o total atualizado
+        )

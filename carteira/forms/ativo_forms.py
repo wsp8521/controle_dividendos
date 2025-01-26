@@ -1,8 +1,5 @@
 from django import forms
 from carteira import models
-from dal import autocomplete
-
-
         
 ########################################## ATIVOS ###################################################  
 class AtivosForm(forms.ModelForm):

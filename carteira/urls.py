@@ -23,6 +23,21 @@ urlpatterns = [
     path('proventos/update/<int:pk>', views.ProventosUpdate.as_view(), name='update_proventos'),
     path('proventos/delete/<int:pk>', views.ProventosDelete.as_view(), name='delete_proventos'),
     
+    #CRUD META
+    path('metas/', views.MetaRender.as_view(), name='list_metas'),
+    path('metas/create', views.CadastroMetas.as_view(), name='create_metas'),
+    path('metas/update/<int:pk>', views.MetasUpdate.as_view(), name='update_metas'),
+    path('metas/delete/<int:pk>', views.MetasDelete.as_view(), name='delete_metas'),
+    
+    #CRUD PRECO TETO
+    path('preco/', views.PrecoTetoRender.as_view(), name='list_preco_teto'),
+    path('metas/create', views.CadastroMetas.as_view(), name='create_metas'),
+    path('metas/update/<int:pk>', views.MetasUpdate.as_view(), name='update_metas'),
+    path('metas/delete/<int:pk>', views.MetasDelete.as_view(), name='delete_metas'),
+    
+    
+    
+    
     
     #CRUD SETOR
     path('setor/create', views.CadastroSetor.as_view(), name='create_setor'),

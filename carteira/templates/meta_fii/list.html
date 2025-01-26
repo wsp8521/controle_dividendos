@@ -1,0 +1,35 @@
+{% extends "global/base.html" %}
+{% block title %}Metas{% endblock title %}
+{% block content %}
+{% include "global/componentes/menssage.html" %}
+<p class="h3">Metas</p>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            
+        </div>
+        <div class="col-md-6">
+            <a href="#" class="btn btn-success float-end" 
+            data-bs-toggle="modal" 
+            data-bs-target="#cadastroModal"
+            hx-get = {% url "create_metas" %}
+            hx-target = "#addContent"
+            hx-swap = "innerHTML">
+                <i class="bi bi-plus"></i>Cadastrar
+            </a>
+        </div>
+    </div>
+    <div  class="col-md-12  ">
+        <div class="row" style="display:flex">
+    {% if lists %}
+       {% include "metas_geral/table_fii.html" %}
+       {% include "metas_geral/table_acao.html" %}
+    {% else %}
+        <p class="h3">Nenhum registro encontrado.</p>
+    {% endif %}
+  
+    </div>
+</div>
+    {% include "global/componentes/modal_forms.html" %}
+    {% include "global/componentes/pagination.html" %}
+
+{% endblock %}

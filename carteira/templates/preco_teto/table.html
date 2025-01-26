@@ -1,12 +1,13 @@
-
-
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
             <th>Ativo</th>
-            <th>Tiket</th>
-            <th>setor</th>
-            <th>Cotaçao</th>
+            <th>classe</th>
+            <th>rentabilidade</th>
+            {% if request.GET.name == "FII" %}
+                <th>ipca</th>
+            {% endif %}
+            <th>cotacao</th>
             <th>Ações</th>
         </tr>
     </thead>
@@ -14,8 +15,11 @@
         {% for list in lists %}
             <tr>
                 <td>{{ list.ativo }}</td>
-                <td>{{ list.ticket }}</td>
-                <td>{{ list.setor }}</td>
+                <td>{{ list.classe }}</td>
+                <td>{{ list.rentabilidade }}</td>
+                {% if request.GET.name == "FII" %}
+                    <td>{{ list.ipca }}</td>
+                {% endif %}
                 <td>{{ list.cotacao }}</td>
                 <td style="width:8em">
 

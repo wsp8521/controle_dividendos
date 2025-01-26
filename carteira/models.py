@@ -119,13 +119,30 @@ class MetaAtivo(models.Model):
     classe = models.CharField(max_length=10, null=True, blank=True)
     meta_anual = models.IntegerField(verbose_name="Meta Anual", null=True, blank=True)
     meta_alcancada = models.IntegerField(verbose_name="Meta anual alçancada", null=True, blank=True)
-    status_anual = models.CharField(max_length=10, verbose_name="Status Anual", null=True, blank=True)
+    #status_anual = models.CharField(max_length=20, verbose_name="Status Anual", null=True, blank=True)
     meta_geral = models.IntegerField(verbose_name="Meta geral", null=True, blank=True)
     meta_geral_alcancada = models.IntegerField(verbose_name="Meta geral alcançada", null=True, blank=True)
-    status_geral = models.CharField(max_length=10, verbose_name="Status Anual", null=True, blank=True)
+    #status_geral = models.CharField(max_length=20, verbose_name="Status Anual", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
     update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')
 
     def __str__(self):
-        return self.ano
+        return self.classe
+
+
+####################################### PREÇO TETO #############################################    
+class PrecoTeto(models.Model):
+    class Meta:
+        verbose_name = "Preço teto"
+        verbose_name_plural = "Preço teto"
+        
+    fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_preco_teto",  null=True) #relacionando campo com a pk da tbl user
+    id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Ativos") #relacionando campo com a pk da tbl ativo
+    classe = models.CharField(max_length=10, null=True, blank=True,)
+    rentabilidade = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='Rentabilidade', null=True, blank=True,)
+    ipca = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='IPCA+', null=True, blank=True,)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')
     
+    def __str__(self):
+        return self.classe

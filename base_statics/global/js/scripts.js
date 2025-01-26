@@ -7,7 +7,7 @@ function modal(element){
     var modalBodyContent = document.getElementById('modalBodyContent'); //elemento que rá receber a mensagem
     var deleteForm = document.getElementById('deleteForm');
    modalBodyContent.textContent = 'Tem certeza que deseja excluir o registro '+ name + '?'; //inserindo mensagem na modal
-   deleteForm.action = '/'+page+'/delete/' + id ; //acionando action do form
+   deleteForm.action = '/'+page+'/delete/' + id ; //aciona o link de exclusão da 
     }
   
 

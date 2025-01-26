@@ -1,5 +1,5 @@
 from django.contrib import admin
-from carteira.models import Ativos, Proventos, Operacao, MetaAtivo, SetorAtivo
+from carteira.models import Ativos, Proventos, Operacao, MetaAtivo, SetorAtivo, PrecoTeto
 
 @admin.register(Ativos)
 class AtivosAdmin(admin.ModelAdmin):
@@ -29,3 +29,8 @@ class SetorAtivoAdmin(admin.ModelAdmin):
     list_display=("id", "setor","created_at","update_at")
     list_display_links=("setor",)
     
+    
+@admin.register(PrecoTeto)
+class PrecoTetoAdmin(admin.ModelAdmin):
+    list_display=("id_ativo", "classe","rentabilidade","created_at","update_at")
+    list_display_links=("id_ativo",)

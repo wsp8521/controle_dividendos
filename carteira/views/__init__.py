@@ -3,3 +3,5 @@ from .dash import *
 from .setor_views import*
 from .operacao_views import*
 from .dividendos_view import *
+from .metas_views import *
+from .preco_teto import *

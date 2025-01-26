@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'dal',
     'dal_select2',
     'carteira',
+    'chat_ai'
 ]
 
 MIDDLEWARE = [
