@@ -1,7 +1,7 @@
-
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
+
 import datetime
 
 
@@ -50,9 +50,42 @@ def media_dividendos(ativo,tipo, ano):
                 
                 # Filtrando os dados pelo ano fornecido
                 df_ano = df[df['Data Com'].dt.year == get_ano] #filtrando os dados pelo ano
+                
+                print(df_ano['Valor'].sum())
+                
                 result += df_ano['Valor'].sum()/ano   
             return f'{result:.2f}'
         else:
             return f"Erro {response.status_code} "
     except Exception as e:
         return f"Erro:{e}" 
+
+# div = media_dividendos("XPML11", 5)
+
+
+# # print(div)
+# ativos = [
+#     "MXRF11",
+#     "BBSE3"
+#     ]
+ativos = {
+    #"KLBN11":"AÇÃO",
+    "HGLG11": "FII"
+}
+dados = {}
+
+#print(media_dividendos("KLBN11","AÇÃO",5))
+     
+
+
+for ativo, tipo in ativos.items():
+    dados[ativo] = media_dividendos(ativo, tipo, 5)
+    
+# # Verifica se algum valor contém "Erro" e printa a mensagem de erro
+if any("Erro" in valor for valor in dados.values()):
+    for ativo, resultado in dados.items():
+        if "Erro" in resultado:
+            print(f"Erro ao obter os dividendos do ativo {ativo}: {resultado}")
+else:
+    print(dados)
+   

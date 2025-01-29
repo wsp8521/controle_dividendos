@@ -3,6 +3,7 @@ from carteira.models import PrecoTeto
 from django.urls import reverse_lazy
 from carteira.forms import AtivosForm
 from utils.cotacao import obter_cotacao
+from utils.media_dividendos import media_dividendos
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView,DetailView
 
@@ -29,12 +30,15 @@ class PrecoTetoRender(ListView):
         
         for ativo in ativos:
             cotacao = obter_cotacao(ativo.id_ativo)
+            dividendos = media_dividendos(ativo.id_ativo,ativo.classe, 5)
             lista_ativos.append({
                 "ativo": ativo.id_ativo,
                 "classe": ativo.classe,
                 "rentabilidade":ativo.rentabilidade,
                 "ipca": ativo.ipca if ativo.ipca is not None else 0,
                 "cotacao": cotacao,
+                "media_dividendos": dividendos,
+                
             })
 
         #Serializa a lista de ativos como JSON
