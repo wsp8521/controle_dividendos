@@ -39,7 +39,7 @@ def media_dividendos(ativo,tipo, anos):
             ano_atual = datetime.now().year
             
             # Define o limite de anos (últimos 5 anos)
-            limite_ano = ano_atual - 5
+            limite_ano = ano_atual - anos
             
             # Filtrar registros dentro dos últimos 5 anos e selecionar apenas os campos desejados
             registros_filtrados = [
@@ -66,7 +66,7 @@ def media_dividendos(ativo,tipo, anos):
                 "pagamentos_por_ano": pagamentos_ordenados
             }
             
-            media_pagamento = sum(resultado_final['pagamentos_por_ano'].values())/5
+            media_pagamento = sum(resultado_final['pagamentos_por_ano'].values())/anos
             
             return f'{media_pagamento:.2f}'
         
@@ -86,7 +86,7 @@ def media_dividendos(ativo,tipo, anos):
 ativos = {
     "KLBN11":"AÇÃO",
     "HGLG11": "FII",
-   # "BODB11":"FI-INFRA"
+    "BODB11":"FI-INFRA"
 }
 dados = {}
 
