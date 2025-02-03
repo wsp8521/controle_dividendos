@@ -1,0 +1,48 @@
+<div class="col-md-12">
+{% comment %} <div class="table-responsive"> {% endcomment %}
+<table class="table table-bordered text-center align-middle">
+    {% comment %} <thead class="table-warning">
+      <tr>
+        <th colspan="3">CONTROLE DE METAS FII</th>
+        <th colspan="2">ANO</th>
+        <th colspan="4">2025</th>
+      </tr>
+      <tr class="table-light">
+        <th colspan="2">METAS GERAL: 1280 COTAS</th>
+        <th colspan="6">INVESTIMENTO NECESSÁRIO: <span class="text-white bg-danger p-1 rounded">R$ 6.996,02</span></th>
+      </tr> {% endcomment %}
+      <!--TABELA-->
+      <tr class="table-primary">
+        <th>ATIVOS</th>
+        <th>METAS DO ANO</th>
+        <th>STATUS</th>
+        <th>COTAS RESTANTES</th>
+        <th>COTAÇÃO</th>
+        <th>TOTAL</th>
+        <th>DIFERENÇA </th>
+        <th>RECOMENDAÇÃO</th> 
+      </tr>
+    </thead>
+    <tbody>
+      {% for list in lists %}
+      <tr>
+        <td>{{ list.ativo }}</td>
+        <td>
+          <span 
+          class="form-control editable-meta text-center"
+          contenteditable="true" 
+          data-meta-id="{{ list.pk }}"
+           >{{ list.qtd }}</span>
+        </td>
+        <td>não alcançada</td>
+        <td>62</td>
+        <td>{{list.cotacao}}</td>
+        <td>{{list.rentabilidade}}</td>
+        <td class="text-success">-R$ 0,28</td>
+        <td class="bg-success text-white">comprar</td> 
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% comment %} </div> {% endcomment %}

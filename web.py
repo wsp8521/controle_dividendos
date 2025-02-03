@@ -10,7 +10,7 @@ from collections import defaultdict
 def media_dividendos(ativo,tipo, anos):
     try:
         # # URL da página com os dados
-        if tipo == "AÇÃO":
+        if tipo == "Ação":
             tipo_ativo = "acoes"
         elif tipo == "FII":
             tipo_ativo="fundos-imobiliarios"
@@ -84,8 +84,8 @@ def media_dividendos(ativo,tipo, anos):
 #     "BBSE3"
 #     ]
 ativos = {
-    "KLBN11":"AÇÃO",
-    "HGLG11": "FII",
+    "KLBN11":"Ação",
+    "MXRF11": "FII",
     "BODB11":"FI-INFRA"
 }
 dados = {}

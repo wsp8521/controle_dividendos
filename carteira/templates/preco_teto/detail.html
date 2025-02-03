@@ -1,0 +1,33 @@
+<tr id="trExpense">
+        <td>{{ form.id_ativo }}</td>
+        <td>{{ form.classe }}</td>
+        <td>{{ form.rentabilidade }}</td>
+        {% if form.classe.value != "AÇÃO" %}
+            <td>{{ form.ipca }}</td>
+        {% endif %}
+        <td>{{ lists.cotacao }}</td>
+        <td>{{ lists.preco_teto|floatformat:2 }}</td>  <!-- Exibindo o preco_teto calculado -->
+        <td>{{ lists.diferenca|floatformat:2 }}</td>   <!-- Exibindo a diferença -->
+        <td>{{ lists.margem_seguranca|floatformat:2 }}</td>  <!-- Exibindo a margem de segurança -->
+        <td>{{ lists.recomendacao }}</td>  <!-- Exibindo a recomendação -->
+
+        <td class="text-center">
+            <button 
+              type="submit"
+              class="btn btn-success"
+              hx-post="{% url 'update_preco_teto' object.pk %}"
+              hx-target="#trExpense"
+              hx-swap="outerHTML"
+              hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            >
+              OK
+            </button>
+            <button
+              class="btn btn-danger"
+              hx-get="{% url 'update_preco_teto' object.pk %}"
+              hx-target="#trExpense"
+              hx-swap="outerHTML"
+            >
+              <i class="fa fa-close">X</i>
+            </button>
+</tr>

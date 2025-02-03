@@ -3,7 +3,7 @@
         {% if form.instance.pk %}
             Editar Ativo
         {% else %}
-            Cadastrar Novo Ativo
+            Inserir Ativo
         {% endif %}
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
@@ -11,37 +11,35 @@
 
 <div class="modal-body">
     <!-- Formulário de Cadastro -->
-    <form  method="POST"
-    action="{% if form.instance.pk %}{% url 'update_ativo' form.instance.pk %}{% else %}{% url 'create_ativo' %}{% endif %}">
-     
+    <form method="POST" id="form-preco-teto"
+          action="{% url 'create_preco_teto' %}">
         {% csrf_token %}
-        {% for field in form %}
-     
-        <div class="mb-3">
-            {{ field.label_tag }}
-            {{ field }}
-           
-                <!-- Campo de Setor -->
-
-                <!-- Botão Adicionar Setor -->
-                {% if field.name == 'setor' %}
-                <a href="#" class="btn btn-info" id="add-sector-btn" 
-                data-bs-toggle="modal" 
-                data-bs-target="#cadastroModal"
-                hx-get = {% url "create_setor" %}
-                hx-target = "#addContent"
-                hx-swap = "innerHTML">
-                    <i class="bi bi-plus"></i>Cadastrar
-                </a>
-                {% endif %}
         
-            {{ field.errors }}
-            {% if field.help_text %}
-              <small class="text-muted">{{ field.help_text|safe }}</small>
-            {% endif %}
+        <div class="mb-3">
+            <label>Classe do ativo</label>
+            <select id="id_classe" name="classe" class="form-control" onchange="filtrarAtivos('/preco'); hiddenCampoIpca()">
+                {% for value, label in form.fields.classe.choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
         </div>
 
-        {% endfor %}
+        <div class="mb-3">
+            <label>Ativo</label>
+            <select id="id_id_ativo" name="id_ativo" class="form-control">
+                <option value="">Selecione uma classe primeiro...</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Rentabilidade</label>
+            {{form.rentabilidade}}
+        </div>
+
+        <div class="mb-3" id="container_ipca">
+            <label>IPCA Tesouro Direto</label>
+            {{form.ipca}}
+        </div>
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>

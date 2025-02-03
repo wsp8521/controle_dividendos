@@ -21,20 +21,6 @@
             {{ field.label_tag }}
             {{ field }}
            
-                <!-- Campo de Setor -->
-
-                <!-- Botão Adicionar Setor -->
-                {% if field.name == 'setor' %}
-                <a href="#" class="btn btn-info" id="add-sector-btn" 
-                data-bs-toggle="modal" 
-                data-bs-target="#cadastroModal"
-                hx-get = {% url "create_setor" %}
-                hx-target = "#addContent"
-                hx-swap = "innerHTML">
-                    <i class="bi bi-plus"></i>Cadastrar
-                </a>
-                {% endif %}
-        
             {{ field.errors }}
             {% if field.help_text %}
               <small class="text-muted">{{ field.help_text|safe }}</small>

@@ -10,3 +10,53 @@
 
 
 .header-meta{margin:20px; padding:10px; border: 1px solid #ffffff; background-color: #d9edf7; color: #000000;}
+#container_ipca{display: none;}
+
+/*estilização tabela pagina plan meeta*/
+.editable-meta {
+    display: inline-block;
+    width: 100%;
+    min-width: 60px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ced4da; /* Cor do Bootstrap */
+    border-radius: 5px;
+    
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1), /* Sombra interna para baixo relevo */
+                0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra externa para dar profundidade */
+    transition: all 0.2s ease-in-out;
+}
+
+/* Quando a célula é clicada para edição */
+.editable-meta:focus,
+.editable-meta:active {
+    outline: none;
+    border:2px solid;
+    border-color: #80bdff; /* Azul Bootstrap */
+    box-shadow: inset 1px 1px 3px rgba(12, 73, 194, 0.2), /* Sombra interna para baixo relevo */
+                0 4px 8px rgba(12, 73, 194, 0.2); /* Aumento da sombra externa */
+    
+}
+
+
+.alert {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    font-weight: bold;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.alert-success {
+    background-color:#025614 !important;
+    color: white;
+}
+
+.alert-danger {
+    background-color: #dc3545;
+    color: white;
+}
+

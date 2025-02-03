@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="cadastroModalLabel">
+      Editar rentabilidade 
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+</div>
+
+<div class="modal-body">
+    <!-- Formulário de Cadastro -->
+    <form method="POST" 
+          action="{% url 'update_preco_teto' form.instance.pk %}">
+        {% csrf_token %}
+        
+        <div class="mb-3" style="display:none">
+            <label>Classe do ativo</label>
+            {{form.classe}}
+        
+        </div>
+
+        <div class="mb-3">
+            <label>Ativo</label>
+            {{form.id_ativo}}
+        </div>
+
+        <div class="mb-3">
+            <label>Rentabilidade</label>
+            {{form.rentabilidade}}
+        </div>
+
+
+        {% if form.classe.value != "Ação" %}
+        <div class="mb-3" >
+            <label>IPCA Tesouro Direto</label>
+            {{form.ipca}}
+        </div>
+        {% endif %}
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %}</button>
+        </div>
+    </form>
+</div>

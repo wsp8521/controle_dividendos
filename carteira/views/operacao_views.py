@@ -1,7 +1,8 @@
-import json
-from carteira.models import Operacao
+from django.core.cache import cache
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 from carteira.forms import OperacaoForm
+from carteira.models import Operacao, Ativos
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView,DetailView
 
@@ -15,8 +16,12 @@ class OperacaoRender(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        # Filtra as operações pelo usuário logado
-        queryset = Operacao.objects.filter(fk_user=self.request.user).order_by(self.ordering)
+        queryset = cache.get('operacao_listagem')  #recuperando dados no cache
+               
+        if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
+            # Filtra as operações pelo usuário logado
+            queryset = Operacao.objects.filter(fk_user=self.request.user).order_by(self.ordering)
+            cache.set('produtos_listagem', queryset, timeout=300)  # salva dados no cache
         
         # Aplica o filtro adicional caso tenha sido fornecido um nome (parâmetro GET)
         filter_name = self.request.GET.get('name')
@@ -52,3 +57,13 @@ class OperacaoDelete( SuccessMessageMixin, DeleteView):
     model=Operacao
     success_url = reverse_lazy('list_operacao')
     success_message='Cadastro excluído com sucesso.'
+    
+def filtrar_ativos(request):
+    classe = request.GET.get('classe', '')
+    
+    # Filtra os ativos com base na classe
+    ativos = Ativos.objects.filter(classe=classe)
+    
+    # Prepara a resposta em formato JSON
+    ativos_data = [{'id': ativo.pk, 'nome': ativo.ticket} for ativo in ativos]
+    return JsonResponse({'ativos': ativos_data})

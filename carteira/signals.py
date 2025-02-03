@@ -1,7 +1,8 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
+from django.core.cache import cache
+from django.db.models import Sum
 from carteira.models import Operacao, Proventos, MetaAtivo
-from django.db.models import Sum, Q
 
 
 # Executa antes de uma Operacao ser salva
@@ -108,3 +109,9 @@ def atualizar_meta_ativos(sender, instance, **kwargs):
             meta_alcancada=total_qtd,
             meta_geral_alcancada=meta_anual_anterior + total_qtd  # Somando o total atualizado
         )
+        
+# Sinais para limpar o cache ao salvar ou deletar uma operação
+@receiver(post_save, sender=Operacao)
+@receiver(post_delete, sender=Operacao)
+def limpar_cache_operacoes(sender, **kwargs):
+    cache.delete('operacao_listagem')

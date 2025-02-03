@@ -5,26 +5,29 @@
 <p class="h3">Preço teto</p>
     <div class="row mb-3">
         <div class="col-md-6">
-            <form action="#" method="GET">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="name" placeholder="Pesquisar marca" value="{{ request.GET.name }}"/>
-                    {% if request.GET.name %}
-                        <a href="#" class="btn btn-primary">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
-                    {% else %}
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    {% endif %}
+            <form action="" method="GET" id="filterForm">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="name" id="flexRadioDefault1" value="FII" 
+                    {% if request.GET.name == "FII" %} checked {% endif %} onchange="this.form.submit();">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      Fundos Imobiliários
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="name" id="flexRadioDefault2" value="Ação" 
+                    {% if request.GET.name == "Ação" %} checked {% endif %} onchange="this.form.submit();">
+                    <label class="form-check-label" for="flexRadioDefault2">
+                      Ações
+                    </label>
                 </div>
             </form>
+            
         </div>
         <div class="col-md-6">
             <a href="#" class="btn btn-success float-end" 
             data-bs-toggle="modal" 
             data-bs-target="#cadastroModal"
-            hx-get = {% url "create_ativo" %}
+            hx-get = {% url "create_preco_teto" %}
             hx-target = "#addContent"
             hx-swap = "innerHTML">
                 <i class="bi bi-plus"></i>Cadastrar
@@ -40,4 +43,8 @@
     </div>
     {% include "global/componentes/pagination.html" %}
     {% include "global/componentes/modal_forms.html" %}
+
+
+    
+
 {% endblock %}

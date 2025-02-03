@@ -30,10 +30,12 @@ class ProventosForm(forms.ModelForm):
 
     # Definindo as opções dos campos select
     
+           
     classe_options = [
-        (False, 'Classe do ativo'),
+         (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
+        ('FII-Infra', 'FII-Infra'),
     ]
     
     op_options = [
@@ -43,6 +45,11 @@ class ProventosForm(forms.ModelForm):
     ]
 
     # Campos de escolha com widgets apropriados
-    classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
+    classe = forms.ChoiceField(
+        choices=classe_options, 
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'onchange':"filtrarAtivos('/proventos')"
+            }))
     tipo_provento = forms.ChoiceField(choices=op_options, widget=forms.Select(attrs={'class': 'form-control'}))
     

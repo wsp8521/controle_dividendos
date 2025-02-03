@@ -15,6 +15,7 @@ urlpatterns = [
     path('operacao/create', views.CadastroOperacao.as_view(), name='create_operacao'),
     path('operacao/update/<int:pk>', views.OperacaoUpdate.as_view(), name='update_operacao'),
     path('operacao/delete/<int:pk>', views.OperacaoDelete.as_view(), name='delete_operacao'),
+    path('operacao/filtrar-ativos/', views.filtrar_ativos, name='filtrar_ativos'),
     
     
     #CRUD PROVENTOS
@@ -22,6 +23,7 @@ urlpatterns = [
     path('proventos/create', views.CadastroProventos.as_view(), name='create_proventos'),
     path('proventos/update/<int:pk>', views.ProventosUpdate.as_view(), name='update_proventos'),
     path('proventos/delete/<int:pk>', views.ProventosDelete.as_view(), name='delete_proventos'),
+    path('proventos/filtrar-ativos/', views.filtrar_ativos, name='filtrar_ativos'),
     
     #CRUD META
     path('metas/', views.MetaRender.as_view(), name='list_metas'),
@@ -29,11 +31,19 @@ urlpatterns = [
     path('metas/update/<int:pk>', views.MetasUpdate.as_view(), name='update_metas'),
     path('metas/delete/<int:pk>', views.MetasDelete.as_view(), name='delete_metas'),
     
+    #CRUD PLANO DE METAS
+    path('plan-metas/', views.PlanMetasRender.as_view(), name='list_plan'),
+    # path('metas/create', views.CadastroMetas.as_view(), name='create_metas'),
+     path('plan-metas/update/<int:pk>', views.atualizar_metas, name='update_plan'),
+    # path('metas/delete/<int:pk>', views.MetasDelete.as_view(), name='delete_metas'),
+    
     #CRUD PRECO TETO
     path('preco/', views.PrecoTetoRender.as_view(), name='list_preco_teto'),
-    path('metas/create', views.CadastroMetas.as_view(), name='create_metas'),
-    path('metas/update/<int:pk>', views.MetasUpdate.as_view(), name='update_metas'),
-    path('metas/delete/<int:pk>', views.MetasDelete.as_view(), name='delete_metas'),
+    #path('preco/detail/<int:pk>', views.PrecoTetoDetail.as_view(), name='detail_preco_teto'),   
+    path('preco/create', views.CadastroPrecoTeto.as_view(), name='create_preco_teto'),
+    path('preco/update/<int:pk>', views.PrecoTetoUpdate.as_view(), name='update_preco_teto'),
+    path('preco/delete/<int:pk>', views.PrecoTetoDelete.as_view(), name='delete_preco_teto'),
+    path('preco/filtrar-ativos/', views.filtrar_ativos, name='filtrar_ativos'),
     
     
     

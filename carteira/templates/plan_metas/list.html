@@ -1,8 +1,8 @@
 {% extends "global/base.html" %}
-{% block title %}Metas{% endblock title %}
+{% block title %}Controle de Metas{% endblock title %}
 {% block content %}
 {% include "global/componentes/menssage.html" %}
-<p class="h3">Metas</p>
+<p class="h3">Controle de Metas</p>
     <div class="row mb-3">
         <div class="col-md-6">
             
@@ -20,12 +20,12 @@
     </div>
     <div  class="col-md-12  ">
         <div class="row" style="display:flex">
-    {% if lists %}
-       {% include "metas_geral/table_fii.html" %}
-       {% include "metas_geral/table_acao.html" %}
-    {% else %}
+    {% comment %} {% if lists %} {% endcomment %}
+       {% include "plan_metas/table.html" %}
+       {% comment %} {% include "plan_metas/calculadora_fii.html" %} {% endcomment %}
+    {% comment %} {% else %}
         <p class="h3">Nenhum registro encontrado.</p>
-    {% endif %}
+    {% endif %} {% endcomment %}
   
     </div>
 </div>

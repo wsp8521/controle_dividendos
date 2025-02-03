@@ -25,10 +25,6 @@ class MetaRender(ListView):
         # Filtra os dados por classe
         context["metas_fii"] = self.get_queryset().filter(classe="FII")
         context["metas_acoes"] = self.get_queryset().filter(classe="Ação")
-        print("############################")
-        print(context["metas_acoes"] )
-        print("############################")
-        
         return context
     
 # #CRETE

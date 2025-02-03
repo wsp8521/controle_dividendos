@@ -1,7 +1,8 @@
-import json
-from carteira.models import Proventos, Ativos
+from django.core.cache import cache
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 from carteira.forms import ProventosForm
+from carteira.models import Proventos, Ativos
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView,DetailView
 
@@ -15,8 +16,12 @@ class ProventosRender(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        # Filtra as operações pelo usuário logado
-        queryset = Proventos.objects.filter(fk_user=self.request.user).order_by(self.ordering)
+        queryset = cache.get('operacao_listagem')  #recuperando dados no cache
+               
+        if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
+            # Filtra as operações pelo usuário logado
+            queryset = Proventos.objects.filter(fk_user=self.request.user).order_by(self.ordering)
+            cache.set('produtos_listagem', queryset, timeout=300)  # salva dados no cache
         
         # Aplica o filtro adicional caso tenha sido fornecido um nome (parâmetro GET)
         filter_name = self.request.GET.get('name')
@@ -82,3 +87,15 @@ class ProventosDelete( SuccessMessageMixin, DeleteView):
     model=Proventos
     success_url = reverse_lazy('list_proventos')
     success_message='Cadastro excluído com sucesso.'
+    
+
+def filtrar_ativos(request):
+    #classe = request.GET.get('classe', '')
+    classe = "Ação"
+    
+    # Filtra os ativos com base na classe
+    ativos = Ativos.objects.filter(classe=classe, qtdAtivo__gt=0)
+    
+    # Prepara a resposta em formato JSON
+    ativos_data = [{'id': ativo.pk, 'nome': ativo.ticket} for ativo in ativos]
+    return JsonResponse({'ativos': ativos_data})

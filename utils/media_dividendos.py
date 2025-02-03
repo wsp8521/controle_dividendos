@@ -1,58 +1,73 @@
-
+import json
 import requests
-import pandas as pd
 from bs4 import BeautifulSoup
-import datetime
+from datetime import datetime
+from collections import defaultdict
+from django.core.cache import cache
 
-
-
-def media_dividendos(ativo,tipo, ano):
+def media_dividendos(ativo, tipo, anos):
     try:
         # URL da página com os dados
-        tipo_ativo = "fii_" if tipo == "FII" else ""
-        url = f"https://www.fundamentus.com.br/{tipo_ativo}proventos.php?papel={ativo}&tipo=2"
+        if tipo == "Ação":
+            tipo_ativo = "acoes"
+        elif tipo == "FII":
+            tipo_ativo = "fundos-imobiliarios"
+        else:
+            tipo_ativo = "fiinfras"
+
+        # Definindo a chave do cache para o ativo
+        cache_key = f"media_dividendos_{ativo}_{tipo}_{anos}"
+        result = cache.get(cache_key)
+
+        # Verificando se o resultado já está no cache
+        if result:
+            return result
+
+        url = f"https://statusinvest.com.br/{tipo_ativo}/{ativo}"
         browsers = {
             'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
         }
+        
         # Fazendo a requisição para a página
         response = requests.get(url, headers=browsers)
         soup = BeautifulSoup(response.content, 'html.parser')
+        
         if response.status_code == 200:
-
-            # Localizando a tabela
-            table = soup.find('table')
-            rows = table.find_all('tr')[1:]  # Ignorar o cabeçalho
-
-            # Criando uma lista para armazenar os dados
-            data = []
-
-            # Iterando pelas linhas e extraindo os dados
-            for row in rows:
-                cols = row.find_all('td')
-                cols = [col.text.strip() for col in cols]
-                data.append(cols)
-         
-            # # Convertendo os dados em um DataFrame
-            if tipo == "FII":
-                df = pd.DataFrame(data, columns=["Data Com", "Tipo", "Data de Pagamento", "Valor"])
-            else:
-                df = pd.DataFrame(data, columns=["Data Com", "Valor", "Tipo", "Data de Pagamento","Qtd ação"])
-  
-         # Convertendo a coluna 'Valor' para float, substituindo vírgulas por pontos
-            df['Valor'] = df['Valor'].str.replace(',', '.').astype(float)
+            # Localizando os dados
+            dados = soup.find('input', {'id': 'results'})['value']
+            # Carregar a string JSON em um objeto Python
+            json_data = json.loads(dados)
             
-             # Convertendo a coluna 'Data Com' para datetime
-            df['Data Com'] = pd.to_datetime(df['Data Com'], format='%d/%m/%Y')
-            result = 0
+            # Data atual e limite de anos
+            ano_atual = datetime.now().year
+            limite_ano = ano_atual - anos
             
-            #soma dos dividendos dos últimso anos
-            for get_ano in range(datetime.datetime.now().year, datetime.datetime.now().year-ano, -1):
-                
-                # Filtrando os dados pelo ano fornecido
-                df_ano = df[df['Data Com'].dt.year == get_ano] #filtrando os dados pelo ano
-                result += df_ano['Valor'].sum()/ano   
-            return f'{result:.2f}'
+            # Filtrando os registros dentro dos últimos anos
+            registros_filtrados = [
+                {
+                    "data_com": item["ed"],
+                    "data_pagamento": item["pd"],
+                    "tipo": item["etd"],
+                    "valor": item["v"]
+                }
+                for item in json_data if int(item["ed"].split("/")[-1]) > limite_ano
+            ]
+            
+            # Calculando os pagamentos por ano
+            pagamentos_por_ano = defaultdict(float)
+            for item in registros_filtrados:
+                ano = int(item["data_com"].split("/")[-1])  # Extrai o ano da data_com
+                pagamentos_por_ano[ano] += item["valor"]
+
+            # Calculando a média dos pagamentos
+            media_pagamento = sum(pagamentos_por_ano.values()) / anos
+            
+            # Armazenando o resultado no cache por 5 minutos
+            cache.set(cache_key, f'{media_pagamento:.2f}', timeout=60*30)
+            
+            return f'{media_pagamento:.2f}'
+        
         else:
             return f"Erro {response.status_code} "
     except Exception as e:
-        return f"Erro:{e}" 
+        return f"Erro:{e}"

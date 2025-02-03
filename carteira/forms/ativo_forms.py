@@ -19,8 +19,9 @@ class AtivosForm(forms.ModelForm):
          (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
-
+        ('FII-Infra', 'FII-Infra'),
     ]
+    
     classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
     
      # Definindo o campo setor como um ModelChoiceField que busca dados da tabela Setor
@@ -48,13 +49,14 @@ class SetorForm(forms.ModelForm):
         widgets={
             'setor':forms.TextInput(attrs={'class':'form-control'}), #alterando atribuutos do campo
         }
-        
+            
     classe_options = [
          (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
-
+        ('FII-Infra', 'FII-Infra'),
     ]
+    
     setor_classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
 
 ########################################## OPERACAO ###################################################  
@@ -92,11 +94,12 @@ class OperacaoForm(forms.ModelForm):
         
 
     # Definindo as opções dos campos select
-    
+      
     classe_options = [
-        (False, 'Classe do ativo'),
+         (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
+        ('FII-Infra', 'FII-Infra'),
     ]
     
     font_recuso=[
@@ -116,9 +119,20 @@ class OperacaoForm(forms.ModelForm):
     ]
 
     # Campos de escolha com widgets apropriados
-    classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
+    classe = forms.ChoiceField(
+        choices=classe_options, 
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'onchange':"filtrarAtivos('/operacao')"
+                
+                }),
+            required=True, error_messages={'required': 'Este campo é obrigatório.'  # Mensagem de erro personalizada
+            }
+        
+        )
     tipo_operacao = forms.ChoiceField(choices=op_options, widget=forms.Select(attrs={'class': 'form-control'}))
     fonte_recurso = forms.ChoiceField(choices=font_recuso, widget=forms.Select(attrs={'class': 'form-control'}))
    
-    
-    
+ 
+

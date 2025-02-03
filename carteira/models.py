@@ -26,7 +26,7 @@ class Ativos(models.Model):
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_ativo", null=True,) #relacionando campo com a pk da tbl user
     ativo = models.CharField(max_length=250,verbose_name='nome do ativo')
     ticket = models.CharField(max_length=10)
-    classe = models.CharField(max_length=10)
+    classe = models.CharField(max_length=10, null=False, blank=False)
     cnpj = models.CharField(max_length=20, verbose_name='CNPJ')
     setor = models.ForeignKey(SetorAtivo, on_delete=models.PROTECT, related_name="setor_ativo", verbose_name='Setor') 
     qtdAtivo = models.IntegerField(verbose_name='Qtd', blank=True, null= True)
@@ -47,7 +47,7 @@ class Proventos(models.Model):
         
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_provento",  null=True) #relacionando campo com a pk da tbl user
     id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Ativos") #relacionando campo com a pk da tbl ativo
-    classe = models.CharField(max_length=10)
+    classe = models.CharField(max_length=10, null=False, blank=False)
     tipo_provento = models.CharField(max_length=20, verbose_name='tipo de provento')
     valor_recebido = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='valor recebido')
     data_pgto = models.DateField(verbose_name='data do pagamento')
@@ -80,7 +80,7 @@ class Operacao(models.Model):
         
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_operacao",  null=True) #relacionando campo com a pk da tbl user
     id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Ativo') #relacionando campo com a pk da tbl ativo
-    classe = models.CharField(max_length=10)
+    classe = models.CharField(max_length=10, null=False, blank=False, default="")
     tipo_operacao = models.CharField(max_length=20, verbose_name='tipo de operação', blank=True, null=True)
     data_operacao = models.DateField(verbose_name='data da operação')
     qtd = models.IntegerField(verbose_name='quantidade')
@@ -116,7 +116,7 @@ class MetaAtivo(models.Model):
         
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_meta",  null=True) #relacionando campo com a pk da tbl user
     ano = models.IntegerField(verbose_name="Ano", null=True, blank=True)
-    classe = models.CharField(max_length=10, null=True, blank=True)
+    classe = models.CharField(max_length=10, null=False, blank=False, default="")
     meta_anual = models.IntegerField(verbose_name="Meta Anual", null=True, blank=True)
     meta_alcancada = models.IntegerField(verbose_name="Meta anual alçancada", null=True, blank=True)
     #status_anual = models.CharField(max_length=20, verbose_name="Status Anual", null=True, blank=True)
@@ -130,6 +130,24 @@ class MetaAtivo(models.Model):
         return self.classe
 
 
+####################################### PLANEJAMENTO DE METAS aTIVOS#############################################    
+class PlanMetas(models.Model):
+    class Meta:
+        verbose_name = "Planejamento das metas"
+        verbose_name_plural = "Planejamento das metas"
+        
+    fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_meta_ativo",  null=True) #relacionando campo com a pk da tbl user
+    id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Ativos") #relacionando campo com a pk da tbl ativo
+    classe = models.CharField(max_length=10, null=False, blank=False, default="")
+    qtd = models.IntegerField(verbose_name="Quantidade")
+    ano = models.IntegerField(verbose_name="Ano", null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
+    update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')
+    
+    def __str__(self):
+        return self.classe
+
+
 ####################################### PREÇO TETO #############################################    
 class PrecoTeto(models.Model):
     class Meta:
@@ -138,8 +156,8 @@ class PrecoTeto(models.Model):
         
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_preco_teto",  null=True) #relacionando campo com a pk da tbl user
     id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Ativos") #relacionando campo com a pk da tbl ativo
-    classe = models.CharField(max_length=10, null=True, blank=True,)
-    rentabilidade = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='Rentabilidade', null=True, blank=True,)
+    classe = models.CharField(max_length=10, null=False, blank=False, default="")
+    rentabilidade = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='Rentabilidade', default=6)
     ipca = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='IPCA+', null=True, blank=True,)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
     update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')
