@@ -30,36 +30,29 @@ class PlanMetasRender(ListView):
         lista_ativos = []
         
         for ativo in ativos:
-            preco_teto = PrecoTeto.objects.filter(id_ativo=ativo.id_ativo).first()
+            get_preco_teto = PrecoTeto.objects.filter(id_ativo=ativo.id_ativo).first()
             cotacao = obter_cotacao(ativo.id_ativo)
             dividendos = media_dividendos(ativo.id_ativo, ativo.classe, 5)
-            #rentabilidade = Decimal(ativo.rentabilidade)
-            #preco_teto_acoes = Decimal(dividendos) / (rentabilidade / 100)
-            #ipca = Decimal(ativo.ipca) if ativo.ipca is not None else Decimal(0)
-            ##preco_teto_fii = (Decimal(dividendos) / (ipca + ativo.rentabilidade)) * 100
-            #preco_teto = preco_teto_acoes if ativo.classe == "AÇÃO" else preco_teto_fii
-            #cotacao_limpo = cotacao.replace("R$", "").strip().replace(",", ".")
-            ##diferenca = Decimal(cotacao_limpo) - preco_teto
+            rentabilidade = Decimal(get_preco_teto.rentabilidade)
+            preco_teto_acoes = Decimal(dividendos)/ (rentabilidade / 100)
+            ipca = Decimal(get_preco_teto.ipca) if get_preco_teto.ipca is not None else Decimal(0)
+            preco_teto_fii = (Decimal(dividendos) / (ipca + get_preco_teto.rentabilidade)) * 100
+            preco_teto = preco_teto_acoes if ativo.classe == "Ação" else preco_teto_fii
+            cotacao_limpo = cotacao.replace("R$", "").strip().replace(",", ".")
+            diferenca = Decimal(cotacao_limpo) - preco_teto
             #margem_seguranca = ((preco_teto - Decimal(cotacao_limpo)) / preco_teto) * 100
-            #recomendacao = "Comprar" if diferenca < 0 else "Não comprar"
+            recomendacao = "Comprar" if diferenca < 0 else "Não comprar"
             
-            
-            print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-            print(preco_teto.rentabilidade)
-            print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-
             lista_ativos.append({
                 "pk": ativo.id,
                 "ativo": ativo.id_ativo,
                 "qtd": ativo.qtd,  # Adicionando a quantidade para edição
-                #"classe": ativo.classe,
-                "rentabilidade": preco_teto.rentabilidade,
-                #"ipca": ativo.ipca if ativo.ipca is not None else 0,
+                "classe": ativo.classe,
+                "rentabilidade": rentabilidade,
                 "cotacao": cotacao,
-                # "preco_teto": preco_teto,
-                # "diferenca": diferenca,
-                # "margem_seguranca": margem_seguranca if margem_seguranca >= 1 else 0,
-                # "recomendacao": recomendacao,
+                "preco_teto": preco_teto,
+                "diferenca": diferenca,
+                "recomendacao": recomendacao,
             })
         context['lists'] = lista_ativos
         return context

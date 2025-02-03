@@ -70,4 +70,4 @@ def media_dividendos(ativo, tipo, anos):
         else:
             return f"Erro {response.status_code} "
     except Exception as e:
-        return f"Erro:{e}"
+        return f"Erro :{e}. Houve um erro ao carregar o link {url}"

@@ -37,9 +37,10 @@
         <td>não alcançada</td>
         <td>62</td>
         <td>{{list.cotacao}}</td>
-        <td>{{list.rentabilidade}}</td>
-        <td class="text-success">-R$ 0,28</td>
-        <td class="bg-success text-white">comprar</td> 
+        <td>total aqui</td>
+        <td class="bg-success text-white">R$ {{list.diferenca|floatformat:2}}</td> 
+        
+        <td class="bg-success text-white">{{list.recomendacao}}</td> 
       </tr>
     {% endfor %}
     </tbody>

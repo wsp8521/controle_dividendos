@@ -37,7 +37,7 @@ class PrecoTetoRender(ListView):
             preco_teto_acoes = Decimal(dividendos)/(rentabilidade/100)
             ipca = Decimal(ativo.ipca) if ativo.ipca is not None else Decimal(0)
             preco_teto_fii = (Decimal(dividendos)/(ipca+ativo.rentabilidade))*100
-            preco_teto = preco_teto_acoes if ativo.classe == "AÇÃO" else preco_teto_fii
+            preco_teto = preco_teto_acoes if ativo.classe == "Ação" else preco_teto_fii
             cotacao_limpo = cotacao.replace("R$", "").strip().replace(",", ".")  # Remove "R$" e troca vírgula por ponto
             diferenca = Decimal(cotacao_limpo)-preco_teto
             margem_seguranca = ((preco_teto - Decimal(cotacao_limpo))/preco_teto)*100
