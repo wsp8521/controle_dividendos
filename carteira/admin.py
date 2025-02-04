@@ -3,7 +3,7 @@ from carteira.models import Ativos, Proventos, Operacao, MetaAtivo, SetorAtivo, 
 
 @admin.register(Ativos)
 class AtivosAdmin(admin.ModelAdmin):
-    list_display=("id","ativo", "ticket","classe", "created_at","update_at")
+    list_display=("id","ativo", "ticket","classe", "qtdAtivo","created_at","update_at")
     list_display_links=("ativo",)
     
     

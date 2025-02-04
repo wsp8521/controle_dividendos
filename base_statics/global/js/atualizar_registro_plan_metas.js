@@ -80,9 +80,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function atualizarMeta(elemento) {
      let metaId = elemento.getAttribute("data-meta-id");
      let novoValor = elemento.innerText.trim();
-
-     console.log(novoValor)
-
+     
      fetch(`/plan-metas/update/${metaId}`, {  // endpoint de para a atualização
         method: "POST",
         headers: {
@@ -98,6 +96,8 @@ function atualizarMeta(elemento) {
         if (data.status === "success") {
             //exibirMensagem("Meta atualizada!");
             destacarCelula(elemento, "success"); // Destaca a célula alterada
+            setTimeout(() => {location.reload();}, 1000);
+            
             //exibirMensagem("Quantidade atualizada","success");
         } else {
             exibirMensagem("Erro ao atualizar: " + data.message);
@@ -105,6 +105,17 @@ function atualizarMeta(elemento) {
     })
     .catch(error => console.error("Erro:", error));
  }
+
+
+ // Função para atualizar apenas a tabela via AJAX
+function atualizarTabela() {
+    fetch("/plan-metas/atualizar-tabela")  // Endpoint que retorna a tabela renderizada
+    .then(response => response.text())
+    .then(html => {
+        document.querySelector(".table").innerHTML = html; // Substitui a tabela
+    })
+    .catch(error => console.error("Erro ao atualizar tabela:", error));
+}
 
 // Função para obter o CSRF Token do Django
 function getCookie(name) {

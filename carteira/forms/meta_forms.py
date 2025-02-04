@@ -3,7 +3,7 @@ from carteira import models
         
 
         
-########################################## SETOR ###################################################   
+########################################## METAS ANUAIS ###################################################   
 class MetaForm(forms.ModelForm):
     class Meta:
         model = models.MetaAtivo
@@ -22,7 +22,30 @@ class MetaForm(forms.ModelForm):
     
     classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
     meta_anual = forms.IntegerField(label="Meta do Ano", widget=forms.NumberInput(attrs={'class': 'form-control'}))
-
+    
+########################################## PLANO DE METAS ###################################################   
+class PlanForm(forms.ModelForm):
+    class Meta:
+        model = models.PlanMetas
+        fields = ['classe', 'id_ativo', 'qtd']
+        labels = {
+            'qtd': 'Qtde+',  
+        }
+        widgets={'qtd':forms.NumberInput(attrs={'class':'form-control'})}
+        
+        
+    classe_options = [
+         (False, 'Classe do ativo'),
+        ('Ação', 'Ação'),
+        ('FII', 'FII'),
+        ('FII-Infra', 'FII-Infra'),
+    ]
+    
+    classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(
+        attrs={
+            'class': 'form-control'}
+        ))
+    
 ####################################### PREÇO TETO #############################################    
 class PrecoTetoForms(forms.ModelForm):
     class Meta:

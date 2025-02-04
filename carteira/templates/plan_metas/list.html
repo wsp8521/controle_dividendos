@@ -1,8 +1,8 @@
 {% extends "global/base.html" %}
-{% block title %}Controle de Metas{% endblock title %}
+{% block title %}Plano de metas{% endblock title %}
 {% block content %}
 {% include "global/componentes/menssage.html" %}
-<p class="h3">Controle de Metas</p>
+<p class="h3">Plano de metas</p>
     <div class="row mb-3">
         <div class="col-md-6">
             
@@ -11,7 +11,7 @@
             <a href="#" class="btn btn-success float-end" 
             data-bs-toggle="modal" 
             data-bs-target="#cadastroModal"
-            hx-get = {% url "create_metas" %}
+            hx-get = {% url "create_plan" %}
             hx-target = "#addContent"
             hx-swap = "innerHTML">
                 <i class="bi bi-plus"></i>Cadastrar
