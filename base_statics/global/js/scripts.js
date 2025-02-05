@@ -77,14 +77,4 @@ function hiddenCampoIpca() {
         }
     }
 
-    // Atribuindo a função filtrarAtivos ao evento onchange do select de classe
-    document.addEventListener("DOMContentLoaded", () => {
-        const classeSelect = document.querySelector("select[name='classe']");
-        if (classeSelect) {
-            classeSelect.addEventListener("change", function() {
-                const url = "/preco/filtrar-ativos/";  // Aqui você pode passar uma URL diferente se necessário
-                filtrarAtivos(url);  // Chama a função passando a URL
-            });
-        }
-    });
 

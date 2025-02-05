@@ -80,7 +80,7 @@ class CadastroPlan(CreateView):
 
     def form_valid(self, form):
         object = form.save(commit=False)
-        object.fk_user = self.request.user  # Define o usuário autenticado
+        object.fk_user = self.request.user  # Define o usuário autenticado         
         object.save()
         return super().form_valid(form) #redirecionar o usuário para a URL de sucesso definida (success_url) 
     
@@ -103,6 +103,7 @@ def atualizar_metas(request, pk):
 
 
 # #DELETE
+
 class PlanDelete(DeleteView):
     model=PlanMetas
     success_url = reverse_lazy('list_plan')

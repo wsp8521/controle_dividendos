@@ -33,10 +33,10 @@ urlpatterns = [
     
     #CRUD PLANO DE METAS
     path('plan-metas/', views.PlanMetasRender.as_view(), name='list_plan'),
-    path('pan-metas/create', views.CadastroPlan.as_view(), name='create_plan'),
-     path('plan-metas/update/<int:pk>', views.atualizar_metas, name='update_plan'),
+    path('plan-metas/create', views.CadastroPlan.as_view(), name='create_plan'),
+    path('plan-metas/update/<int:pk>', views.atualizar_metas, name='update_plan'),
     path('plan-metas/delete/<int:pk>', views.PlanDelete.as_view(), name='delete_plan'),
-    path('plna-metas/filtrar-ativos/', views.filtrar_ativos, name='filtrar_ativos'),
+    path('plan-metas/filtrar-ativos/', views.filtrar_ativos, name='filtrar_plan'),
     
     #CRUD PRECO TETO
     path('preco/', views.PrecoTetoRender.as_view(), name='list_preco_teto'),

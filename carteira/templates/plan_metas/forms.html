@@ -17,7 +17,7 @@
         
         <div class="mb-3">
             <label>Classe do ativo</label>
-            <select id="id_classe" name="classe" class="form-control" onchange="filtrarAtivos('/plan-metas'); hiddenCampoIpca()">
+            <select id="id_classe" name="classe" class="form-control" onchange="filtrarAtivos('/plan-metas')">
                 {% for value, label in form.fields.classe.choices %}
                     <option value="{{ value }}">{{ label }}</option>
                 {% endfor %}
@@ -31,15 +31,10 @@
             </select>
         </div>
 
-        <div class="mb-3">
-            <label>Rentabilidade</label>
-            {{form.rentabilidade}}
-        </div>
-
-        <div class="mb-3" id="container_ipca">
-            <label>IPCA Tesouro Direto</label>
-            {{form.ipca}}
-        </div>
+        {% comment %} <div class="mb-3">
+            <label>Quantidade</label>
+            {{form.qtd}}
+        </div> {% endcomment %}
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
