@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.core.cache import cache
 from django.urls import reverse_lazy
 from django.http import JsonResponse
@@ -71,6 +72,10 @@ class CadastroProventos(SuccessMessageMixin, CreateView):
     def form_valid(self, form):
         object = form.save(commit=False)
         object.fk_user = self.request.user  # Define o usuário autenticado
+        
+        # Captura o mês e o ano atuais
+        object.mes = datetime.now().month
+        object.ano = datetime.now().year
         object.save()
         return super().form_valid(form) #redirecionar o usuário para a URL de sucesso definida (success_url) 
     

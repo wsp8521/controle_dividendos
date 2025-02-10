@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from utils.cotacao import obter_cotacao
 from django.shortcuts import get_object_or_404
 from utils.media_dividendos import media_dividendos
-from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao
+from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo
 from django.views.generic import ListView, DeleteView, CreateView
 
 from itertools import groupby
@@ -44,11 +44,8 @@ class PlanMetasRender(ListView):
         filter_classe = self.request.GET.get('classe')  # Captura a classe do filtro no template
         filter_recomendacao = self.request.GET.get('recomendacao')  # Filtro para recomendação
         anos_lista = PlanMetas.objects.values_list('ano', flat=True).distinct().order_by('-ano')
-        filter_ativo = Q(ano=filter_ano) if filter_classe is None else Q(ano=filter_ano) & Q(classe=filter_classe)
         
-        #exibindo quantiadde total de ativos com base no ano e na calsse
-        meta_geral = MetaAtivo.objects.filter(filter_ativo).aggregate(Sum("meta_geral"))['meta_geral__sum']  
-        meta_anual = MetaAtivo.objects.filter(filter_ativo).aggregate(Sum("meta_anual"))['meta_anual__sum']  
+        
         
         lista_ativos = []
        
@@ -106,20 +103,29 @@ class PlanMetasRender(ListView):
 
         # Ordena os anos em ordem decrescente
         anos_unicos = sorted(set(anos_lista), reverse=True)
-        meta_alcancada = Operacao.objects.filter(filter_ativo & ~Q(tipo_operacao="Venda")).aggregate(Sum("qtd"))['qtd__sum'] or 0
-        meta_status = f"Falta {meta_anual-meta_alcancada}" if meta_anual-meta_alcancada>=0 else f'Superado {(meta_anual-meta_alcancada)*-1}'
         
         
-        print("XXXXXXXXXXXXXXXXXXXXXXXXX")
-        print(meta_alcancada)
-         
+        #exibindo quantiadde total de ativos com base no ano e na calsse
+        filter_total = MetaAtivo.objects.filter(
+            Q(ano=filter_ano) & Q(classe=filter_classe)
+            ).aggregate(Sum("meta_geral"))['meta_geral__sum']  
+        
+        soma_total = MetaAtivo.objects.filter(ano=datetime.now().year).aggregate(Sum("meta_geral"))['meta_geral__sum']  
+        total_meta = filter_total if filter_total is not None else soma_total
+        
+        
+       
+        
+        print("xxxxxxx TOTAL INVESTIDO xxxxxxxxxxx")
+        print(invesimento_total)
+        
+        # print("xxxxxxxx CLASSE xxxxxxxxxxx")
+        # print(filter_total)
+        
         # context['total_ativo'] = PlanMetas.objects.aaggregate
         context['ano_atual'] = datetime.now().year
         context['investimento_total'] = invesimento_total
-        context['meta_geral'] = meta_geral
-        context['meta_anual'] = meta_anual
-        context['meta_alcancada'] = meta_alcancada
-        context['meta_status'] = meta_status
+        context['total_meta'] = total_meta
         context['lists'] = lista_ativos
         context['anos_disponiveis'] = anos_unicos  # Passando anos agrupados para o template
         return context

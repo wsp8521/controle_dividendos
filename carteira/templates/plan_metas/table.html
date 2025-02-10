@@ -1,16 +1,20 @@
 <div class="col-md-12">
-{% comment %} <div class="table-responsive"> {% endcomment %}
-<table class="table table-bordered text-center align-middle ">
-    {% comment %} <thead class="table-warning">
+<div class="table-responsive"> 
+  <table class="table table-bordered text-center align-middle">
+    <thead class="table-warning">
       <tr>
-        <th colspan="3">CONTROLE DE METAS FII</th>
-        <th colspan="2">ANO</th>
-        <th colspan="4">2025</th>
+        <th colspan="8">CONTROLE DE METAS FII</th>
+        <th colspan="2">ANO: 2025</th>
       </tr>
       <tr class="table-light">
-        <th colspan="2">METAS GERAL: 1280 COTAS</th>
-        <th colspan="6">INVESTIMENTO NECESSÁRIO: <span class="text-white bg-danger p-1 rounded">R$ 6.996,02</span></th>
-      </tr> {% endcomment %}
+        <th colspan="5">METAS GERAL: {{meta_geral}} COTAS</th>
+        <th colspan="5">INVESTIMENTO NECESSÁRIO: R$ {{investimento_total|floatformat:2}}</th>
+      </tr>
+      <tr class="table-light">
+        <th colspan="3">Meta do ano: {{meta_anual}} COTAS</th>
+        <th colspan="3">Alcançada em 2025: {{meta_alcancada}}</th>
+        <th colspan="4">{{meta_status}}</th>
+      </tr>
       <!--TABELA-->
       <tr class="table-primary">
         <th>ATIVOS</th>
@@ -56,4 +60,4 @@
     </tbody>
   </table>
 </div>
-{% comment %} </div> {% endcomment %}
+</div> 
