@@ -6,12 +6,10 @@ from carteira.forms import PlanForm
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from utils.cotacao import obter_cotacao
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from utils.media_dividendos import media_dividendos
 from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao
 from django.views.generic import ListView, DeleteView, CreateView
-
-from itertools import groupby
 
 class PlanMetasRender(ListView):
     model = PlanMetas
@@ -25,7 +23,6 @@ class PlanMetasRender(ListView):
         filter_ano = self.request.GET.get('ano')  # Captura o ano do filtro
         ano_atual = datetime.now().year
 
-        
         if filter:
             queryset = queryset.filter(classe__icontains=filter)
             
@@ -35,7 +32,6 @@ class PlanMetasRender(ListView):
              queryset = queryset.filter(ano=ano_atual)  # Aplica o filtro de ano atual       
         return queryset
     
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         plan_metas = self.get_queryset()
@@ -109,10 +105,6 @@ class PlanMetasRender(ListView):
         meta_alcancada = Operacao.objects.filter(filter_ativo & ~Q(tipo_operacao="Venda")).aggregate(Sum("qtd"))['qtd__sum'] or 0
         meta_status = f"Falta {meta_anual-meta_alcancada}" if meta_anual-meta_alcancada>=0 else f'Superado {(meta_anual-meta_alcancada)*-1}'
         
-        
-        print("XXXXXXXXXXXXXXXXXXXXXXXXX")
-        print(meta_alcancada)
-         
         # context['total_ativo'] = PlanMetas.objects.aaggregate
         context['ano_atual'] = datetime.now().year
         context['investimento_total'] = invesimento_total
@@ -146,10 +138,14 @@ def atualizar_metas(request, pk):
         try:
             data = json.loads(request.body)
             novo_valor = data.get("novo_valor")
+            novo_qtd_calc = data.get("novo_valor_calc")
+            # novo_valor_prov= data.get("novo_valor_prov")
 
              # Busca o objeto pelo 'pk' recebido na URL
             meta = get_object_or_404(PlanMetas, id=pk)
             meta.qtd = int(novo_valor)
+            meta.qtd_calc = int(novo_qtd_calc)
+            # meta.prov_cota= int(novo_valor_prov)
             meta.save()
             return JsonResponse({"status": "success", "message": "Meta atualizada com sucesso!"})
         except Exception as e:
@@ -176,3 +172,27 @@ def filtrar_ativos(request):
     # Prepara a resposta em formato JSON
     ativos_data = [{'id': ativo.pk, 'nome': ativo.ticket} for ativo in ativos]
     return JsonResponse({'ativos': ativos_data})
+
+def calculadora_ativos(request):
+    queryset = PlanMetas.objects.all().order_by('id_ativo')
+  
+    lista_ativos = []
+    context = {}
+       
+    for plan in queryset:
+        cotacao = obter_cotacao(plan.id_ativo)
+        lista_ativos.append({
+            "pk": plan.id,
+            "ativo": plan.id_ativo,
+            "cotacao":cotacao,
+            "qtd": plan.qtd_calc,
+            'total': plan.qtd_calc*cotacao,
+        
+        })
+        
+    print("xxxxxxxxxxxxxxxxxxxxx")    
+    print(lista_ativos)
+
+    context['ativos'] = lista_ativos  # Passa a lista correta para o template
+    return render(request, "plan_metas/calculadora.html", context)
+    

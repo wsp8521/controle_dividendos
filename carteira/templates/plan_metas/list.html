@@ -9,13 +9,25 @@
             
         </div>
         <div class="col-md-6">
-            <a href="#" class="btn btn-success float-end" 
+            <a href="#" class="btn btn-success float-end ms-2" 
             data-bs-toggle="modal" 
             data-bs-target="#cadastroModal"
             hx-get = {% url "create_plan" %}
             hx-target = "#addContent"
             hx-swap = "innerHTML">
                 <i class="bi bi-plus"></i>Cadastrar
+            </a>
+            
+
+            <a href="{% url "calculadora_plan" %}" class="btn btn-primary float-end" 
+            {% comment %} data-bs-toggle="modal" 
+            data-bs-target="#cadastroModal"
+            hx-get = ""
+            hx-target = "#addContent"
+
+            hx-swap = "innerHTML" {% endcomment %}
+            >
+                <i class="bi bi-plus"></i>calculadora
             </a>
         </div>
     </div>

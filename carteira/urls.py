@@ -37,6 +37,8 @@ urlpatterns = [
     path('plan-metas/update/<int:pk>', views.atualizar_metas, name='update_plan'),
     path('plan-metas/delete/<int:pk>', views.PlanDelete.as_view(), name='delete_plan'),
     path('plan-metas/filtrar-ativos/', views.filtrar_ativos, name='filtrar_plan'),
+    path('plan-metas/calculadora/', views.calculadora_ativos, name='calculadora_plan'),
+    
     
     #CRUD PRECO TETO
     path('preco/', views.PrecoTetoRender.as_view(), name='list_preco_teto'),

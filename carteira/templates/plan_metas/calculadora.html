@@ -1,0 +1,90 @@
+{% extends "global/base.html" %}
+{% block content %}
+    <script>
+        function toggleColumns() {
+            var select = document.getElementById("tipo_calc");
+            var isAcao = select.value === "acao";
+            var valorCell = document.getElementById("valor-colspan");
+
+             // Altera dinamicamente o colspan da célula "VALOR"
+             var valorCell = document.getElementById("valor-colspan");
+             valorCell.colSpan = isAcao ? 2 : 3;
+          
+            // Obtém todas as colunas que devem ser ocultadas
+            var provColumns = document.querySelectorAll(".prov-col");
+            
+            // Oculta ou exibe colunas com base na seleção
+            provColumns.forEach(col => {
+                col.style.display = isAcao ? "none" : "table-cell";
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            toggleColumns(); // Aplica a lógica no carregamento inicial
+        });
+    </script>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h4 class="text-center bg-success p-2">DISTRIBUIÇÃO DE COMPRA</h4>
+
+    <select class="form-select" id="tipo_calc" name="tipo_calc" onchange="toggleColumns()">
+        <option value="fii" {% if request.GET.tipo_calc == "fii" %}selected{% endif %}>FII</option>
+        <option value="acao" {% if request.GET.tipo_calc == "acao" %}selected{% endif %}>Ação</option>
+    </select>
+    <br>
+
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>VALOR</th>
+                <th colspan="3" contenteditable="true" id="valor-colspan" >
+                    <span class="form-control editable-meta text-center" contenteditable="true" data-meta-id="{{ list.pk }}">R$ 200,00</span>
+                </th>
+             
+                <th colspan="2" >SALDO R$ 7,64</th>
+            </tr>
+            <tr>
+                <th>ATIVOS</th>
+                <th>QTD</th>
+                <th>COTAÇÃO</th> <!-- Nova Coluna -->
+                <th>TOTAL</th>
+                <th class="prov-col">PROV</th>
+                <th class="prov-col">TOTAL PROV</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for ativo in ativos %}
+            <tr>
+              <td>{{ ativo.ativo }}</td>
+              <td><!-- Exibe a quantidade -->
+                <span 
+                class="form-control editable-meta text-center"
+                contenteditable="true" 
+                data-meta-id="{{ ativo.pk }}"
+                >{{ ativo.qtd }}</span>
+              </td>
+              <td>{{ ativo.cotacao }}</td> <!-- Exibe a cotação -->
+              <td>R$ -</td>
+         
+              <td class="prov-col">
+                <span class="form-control editable-meta text-center" contenteditable="true" data-meta-id="{{ list.pk }}">R$ 0,9</span>
+              </td>
+              <td class="prov-col">-</td>
+          </tr>
+          {% endfor %}
+            <tr class="fw-bold">
+                <td>Total</td>
+                <td>21</td>
+                <td>22</td> <!-- Espaço para cotação total (caso queira calcular) -->
+                <td>R$ 192,36</td>
+       
+                <td class="prov-col">R$ 2,10</td>
+                <td class="prov-col">-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
