@@ -1,14 +1,14 @@
 import json
-from decimal import Decimal
 from datetime import datetime
 from django.db.models import Q, Sum 
 from carteira.forms import PlanForm
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from utils.cotacao import obter_cotacao
+from decimal import Decimal,InvalidOperation
 from django.shortcuts import get_object_or_404, render
 from utils.media_dividendos import media_dividendos
-from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao
+from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao, PlanMetasCalc
 from django.views.generic import ListView, DeleteView, CreateView
 
 class PlanMetasRender(ListView):
@@ -70,9 +70,7 @@ class PlanMetasRender(ListView):
                 status_meta = "Ultrapassada"
             else:
                 status_meta = "Não alcançada"
-
-    
-                 
+                    
             lista_ativos.append({
                 "pk": plan.id,
                 "ativo": plan.id_ativo,
@@ -136,26 +134,48 @@ class CadastroPlan(CreateView):
 def atualizar_metas(request, pk):
     if request.method == "POST":
         try:
-            data = json.loads(request.body)
-            novo_valor = data.get("novo_valor")
-            novo_qtd_calc = data.get("novo_valor_calc")
-            # novo_valor_prov= data.get("novo_valor_prov")
+            data = json.loads(request.body)  # Obtém os dados passados no JavaScript
+            meta = get_object_or_404(PlanMetas, id=pk)  # Obtém o objeto PlanMetas
 
-             # Busca o objeto pelo 'pk' recebido na URL
-            meta = get_object_or_404(PlanMetas, id=pk)
-            meta.qtd = int(novo_valor)
-            meta.qtd_calc = int(novo_qtd_calc)
-            # meta.prov_cota= int(novo_valor_prov)
+            # Tenta obter o objeto PlanMetasCalc, se não existir, apenas ignora
+            try:
+                investimento = PlanMetasCalc.objects.get(id=pk)
+            except PlanMetasCalc.DoesNotExist:
+                investimento = None
+
+            # Atualiza os dados da PlanMetas
+            if "qtd" in data:
+                meta.qtd = int(data["qtd"])
+            if "qtd_calc" in data:
+                meta.qtd_calc = int(data["qtd_calc"])
+
+            if "proventos" in data:
+                try:
+                    proventos = data["proventos"].strip().replace(",", ".")
+                    meta.prov_cota = Decimal(proventos)
+                except (InvalidOperation, ValueError):
+                    return JsonResponse({"status": "error", "message": "Valor inválido para proventos"}, status=400)
+
+            # Atualiza os dados do PlanMetasCalc se ele existir
+            if investimento:
+                if "valor_investimento" in data:
+                    try:
+                        investimento.valor_investido = Decimal(data["valor_investimento"].strip().replace(",", "."))
+                        investimento.save()
+                    except (InvalidOperation, ValueError):
+                        return JsonResponse({"status": "error", "message": "Valor inválido para valor de investimento"}, status=400)
+
+            # Salva as alterações na PlanMetas
             meta.save()
-            return JsonResponse({"status": "success", "message": "Meta atualizada com sucesso!"})
+
+            return JsonResponse({"status": "success", "message": "Metas e investimento atualizados com sucesso!"})
+
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
     return JsonResponse({"status": "error", "message": "Método inválido!"}, status=400)
 
-
-# #DELETE
-
+# #DELET
 class PlanDelete(DeleteView):
     model=PlanMetas
     success_url = reverse_lazy('list_plan')
@@ -174,25 +194,50 @@ def filtrar_ativos(request):
     return JsonResponse({'ativos': ativos_data})
 
 def calculadora_ativos(request):
-    queryset = PlanMetas.objects.all().order_by('id_ativo')
+    classe = request.GET.get('tipo_calc', '')
+    queryset = PlanMetas.objects.filter(classe=classe).order_by('id_ativo')
+    valor_investimento = PlanMetasCalc.objects.filter(classe=classe).first() 
   
     lista_ativos = []
     context = {}
        
     for plan in queryset:
         cotacao = obter_cotacao(plan.id_ativo)
+        cotacao_limpo = cotacao.replace("R$", "").strip().replace(",", ".")
+        total = plan.qtd_calc*Decimal(cotacao_limpo)
+        total_provento =  plan.qtd_calc * Decimal(plan.prov_cota)
+        soma_total_ativo  = queryset.aggregate(Sum('qtd_calc'))['qtd_calc__sum']
+        soma_prov  = queryset.aggregate(Sum('prov_cota'))['prov_cota__sum']
+        
         lista_ativos.append({
             "pk": plan.id,
             "ativo": plan.id_ativo,
             "cotacao":cotacao,
-            "qtd": plan.qtd_calc,
-            'total': plan.qtd_calc*cotacao,
+            "qtd_calc": plan.qtd_calc,
+            "proventos":plan.prov_cota,
+            'total': total,
+            'total_provento':total_provento
+            
         
         })
-        
-    print("xxxxxxxxxxxxxxxxxxxxx")    
-    print(lista_ativos)
-
+      
+    #TOTAIS
+    soma_total_diheiro = sum(ativo['total'] for ativo in lista_ativos)  
+    soma_total_prov = sum(ativo['total_provento'] for ativo in lista_ativos) 
+    
+    print("xxxxxxxxxxxxxxxxxxxxx") 
+    print(valor_investimento.id)
+    
     context['ativos'] = lista_ativos  # Passa a lista correta para o template
+    context['ativos'] = lista_ativos  # Passa a lista correta para o template
+    context['soma_prov'] = soma_prov 
+    context['soma_total_prov'] = soma_total_prov
+    context['soma_total_diheiro'] = soma_total_diheiro
+    context['soma_total_ativo'] = soma_total_ativo
+    context["valor_investimento"] = valor_investimento.valor_investido
+    context["id_class"] = valor_investimento.id
+    
+    context["saldo"] = valor_investimento.valor_investido - soma_total_diheiro
+    
     return render(request, "plan_metas/calculadora.html", context)
     

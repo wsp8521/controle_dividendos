@@ -39,24 +39,9 @@
 }
 
 
-/* .alert {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    padding: 10px 20px;
-    border-radius: 5px;
-    z-index: 1000;
-    font-weight: bold;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+#valor-investimento:empty:before {
+    content: "Valor da aplicação"; /* Texto do placeholder */
+    color: gray; /* Cor do placeholder */
+    font-style: italic; /* Estilização opcional */
+    pointer-events: none; /* Evita que o texto bloqueie a edição */
 }
-
-.alert-success {
-    background-color:#025614 !important;
-    color: white;
-}
-
-.alert-danger {
-    background-color: #dc3545;
-    color: white;
-} */
-

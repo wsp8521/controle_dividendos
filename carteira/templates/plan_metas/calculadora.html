@@ -1,57 +1,55 @@
 {% extends "global/base.html" %}
 {% block content %}
-    <script>
-        function toggleColumns() {
-            var select = document.getElementById("tipo_calc");
-            var isAcao = select.value === "acao";
-            var valorCell = document.getElementById("valor-colspan");
-
-             // Altera dinamicamente o colspan da célula "VALOR"
-             var valorCell = document.getElementById("valor-colspan");
-             valorCell.colSpan = isAcao ? 2 : 3;
-          
-            // Obtém todas as colunas que devem ser ocultadas
-            var provColumns = document.querySelectorAll(".prov-col");
-            
-            // Oculta ou exibe colunas com base na seleção
-            provColumns.forEach(col => {
-                col.style.display = isAcao ? "none" : "table-cell";
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            toggleColumns(); // Aplica a lógica no carregamento inicial
-        });
-    </script>
-</head>
-<body>
 
 <div class="container mt-4">
     <h4 class="text-center bg-success p-2">DISTRIBUIÇÃO DE COMPRA</h4>
-
-    <select class="form-select" id="tipo_calc" name="tipo_calc" onchange="toggleColumns()">
-        <option value="fii" {% if request.GET.tipo_calc == "fii" %}selected{% endif %}>FII</option>
-        <option value="acao" {% if request.GET.tipo_calc == "acao" %}selected{% endif %}>Ação</option>
-    </select>
+    <br>
+<form action="#"  method="GET" class="filter-product" >
+    <div class="input-group">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="tipo_calc" id="flexRadioDefault1" value="FII" 
+            {% if request.GET.tipo_calc == "FII" %} checked {% endif %} onchange="this.form.submit();">
+            <label class="form-check-label" for="flexRadioDefault1">
+              Fundos Imobiliários
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="tipo_calc" id="flexRadioDefault2" value="Ação" 
+            {% if request.GET.tipo_calc == "Ação" %} checked {% endif %} onchange="this.form.submit();">
+            <label class="form-check-label" for="flexRadioDefault2">
+              Ações
+            </label>
+        </div>
+</form>
+    <br>
     <br>
 
     <table class="table table-bordered text-center align-middle">
         <thead class="table-dark">
             <tr>
                 <th>VALOR</th>
-                <th colspan="3" contenteditable="true" id="valor-colspan" >
-                    <span class="form-control editable-meta text-center" contenteditable="true" data-meta-id="{{ list.pk }}">R$ 200,00</span>
+                <th colspan="{% if request.GET.tipo_calc == "FII" %}3{% else %}2{% endif %}">
+                    <span 
+                    id="valor-investimento"  
+                    data-field="valor_investimento"
+                    class="form-control editable-meta text-center"
+                    data-meta-id="{{id_class}}"
+                     contenteditable="true" >R$ {{valor_investimento|floatformat:2}}
+                    </span>
                 </th>
-             
-                <th colspan="2" >SALDO R$ 7,64</th>
+              <th colspan="2">SALDO R$ {{saldo}}</th>
             </tr>
             <tr>
-                <th>ATIVOS</th>
-                <th>QTD</th>
-                <th>COTAÇÃO</th> <!-- Nova Coluna -->
-                <th>TOTAL</th>
-                <th class="prov-col">PROV</th>
-                <th class="prov-col">TOTAL PROV</th>
+                <th class="bg-info">ATIVOS</th>
+                <th class="bg-info">QTD</th>
+                <th class="bg-info">COTAÇÃO</th> <!-- Nova Coluna -->
+                <th class="bg-info">TOTAL</th>
+                
+                <!-- Exibe as colunas "PROV" e "TOTAL PROV" apenas se for "FII" -->
+                {% if request.GET.tipo_calc == "FII" %}
+                    <th class="prov-col bg-info">PROV</th>
+                    <th class="prov-col bg-info">TOTAL PROV</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -62,26 +60,37 @@
                 <span 
                 class="form-control editable-meta text-center"
                 contenteditable="true" 
+                data-field="qtd_calc"
                 data-meta-id="{{ ativo.pk }}"
-                >{{ ativo.qtd }}</span>
+                >{{ ativo.qtd_calc }}</span>
               </td>
               <td>{{ ativo.cotacao }}</td> <!-- Exibe a cotação -->
-              <td>R$ -</td>
+              <td>R$ {{ ativo.total|floatformat:2 }}</td>
          
-              <td class="prov-col">
-                <span class="form-control editable-meta text-center" contenteditable="true" data-meta-id="{{ list.pk }}">R$ 0,9</span>
-              </td>
-              <td class="prov-col">-</td>
+              <!-- Exibe as colunas "PROV" e "TOTAL PROV" apenas se for "FII" -->
+              {% if request.GET.tipo_calc == "FII" %}
+                <td class="prov-col">
+                  <span 
+                  class="form-control editable-meta text-center" 
+                  contenteditable="true" 
+                  data-field="proventos"
+                  data-meta-id="{{ ativo.pk }}">{{ativo.proventos}}</span>
+                </td>
+                <td class="prov-col">{{ativo.total_provento|floatformat:2}}</td>
+              {% endif %}
           </tr>
           {% endfor %}
             <tr class="fw-bold">
                 <td>Total</td>
-                <td>21</td>
-                <td>22</td> <!-- Espaço para cotação total (caso queira calcular) -->
-                <td>R$ 192,36</td>
+                <td colspan="1">{{soma_total_ativo}}</td>
+                <td></td>
+                <td>R$ {{soma_total_diheiro}}</td>
        
-                <td class="prov-col">R$ 2,10</td>
-                <td class="prov-col">-</td>
+                <!-- Exibe as colunas "PROV" e "TOTAL PROV" apenas se for "FII" -->
+                {% if request.GET.tipo_calc == "FII" %}
+                  <td class="prov-col">R$ {{soma_prov|floatformat:2}}</td>
+                  <td class="prov-col">R$ {{soma_total_prov}}</td>
+                {% endif %}
             </tr>
         </tbody>
     </table>

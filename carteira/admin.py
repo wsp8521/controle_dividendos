@@ -1,5 +1,5 @@
 from django.contrib import admin
-from carteira.models import Ativos, Proventos, Operacao, MetaAtivo, SetorAtivo, PrecoTeto, PlanMetas
+from carteira.models import Ativos, Proventos, Operacao, MetaAtivo, SetorAtivo, PrecoTeto, PlanMetas, PlanMetasCalc
 
 @admin.register(Ativos)
 class AtivosAdmin(admin.ModelAdmin):
@@ -36,7 +36,8 @@ class PrecoTetoAdmin(admin.ModelAdmin):
     list_display_links=("id_ativo",)
     
 
-@admin.register(PlanMetas)
-class PlanMetasAdmin(admin.ModelAdmin):
-    list_display=("id_ativo", "classe","qtd","created_at","update_at")
-    list_display_links=("id_ativo",)
+@admin.register(PlanMetasCalc)
+class PlanMetasCalcsAdmin(admin.ModelAdmin):
+    list_display=("classe",)
+  
+    
