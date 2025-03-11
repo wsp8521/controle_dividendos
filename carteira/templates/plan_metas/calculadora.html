@@ -37,7 +37,8 @@
                      contenteditable="true" >R$ {{valor_investimento|floatformat:2}}
                     </span>
                 </th>
-              <th colspan="2">SALDO R$ {{saldo}}</th>
+                
+              <th colspan="2">SALDO {{saldo}}</th>
             </tr>
             <tr>
                 <th class="bg-info">ATIVOS</th>
@@ -64,8 +65,8 @@
                 data-meta-id="{{ ativo.pk }}"
                 >{{ ativo.qtd_calc }}</span>
               </td>
-              <td>{{ ativo.cotacao }}</td> <!-- Exibe a cotação -->
-              <td>R$ {{ ativo.total|floatformat:2 }}</td>
+              <td>R$ {{ ativo.cotacao }}</td> <!-- Exibe a cotação -->
+              <td>{{ ativo.total}}</td>
          
               <!-- Exibe as colunas "PROV" e "TOTAL PROV" apenas se for "FII" -->
               {% if request.GET.tipo_calc == "FII" %}
@@ -88,8 +89,8 @@
        
                 <!-- Exibe as colunas "PROV" e "TOTAL PROV" apenas se for "FII" -->
                 {% if request.GET.tipo_calc == "FII" %}
-                  <td class="prov-col">R$ {{soma_prov|floatformat:2}}</td>
-                  <td class="prov-col">R$ {{soma_total_prov}}</td>
+                  <td class="prov-col">{{soma_prov}}</td>
+                  <td class="prov-col">{{soma_total_prov}}</td>
                 {% endif %}
             </tr>
         </tbody>

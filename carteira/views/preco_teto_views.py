@@ -19,7 +19,7 @@ class PrecoTetoRender(ListView):
 
     def get_queryset(self):
         filter_name = self.request.GET.get('name')
-        queryset = PrecoTeto.objects.all().order_by('id_ativo')  # Ordenando pela chave 'id_ativo'
+        queryset = PrecoTeto.objects.filter(fk_user=self.request.user).order_by('id_ativo')  # Ordenando pela chave 'id_ativo'
         if filter_name:
             # Filtro aplicado diretamente no queryset
             queryset = queryset.filter(classe__icontains=filter_name)
@@ -29,18 +29,19 @@ class PrecoTetoRender(ListView):
         context = super().get_context_data(**kwargs)
         ativos = self.get_queryset()  # Queryset já ordenado e filtrado, se necessário
         lista_ativos = []
+        tickers = [ativo.id_ativo for ativo in ativos]
+        cotacoes = obter_cotacao(tickers)
         
         for ativo in ativos:
-            cotacao = obter_cotacao(ativo.id_ativo)
+            cotacao = cotacoes.get(f'{ativo.id_ativo}.SA')
             dividendos = media_dividendos(ativo.id_ativo, ativo.classe, 5)
             rentabilidade = Decimal(ativo.rentabilidade)  # Converte string para Decimal
             preco_teto_acoes = Decimal(dividendos)/(rentabilidade/100)
             ipca = Decimal(ativo.ipca) if ativo.ipca is not None else Decimal(0)
             preco_teto_fii = (Decimal(dividendos)/(ipca+ativo.rentabilidade))*100
             preco_teto = preco_teto_acoes if ativo.classe == "Ação" else preco_teto_fii
-            cotacao_limpo = cotacao.replace("R$", "").strip().replace(",", ".")  # Remove "R$" e troca vírgula por ponto
-            diferenca = Decimal(cotacao_limpo)-preco_teto
-            margem_seguranca = ((preco_teto - Decimal(cotacao_limpo))/preco_teto)*100
+            diferenca = Decimal(cotacao or 0)-preco_teto
+            margem_seguranca = ((preco_teto - Decimal(cotacao or 0))/preco_teto)*100
             recomendacao = "Comprar" if diferenca < 0 else "Não comprar"
 
             lista_ativos.append({

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 from django.contrib.auth.models import User
 
 
@@ -48,6 +49,7 @@ class Proventos(models.Model):
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_provento",  null=True) #relacionando campo com a pk da tbl user
     id_ativo = models.ForeignKey(Ativos, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Ativos") #relacionando campo com a pk da tbl ativo
     classe = models.CharField(max_length=10, null=False, blank=False)
+    status = models.CharField(max_length=10, null=False, blank=False, default="A PAGAR")
     tipo_provento = models.CharField(max_length=20, verbose_name='tipo de provento')
     valor_recebido = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='valor recebido')
     data_pgto = models.DateField(verbose_name='data do pagamento')
@@ -59,12 +61,20 @@ class Proventos(models.Model):
     # Calcula o valor_total antes de salvar
     def save(self, *args, **kwargs):
     
+         # Atualiza automaticamente o campo ano com base em data_operacao
         if self.data_pgto:
             self.mes = self.data_pgto.month
-
-        # Atualiza automaticamente o campo ano com base em data_operacao
+            
         if self.data_pgto:
             self.ano = self.data_pgto.year
+            
+            
+          # Atualiza o status com base na data de pagamento
+            if self.data_pgto <= now().date():
+                self.status = "PAGO"
+            else:
+                self.status = "A PAGAR"
+                
         super().save(*args, **kwargs)
     
     

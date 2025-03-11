@@ -1,0 +1,41 @@
+<div class="col-md-6">
+    <h3>Rendimento mensal</h3>
+    <div class="table-container">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>MÊS</th>
+                    <th>FII</th>
+                    <th>AÇÕES</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for mes, valores in proventos_mensais.totais_por_mes.items %}
+                <tr>
+                    <td> {% for numero, nome in meses %}
+                        {% if mes == numero %}
+                            {{ nome }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+
+                    <td>R$ {{ valores.FII|floatformat:2|default:"0,00" }}</td>
+                    <td>R$ {{ valores.Ação|floatformat:2| default:"0,00"}}</td>
+                    <td>R$ {{ valores.Total|floatformat:2|default:"0,00" }}</td>
+                </tr>
+            {% endfor %}
+                
+            </tbody>
+            <tfoot class="table-warning">
+                <tr class="fw-bold">
+                    <td ><strong>TOTAL</strong></td>
+                    <td><strong>R$ {{proventos_mensais.total_fii|floatformat:2}}</strong></td>
+                    <td><strong>R$ {{proventos_mensais.total_acoes|floatformat:2}}</strong></td>
+                    <td><strong>R$ {{proventos_mensais.total_geral|floatformat:2}}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+

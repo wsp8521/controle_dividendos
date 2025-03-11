@@ -8,8 +8,11 @@ from utils.cotacao import obter_cotacao
 from decimal import Decimal,InvalidOperation
 from django.shortcuts import get_object_or_404, render
 from utils.media_dividendos import media_dividendos
-from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao, PlanMetasCalc
 from django.views.generic import ListView, DeleteView, CreateView
+from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao, PlanMetasCalc
+from babel.numbers import format_currency
+
+
 
 class PlanMetasRender(ListView):
     model = PlanMetas
@@ -19,7 +22,7 @@ class PlanMetasRender(ListView):
 
     def get_queryset(self):
         filter = self.request.GET.get('classe')
-        queryset = PlanMetas.objects.all().order_by('id_ativo')
+        queryset = PlanMetas.objects.filter( fk_user=self.request.user).order_by('id_ativo')
         filter_ano = self.request.GET.get('ano')  # Captura o ano do filtro
         ano_atual = datetime.now().year
 
@@ -47,21 +50,23 @@ class PlanMetasRender(ListView):
         meta_anual = MetaAtivo.objects.filter(filter_ativo).aggregate(Sum("meta_anual"))['meta_anual__sum']  
         
         lista_ativos = []
-       
+        tickers = [ativo.id_ativo for ativo in plan_metas]
+        cotacoes = obter_cotacao(tickers)
+        
+      
         for plan in plan_metas:
             get_preco_teto = PrecoTeto.objects.filter(id_ativo=plan.id_ativo).first()
             ativos = Ativos.objects.filter(ticket=plan.id_ativo).first()
             cota_restante = plan.qtd - ativos.qtdAtivo if (plan.qtd - ativos.qtdAtivo) > 0 else 0
-            cotacao = obter_cotacao(plan.id_ativo)
+            cotacao = cotacoes.get(f'{plan.id_ativo}.SA')
             dividendos = media_dividendos(plan.id_ativo, plan.classe, 5)
             rentabilidade = Decimal(get_preco_teto.rentabilidade)
             preco_teto_acoes = Decimal(dividendos) / (rentabilidade / 100)
             ipca = Decimal(get_preco_teto.ipca) if get_preco_teto.ipca is not None else Decimal(0)
             preco_teto_fii = (Decimal(dividendos) / (ipca + get_preco_teto.rentabilidade)) * 100
             preco_teto = preco_teto_acoes if plan.classe == "Ação" else preco_teto_fii
-            cotacao_limpo = cotacao.replace("R$", "").strip().replace(",", ".")
-            diferenca = Decimal(cotacao_limpo) - preco_teto
-            total = Decimal(cotacao_limpo) * cota_restante if cota_restante > 0 else 0
+            diferenca = Decimal(cotacao or 0) - preco_teto
+            total = Decimal(cotacao) * cota_restante if cota_restante > 0 else 0
             recomendacao = "Comprar" if diferenca < 0 else "Não comprar"
             
             if plan.qtd == ativos.qtdAtivo:
@@ -195,16 +200,17 @@ def filtrar_ativos(request):
 
 def calculadora_ativos(request):
     classe = request.GET.get('tipo_calc', '')
-    queryset = PlanMetas.objects.filter(classe=classe).order_by('id_ativo')
-    valor_investimento = PlanMetasCalc.objects.filter(classe=classe).first() 
+    queryset = PlanMetas.objects.filter(classe=classe, fk_user=request.user).order_by('id_ativo')
+    valor_investimento = PlanMetasCalc.objects.filter(classe=classe,  fk_user=request.user).first() 
   
     lista_ativos = []
     context = {}
+    tickers = [ativo.id_ativo for ativo in queryset]
+    cotacoes = obter_cotacao(tickers)
        
     for plan in queryset:
-        cotacao = obter_cotacao(plan.id_ativo)
-        cotacao_limpo = cotacao.replace("R$", "").strip().replace(",", ".")
-        total = plan.qtd_calc*Decimal(cotacao_limpo)
+        cotacao = cotacoes.get(f'{plan.id_ativo}.SA')
+        total = plan.qtd_calc*Decimal(cotacao or 0)
         total_provento =  plan.qtd_calc * Decimal(plan.prov_cota)
         soma_total_ativo  = queryset.aggregate(Sum('qtd_calc'))['qtd_calc__sum']
         soma_prov  = queryset.aggregate(Sum('prov_cota'))['prov_cota__sum']
@@ -215,29 +221,28 @@ def calculadora_ativos(request):
             "cotacao":cotacao,
             "qtd_calc": plan.qtd_calc,
             "proventos":plan.prov_cota,
-            'total': total,
+            'total': format_currency(total, "BRL", locale="pt_BR"),
+            'total_soma': total,
             'total_provento':total_provento
             
         
         })
       
     #TOTAIS
-    soma_total_diheiro = sum(ativo['total'] for ativo in lista_ativos)  
+    soma_total_diheiro = sum(ativo['total_soma'] for ativo in lista_ativos)  
     soma_total_prov = sum(ativo['total_provento'] for ativo in lista_ativos) 
-    
-    print("xxxxxxxxxxxxxxxxxxxxx") 
-    print(valor_investimento.id)
-    
+
     context['ativos'] = lista_ativos  # Passa a lista correta para o template
     context['ativos'] = lista_ativos  # Passa a lista correta para o template
-    context['soma_prov'] = soma_prov 
-    context['soma_total_prov'] = soma_total_prov
-    context['soma_total_diheiro'] = soma_total_diheiro
-    context['soma_total_ativo'] = soma_total_ativo
-    context["valor_investimento"] = valor_investimento.valor_investido
+    context['soma_prov'] = format_currency(soma_prov , "BRL", locale="pt_BR")
+    context['soma_total_prov'] = format_currency(soma_total_prov, "BRL", locale="pt_BR")
+    context['soma_total_diheiro'] = format_currency(soma_total_diheiro, "BRL", locale="pt_BR")
+    context['soma_total_ativo'] = soma_total_ativo 
+    context["valor_investimento"] = valor_investimento.valor_investido 
     context["id_class"] = valor_investimento.id
     
-    context["saldo"] = valor_investimento.valor_investido - soma_total_diheiro
+    saldo = valor_investimento.valor_investido - soma_total_diheiro
+    context["saldo"] = format_currency(saldo, "BRL", locale="pt_BR")
     
     return render(request, "plan_metas/calculadora.html", context)
     

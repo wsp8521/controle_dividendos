@@ -45,3 +45,30 @@
     font-style: italic; /* Estilização opcional */
     pointer-events: none; /* Evita que o texto bloqueie a edição */
 }
+
+/*Estilização pagina pagamento proventos*/
+.ativo {
+    max-height: 400px; /* Define altura máxima */
+    overflow-y: auto; /* Adiciona rolagem vertical */
+    position: relative;
+}
+
+.table thead th {
+    position: sticky;
+    top: -2px;
+    background: #343a40; /* Cor do cabeçalho */
+    color: white;
+    z-index: 2;
+}
+
+.table tfoot td {
+    position: sticky;
+    bottom: 0;
+    background: #ffc107; /* Cor do rodapé */
+    z-index: 2;
+}
+
+.table {
+    border-collapse: collapse; /* Remove espaços extras */
+    width: 100%;
+}

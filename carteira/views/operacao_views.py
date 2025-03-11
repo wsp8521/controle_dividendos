@@ -43,6 +43,7 @@ class CadastroOperacao(SuccessMessageMixin, CreateView):
         object = form.save(commit=False)
         object.fk_user = self.request.user  # Define o usuário autenticado
         object.ano = datetime.now().year
+        cache.delete('operacao_listagem')  # Limpa o cache
         object.save()
         return super().form_valid(form) #redirecionar o usuário para a URL de sucesso definida (success_url) 
     
@@ -53,6 +54,14 @@ class OperacaoUpdate(SuccessMessageMixin, UpdateView):
     form_class = OperacaoForm
     success_url = reverse_lazy('list_operacao')
     success_message ='Atualizada realizado com sucesso'
+    
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        cache.delete('operacao_listagem')  # Limpa o cache
+        object.save()
+        return super().form_valid(form) #redirecionar o usuário para a URL de sucesso definida (success_url)
+    
+    
 
 #DELETE
 class OperacaoDelete( SuccessMessageMixin, DeleteView):

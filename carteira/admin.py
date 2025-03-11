@@ -9,8 +9,9 @@ class AtivosAdmin(admin.ModelAdmin):
     
 @admin.register(Proventos)
 class ProventosAdmin(admin.ModelAdmin):
-    list_display=("id", "id_ativo", "classe", "valor_recebido","data_pgto", "created_at","update_at")
+    list_display=("id", "id_ativo", "classe", "valor_recebido","data_pgto","status")
     list_display_links=("id_ativo",)
+    list_filter = ("status","id_ativo",)  # Adiciona o filtro por status no Django Admin
     
 
 @admin.register(Operacao)

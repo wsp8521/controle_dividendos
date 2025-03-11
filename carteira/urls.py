@@ -23,7 +23,10 @@ urlpatterns = [
     path('proventos/create', views.CadastroProventos.as_view(), name='create_proventos'),
     path('proventos/update/<int:pk>', views.ProventosUpdate.as_view(), name='update_proventos'),
     path('proventos/delete/<int:pk>', views.ProventosDelete.as_view(), name='delete_proventos'),
+    
+    #operaçao com proventos
     path('proventos/filtrar-ativos/', views.filtrar_ativos, name='filtrar_ativos'),
+    path('proventos/pagamento/', views.pgto_proventos, name='pgto_proventos'),
     
     #CRUD META
     path('metas/', views.MetaRender.as_view(), name='list_metas'),
@@ -39,7 +42,6 @@ urlpatterns = [
     path('plan-metas/filtrar-ativos/', views.filtrar_ativos, name='filtrar_plan'),
     path('plan-metas/calculadora/', views.calculadora_ativos, name='calculadora_plan'),
     
-    
     #CRUD PRECO TETO
     path('preco/', views.PrecoTetoRender.as_view(), name='list_preco_teto'),
     #path('preco/detail/<int:pk>', views.PrecoTetoDetail.as_view(), name='detail_preco_teto'),   
@@ -47,9 +49,6 @@ urlpatterns = [
     path('preco/update/<int:pk>', views.PrecoTetoUpdate.as_view(), name='update_preco_teto'),
     path('preco/delete/<int:pk>', views.PrecoTetoDelete.as_view(), name='delete_preco_teto'),
     path('preco/filtrar-ativos/', views.filtrar_ativos, name='filtrar_ativos'),
-    
-    
-    
     
     
     #CRUD SETOR

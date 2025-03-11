@@ -10,6 +10,7 @@
             <th>Qtd cota</th>
             <th>valor por cota/ação</th>
             <th>Data pagamento</th>
+            <th>Status</th>
             <th>Ações</th>
         </tr>
     </thead>
@@ -23,6 +24,7 @@
                 <td>{{ list.qtd_cota }}</td>
                 <td>R$ {{ list.valor_por_cota|floatformat:2 }}</td> <!-- Formato de moeda -->
                 <td>{{ list.data_pgto|date:"d/m/Y"}}</td>
+                <td>{{ list.status}}</td>
                 <td style="width:8em">
 
                     <!--btn visualizar-->
