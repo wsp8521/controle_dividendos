@@ -17,15 +17,14 @@ class AtivoRender(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        queryset = cache.get('ativo_listagem')  #recuperando dados no cache
+        #queryset = cache.get('ativo_listagem')  #recuperando dados no cache
         
-        if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
+        #if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
             # Filtra as operações pelo usuário logado
-            queryset = Ativos.objects.filter(fk_user=self.request.user).order_by(self.ordering)
-            cache.set('ativo_listagem', queryset, timeout=600)  # salva dados no cache
+        queryset = Ativos.objects.filter(fk_user=self.request.user).order_by(self.ordering)
+            #cache.set('ativo_listagem', queryset, timeout=600)  # salva dados no cache
          
         filter_name = self.request.GET.get('name')
-        queryset = Ativos.objects.all().order_by('ativo')
         if filter_name:
             return queryset.filter(ticket__icontains=filter_name)
         return queryset 

@@ -1,12 +1,13 @@
 from django.core.cache import cache
-from carteira.models import Proventos
+from carteira.models import Proventos, Ativos
 from django.db.models import Sum
 from django.shortcuts import render
 from datetime import datetime
 
 
 def pgto_proventos(request):
-     dados = Proventos.objects.filter(fk_user=request.user)
+     proventos = Proventos.objects.filter(fk_user=request.user)
+     ativos = Ativos.objects.filter(fk_user=request.user, qtdAtivo__gt=0, classe="FII")
      
       # Pegando o mê e o ano atual
      mes_atual_str = str(datetime.today().month) #Pegando o mês atual como string SEM zero à esquerda
@@ -15,15 +16,13 @@ def pgto_proventos(request):
      #dados filtrados
      filter_ano = request.GET.get('ano') if request.GET.get('ano') else ano_atual
      filter_mes = request.GET.get('mes') if request.GET.get('mes') else mes_atual_str
-     queryset = dados.filter(ano = filter_ano,mes = filter_mes).order_by('-data_pgto')
-     ano_list = dados.values_list('ano', flat=True).distinct().order_by('-ano')
+     queryset = proventos.filter(ano = filter_ano,mes = filter_mes).order_by('-data_pgto')
+     ano_list = proventos.values_list('ano', flat=True).distinct().order_by('-ano')
      total_proventos_fii = queryset.filter(classe='FII').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
      total_proventos_acao = queryset.filter(classe='Ação').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
-     proventos_acumulados_fii = dados.filter(classe='FII').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
-     proventos_acumulados_acao = dados.filter(classe='Ação').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
-   
+     proventos_acumulados_fii = proventos.filter(classe='FII').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
+     proventos_acumulados_acao = proventos.filter(classe='Ação').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
      proventos_mensais = distribuicao_proventos(request.user, filter_ano)
-      
       
      # Pegando o mês e o ano selecionado no formulário (se enviado pelo usuário)
      mes_selecionado = request.GET.get("mes", mes_atual_str)  # Padrão: mês atual
@@ -41,14 +40,14 @@ def pgto_proventos(request):
     ]
      fiis = []
      acoes = []
-    
+
      for ativo in queryset:
           dado = {
                'ativo': ativo.id_ativo,
                'classe': ativo.classe,
                'valor_recebido':ativo.valor_recebido,
                'data_pgto':ativo.data_pgto,
-               'acumulado':dados.filter(id_ativo=ativo.id_ativo).aggregate(Sum('valor_recebido'))['valor_recebido__sum'],
+               'acumulado':proventos.filter(id_ativo=ativo.id_ativo).aggregate(Sum('valor_recebido'))['valor_recebido__sum'],
           }
      
           if ativo.classe == "FII":
@@ -57,6 +56,7 @@ def pgto_proventos(request):
                acoes.append(dado)
                
      context = {
+          "ativo":ativos,
           "meses": meses,
           "anos": ano_list,
           "mes_selecionado": mes_selecionado,
@@ -68,9 +68,31 @@ def pgto_proventos(request):
           'proventos_acumulados_fii': proventos_acumulados_fii,
           'proventos_acumulados_acao': proventos_acumulados_acao,
           'proventos_mensais': proventos_mensais,  # Adiciona o resultado da função ao context
+          'assoc_pgto_ativo':assoc_pgto_ativo(ativos, queryset)
      }
      
+  
+  
+    
+     
      return render(request, "pgto_proventos/list.html", context)
+
+
+#associação dos pagamentos do mês ao ativo
+def assoc_pgto_ativo(ativo_data, proventos_data):
+     prov_ativos = {}
+     # Loop para cada ativo
+     for ativo in ativo_data:
+          # Filtra os proventos para o ativo específico
+          rendimento = proventos_data.filter(id_ativo=ativo).first()  # Pega o primeiro provento encontrado
+
+          # Verifica se o provento foi encontrado
+          if rendimento:
+               prov_ativos[ativo.ticket] = rendimento.valor_recebido
+          else:
+               prov_ativos[ativo.ticket] = 'AGUARDANDO PAGAMENTO'               
+     return prov_ativos
+    
 
 
 #definindo a função de distribuição de proventos mensais
@@ -112,4 +134,3 @@ def distribuicao_proventos(user, ano):
      }
      
      return context
-          

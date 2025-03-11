@@ -11,7 +11,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView,De
 #READ
 class PagamentoRender(ListView):
     model = Proventos
-    template_name = 'proventos/list.html'
+    template_name = 'proventos/pagamento/pagamento.html'
     context_object_name = 'lists'
     ordering = '-data_pgto'
     paginate_by = 20
