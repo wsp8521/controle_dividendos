@@ -75,14 +75,15 @@ def update_qtd_ativo(sender, instance, created, **kwargs):
     ativo.save()
   
 
-# Atualiza proventos na tabela ativos
+# ATUALIZAR PROVENTOS NA TABELA ATIVOS
 @receiver(post_save, sender=Proventos)     
 def update_proventos(sender, instance, created, **kwargs):
+    
     # Verifica se o usuário logado corresponde ao usuário do provento
     if instance.fk_user != instance.fk_user:
         return  # Caso o usuário não corresponda, não faz nada
 
-    ativo = instance.id_ativo 
+    ativo = instance.id_ativo #instanciado a tabela ativo pelao id_ativo presente na tabela proventos
     
     # Inicializando os campos
     if ativo.dividendos is None: 
@@ -96,29 +97,41 @@ def update_proventos(sender, instance, created, **kwargs):
     ativo.save()
 
 
-# Atualiza metas dos ativos
+# ATUALIZANDO TABAELA METAS
 @receiver(post_save, sender=Operacao)
 def atualizar_meta_ativos(sender, instance, **kwargs):
+    classe_ativo = instance.classe if len(instance.classe) <=4 else "FII" # se o atifo for um FII-infra, exibe somente o FII
+    
+    
+    
+    print("xxxxxxx classe antiga  xxxxxxxxxx") 
+    print(instance.classe)
+    
+        
+    print("xxxxxxx nova  xxxxxxxxxx") 
+    print(classe_ativo)
+    
     # Verifica se o usuário logado corresponde ao usuário da operação
     if instance.fk_user != instance.fk_user:
         return  # Caso o usuário não corresponda, não faz nada
 
     total_qtd = Operacao.objects.filter(
         fk_user=instance.fk_user,
-        classe=instance.classe,
+        classe=classe_ativo,
         ano=instance.ano
     ).exclude(tipo_operacao="V").aggregate(Sum('qtd'))['qtd__sum'] or 0
         
     # Calcula a soma das metas anuais dos anos anteriores (excluindo o ano atual)
     meta_anual_anterior = MetaAtivo.objects.filter(
         fk_user=instance.fk_user,
-        classe=instance.classe
+        classe=classe_ativo
     ).exclude(ano=instance.ano).aggregate(Sum('meta_alcancada'))['meta_alcancada__sum'] or 0
         
+
     MetaAtivo.objects.filter(
         fk_user=instance.fk_user,
         ano=instance.ano,
-        classe=instance.classe,
+        classe=classe_ativo, 
     ).update(
         meta_alcancada=total_qtd,
         meta_geral_alcancada=meta_anual_anterior + total_qtd  # Somando o total atualizado

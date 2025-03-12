@@ -19,7 +19,7 @@ class AtivosForm(forms.ModelForm):
          (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
-        # ('FII-Infra', 'FII-Infra'),
+        ('FII-Infra', 'FII-Infra'),
     ]
     
     classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
@@ -54,7 +54,7 @@ class SetorForm(forms.ModelForm):
          (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
-        # ('FII-Infra', 'FII-Infra'),
+        ('FII-Infra', 'FII-Infra'),
     ]
     
     setor_classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
@@ -99,7 +99,7 @@ class OperacaoForm(forms.ModelForm):
          (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
-        # ('FII-Infra', 'FII-Infra'),
+        ('FII-Infra', 'FII-Infra'),
     ]
     
     font_recuso=[

@@ -38,7 +38,7 @@ class PlanForm(forms.ModelForm):
          (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
-        # ('FII-Infra', 'FII-Infra'),
+        ('FII-Infra', 'FII-Infra'),
     ]
     
     classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(

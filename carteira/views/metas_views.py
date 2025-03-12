@@ -6,8 +6,6 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView,DetailView
 
 
-
-
 #READ
 class MetaRender(ListView):
     model = MetaAtivo

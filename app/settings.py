@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'carteira.middleware.AtualizaProventosMiddleware',  # Adicione essa linha
 ]
 
 ROOT_URLCONF = 'app.urls'

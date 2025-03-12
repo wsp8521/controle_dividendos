@@ -1,11 +1,6 @@
 import requests
 import pandas as pd
-import json
 from bs4 import BeautifulSoup
-from datetime import datetime
-from collections import defaultdict
-
-
 
 def busca_agenda_pagamento(ativo,tipo):
     try:
@@ -51,32 +46,3 @@ def busca_agenda_pagamento(ativo,tipo):
             return f"Erro {response.status_code} "
     except Exception as e:
         return f"Erro:{e}" 
-
-#div = busca_agenda_pagamento("HSML11", 'FII')
-
-
-
-# # print(div)
-# ativos = [
-#     "MXRF11",
-#     "BBSE3"
-#     ]
-ativos = {
-    "KLBN11":"Ação",
-    "MXRF11": "FII",
-    "BODB11":"FI-INFRA"
-}
-dados = {}
-
-
-for ativo, tipo in ativos.items():
-    dados[ativo] = busca_agenda_pagamento(ativo, tipo)
-    
-# # Verifica se algum valor contém "Erro" e printa a mensagem de erro
-if any("Erro" in valor for valor in dados.values()):
-    for ativo, resultado in dados.items():
-        if "Erro" in resultado:
-            print(f"Erro ao obter os dividendos do ativo {ativo}: {resultado}")
-else:
-    print(dados)
-  
