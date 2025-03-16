@@ -1,8 +1,9 @@
 from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
 from django.core.cache import cache
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from carteira.models import Operacao, Proventos, MetaAtivo
+from django.contrib.auth.decorators import login_required
 
 
 # Executa antes de uma Operação ser salva
@@ -36,7 +37,6 @@ def capture_old_proventos(sender, instance, **kwargs):
         # Define como 0 caso seja uma nova operação
         instance._old_proventos = 0
 
- 
 
 # Atualiza campos qtdAtivo e investimentos na tabela ativos
 @receiver(post_save, sender=Operacao)  
@@ -100,45 +100,47 @@ def update_proventos(sender, instance, created, **kwargs):
 # ATUALIZANDO TABAELA METAS
 @receiver(post_save, sender=Operacao)
 def atualizar_meta_ativos(sender, instance, **kwargs):
-    classe_ativo = instance.classe if len(instance.classe) <=4 else "FII" # se o atifo for um FII-infra, exibe somente o FII
-    
-    
-    
-    print("xxxxxxx classe antiga  xxxxxxxxxx") 
-    print(instance.classe)
-    
-        
-    print("xxxxxxx nova  xxxxxxxxxx") 
-    print(classe_ativo)
-    
-    # Verifica se o usuário logado corresponde ao usuário da operação
-    if instance.fk_user != instance.fk_user:
-        return  # Caso o usuário não corresponda, não faz nada
+    # Verifica se o usuário está preenchido
+    if not instance.fk_user:
+        return  
 
+    # Definir a classe base para o ativo
+    if "FII" in instance.classe:
+        classe_ativo = "FII"
+    elif "Ação" in instance.classe:
+        classe_ativo = "Ação"
+    else:
+        return  # Se não for FII ou Ações, sai da função
+
+    # Calcula o total de quantidade SOMANDO todas as operações por tipo de ativo
     total_qtd = Operacao.objects.filter(
         fk_user=instance.fk_user,
-        classe=classe_ativo,
         ano=instance.ano
+    ).filter(
+        Q(classe="FII") | Q(classe__icontains="FII") if classe_ativo == "FII" else Q(classe="Ação")
     ).exclude(tipo_operacao="V").aggregate(Sum('qtd'))['qtd__sum'] or 0
-        
-    # Calcula a soma das metas anuais dos anos anteriores (excluindo o ano atual)
+
+    # Soma das metas anuais dos anos anteriores
     meta_anual_anterior = MetaAtivo.objects.filter(
         fk_user=instance.fk_user,
         classe=classe_ativo
     ).exclude(ano=instance.ano).aggregate(Sum('meta_alcancada'))['meta_alcancada__sum'] or 0
         
-
-    MetaAtivo.objects.filter(
+    # Atualiza ou cria o registro no MetaAtivo
+    MetaAtivo.objects.update_or_create(
         fk_user=instance.fk_user,
         ano=instance.ano,
-        classe=classe_ativo, 
-    ).update(
-        meta_alcancada=total_qtd,
-        meta_geral_alcancada=meta_anual_anterior + total_qtd  # Somando o total atualizado
+        classe=classe_ativo,  # Agora pode ser "FII" ou "Ações"
+        defaults={
+            "meta_alcancada": total_qtd,
+            "meta_geral_alcancada": meta_anual_anterior + total_qtd
+        }
     )
         
 # Sinais para limpar o cache ao salvar ou deletar uma operação
 @receiver(post_save, sender=Operacao)
 @receiver(post_delete, sender=Operacao)
+
 def limpar_cache_operacoes(sender, **kwargs):
     cache.delete('operacao_listagem')
+

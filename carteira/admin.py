@@ -39,6 +39,6 @@ class PrecoTetoAdmin(admin.ModelAdmin):
 
 @admin.register(PlanMetasCalc)
 class PlanMetasCalcsAdmin(admin.ModelAdmin):
-    list_display=("classe",)
+    list_display=("id", "classe",)
   
     

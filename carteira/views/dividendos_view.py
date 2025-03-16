@@ -21,7 +21,7 @@ class ProventosRender(ListView):
                
         if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
             # Filtra as operações pelo usuário logado
-            queryset = Proventos.objects.filter(fk_user=self.request.user).order_by(self.ordering)
+            queryset = Proventos.objects.filter(fk_user_id=self.request.user.id).order_by(self.ordering)
             cache.set('dividendos_listagem', queryset, timeout=300)  # salva dados no cache
         
         # Aplica o filtro adicional caso tenha sido fornecido um nome (parâmetro GET)
@@ -39,7 +39,7 @@ class ProventosRender(ListView):
         for provento in proventos:
             try:
                 # Busca o ativo relacionado ao provento pelo ticket
-                ativo = Ativos.objects.get(ticket=provento.id_ativo, fk_user=self.request.user)
+                ativo = Ativos.objects.get(ticket=provento.id_ativo, fk_user_id=self.request.user.id)
                 qtd_cota = ativo.qtdAtivo or 0  # Caso `qtdAtivo` seja nulo
             except Ativos.DoesNotExist:
                 qtd_cota = 0
@@ -108,7 +108,7 @@ def filtrar_ativos(request):
     classe = "Ação"
     
     # Filtra os ativos com base na classe
-    ativos = Ativos.objects.filter(classe=classe, qtdAtivo__gt=0)
+    ativos = Ativos.objects.filter(classe=classe, qtdAtivo__gt=0, fk_user_id=request.user.id)
     
     # Prepara a resposta em formato JSON
     ativos_data = [{'id': ativo.pk, 'nome': ativo.ticket} for ativo in ativos]

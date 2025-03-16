@@ -6,8 +6,8 @@ from datetime import datetime
 
 
 def pgto_proventos(request):
-     proventos = Proventos.objects.filter(fk_user=request.user)
-     ativos = Ativos.objects.filter(fk_user=request.user, qtdAtivo__gt=0, classe="FII")
+     proventos = Proventos.objects.filter(fk_user_id=request.user.id,)
+     ativos = Ativos.objects.filter(fk_user_id=request.user.id, qtdAtivo__gt=0, classe="FII")
      
       # Pegando o mê e o ano atual
      mes_atual_str = str(datetime.today().month) #Pegando o mês atual como string SEM zero à esquerda
@@ -22,7 +22,7 @@ def pgto_proventos(request):
      total_proventos_acao = queryset.filter(classe='Ação').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
      proventos_acumulados_fii = proventos.filter(classe='FII').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
      proventos_acumulados_acao = proventos.filter(classe='Ação').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
-     proventos_mensais = distribuicao_proventos(request.user, filter_ano)
+     proventos_mensais = distribuicao_proventos(request.user.id, filter_ano)
       
      # Pegando o mês e o ano selecionado no formulário (se enviado pelo usuário)
      mes_selecionado = request.GET.get("mes", mes_atual_str)  # Padrão: mês atual
@@ -70,11 +70,6 @@ def pgto_proventos(request):
           'proventos_mensais': proventos_mensais,  # Adiciona o resultado da função ao context
           'assoc_pgto_ativo':assoc_pgto_ativo(ativos, queryset)
      }
-     
-  
-  
-    
-     
      return render(request, "pgto_proventos/list.html", context)
 
 
@@ -98,7 +93,7 @@ def assoc_pgto_ativo(ativo_data, proventos_data):
 #definindo a função de distribuição de proventos mensais
 def distribuicao_proventos(user, ano):
      dados = Proventos.objects.filter(
-            fk_user=user,
+            fk_user_id=user,
             ano = ano,
           ).values("mes", "classe").annotate(total_pago=Sum("valor_recebido")).order_by("mes")
     # Lista fixa de meses (para garantir que todos sejam mostrados)

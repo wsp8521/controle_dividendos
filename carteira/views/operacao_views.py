@@ -21,7 +21,7 @@ class OperacaoRender(ListView):
                
         if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
             # Filtra as operações pelo usuário logado
-            queryset = Operacao.objects.filter(fk_user=self.request.user).order_by(self.ordering)
+            queryset = Operacao.objects.filter(fk_user_id=self.request.user.id,).order_by(self.ordering)
             cache.set('produtos_listagem', queryset, timeout=300)  # salva dados no cache
         
         # Aplica o filtro adicional caso tenha sido fornecido um nome (parâmetro GET)
@@ -73,7 +73,7 @@ def filtrar_ativos(request):
     classe = request.GET.get('classe', '')
     
     # Filtra os ativos com base na classe
-    ativos = Ativos.objects.filter(classe=classe)
+    ativos = Ativos.objects.filter(classe=classe, fk_user_id=request.user.id,)
     
     # Prepara a resposta em formato JSON
     ativos_data = [{'id': ativo.pk, 'nome': ativo.ticket} for ativo in ativos]

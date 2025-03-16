@@ -21,7 +21,7 @@ class AtivoRender(ListView):
         
         #if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
             # Filtra as operações pelo usuário logado
-        queryset = Ativos.objects.filter(fk_user=self.request.user).order_by(self.ordering)
+        queryset = Ativos.objects.filter(fk_user_id=self.request.user.id).order_by(self.ordering)
             #cache.set('ativo_listagem', queryset, timeout=600)  # salva dados no cache
          
         filter_name = self.request.GET.get('name')

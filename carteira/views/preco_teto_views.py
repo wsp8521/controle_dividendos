@@ -19,7 +19,7 @@ class PrecoTetoRender(ListView):
 
     def get_queryset(self):
         filter_name = self.request.GET.get('name')
-        queryset = PrecoTeto.objects.filter(fk_user=self.request.user).order_by('id_ativo')  # Ordenando pela chave 'id_ativo'
+        queryset = PrecoTeto.objects.filter(fk_user_id=self.request.user.id,).order_by('id_ativo')  # Ordenando pela chave 'id_ativo'
         if filter_name:
             # Filtro aplicado diretamente no queryset
             queryset = queryset.filter(classe__icontains=filter_name)
@@ -94,7 +94,7 @@ def filtrar_ativos(request):
     classe = request.GET.get('classe', '')
     
     # Filtra os ativos com base na classe
-    ativos = Ativos.objects.filter(classe=classe)
+    ativos = Ativos.objects.filter(classe=classe,fk_user_id=request.user.id,)
     
     # Prepara a resposta em formato JSON
     ativos_data = [{'id': ativo.pk, 'nome': ativo.ticket} for ativo in ativos]

@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 event.preventDefault(); // Impede quebra de linha
                 if (this.innerText.trim() !== valorOriginal) {
                     atualizarMeta(this);
+                    //atualizarValorInvestimento(this)
                 }
             }
         });
@@ -57,19 +58,19 @@ document.addEventListener("DOMContentLoaded", function() {
         cell.addEventListener("blur", function() {  // Se clicar fora
             if (this.innerText.trim() !== valorOriginal) {
                 atualizarMeta(this);
+                //atualizarValorInvestimento(this)
             }
         });
     });
 });
 
+//atualiza a quantidade de ativos no modulo plano de meatas
 function atualizarMeta(elemento) {
     let metaId = elemento.getAttribute("data-meta-id");
     let campo = elemento.getAttribute("data-field");
     let novoValor = elemento.innerText.trim();  
 
-
-    console.log("campo: " + campo)
-    console.log("id: " +metaId)
+    console.log("campo: "+campo)
 
     // Se for a coluna de proventos, garantir que está no formato correto
     if (campo === "proventos") {
@@ -79,11 +80,12 @@ function atualizarMeta(elemento) {
         }
     }
 
-
     let dados = {};
-    dados[campo] = novoValor;  
+    dados[campo] = novoValor; 
 
-    fetch(`/plan-metas/update/${metaId}`, {
+    url = campo === "valor_investimento" ? `/plan-metas/calculadora/${metaId}` : `/plan-metas/update/${metaId}`;
+
+    fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -102,6 +104,43 @@ function atualizarMeta(elemento) {
     })
     .catch(error => console.error("Erro:", error));
 }
+
+// //atualiza o valor do investsimento no modulo calculadora
+// function atualizarValorInvestimento(elemento) {
+//     let metaId = elemento.getAttribute("data-meta-id");
+//     let campo = elemento.getAttribute("data-field");
+//     let novoValor = elemento.innerText.trim();  
+
+//     // Se for a coluna de proventos, garantir que está no formato correto
+//     if (campo === "valor_investimento") {
+//         novoValor = novoValor.replace(",", ".");  // Substitui vírgula por ponto
+//         if (isNaN(novoValor) || novoValor === "") {
+//             novoValor = "0";  // Evita erro ao enviar string vazia
+//         }
+//     }
+
+//     let dados = {};
+//     dados[campo] = novoValor;  
+
+//     fetch(`/plan-metas/calculadora/${metaId}`, {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/json",
+//             "X-CSRFToken": getCookie("csrftoken")
+//         },
+//         body: JSON.stringify(dados)
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.status === "success") {
+//             destacarCelula(elemento, "success");
+//             setTimeout(() => { location.reload(); }, 1000);
+//         } else {
+//             exibirMensagem("Erro ao atualizar: " + data.message);
+//         }
+//     })
+//     .catch(error => console.error("Erro:", error));
+// }
 
 
 

@@ -15,7 +15,7 @@ class MetaRender(ListView):
     paginate_by = 10
     
     def get_queryset(self):
-        return MetaAtivo.objects.filter(fk_user=self.request.user).order_by("-ano")
+        return MetaAtivo.objects.filter(fk_user_id=self.request.user.id).order_by("-ano")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -40,13 +40,13 @@ class CadastroMetas(SuccessMessageMixin, CreateView):
         
         # Calcula a soma das metas anuais dos anos anteriores
         meta_anual_anterior = MetaAtivo.objects.filter(
-            fk_user=self.request.user,
+            fk_user_id=self.request.user.id,
             classe=object.classe
         ).aggregate(Sum('meta_alcancada'))['meta_alcancada__sum'] or 0
         
          #calculo da meta do ano anterior
         meta_anterior = MetaAtivo.objects.filter(
-            fk_user=self.request.user, 
+            fk_user_id=self.request.user.id,
             ano = object.ano-1,
             classe = object.classe,
         ).aggregate(Sum('meta_geral_alcancada'))['meta_geral_alcancada__sum'] or 0
@@ -73,13 +73,13 @@ class MetasUpdate(SuccessMessageMixin, UpdateView):
         
         # Calcula a soma das metas anuais dos anos anteriores
         meta_anual_anterior = MetaAtivo.objects.filter(
-            fk_user=self.request.user, 
+            fk_user_id=self.request.user.id,
             classe=object.classe
         ).aggregate(Sum('meta_alcancada'))['meta_alcancada__sum'] or 0
         
         #calculo da meta do ano anterior
         meta_anterior = MetaAtivo.objects.filter(
-            fk_user=self.request.user, 
+            fk_user_id=self.request.user.id,
             ano = object.ano-1,
             classe = object.classe,
         ).aggregate(Sum('meta_geral_alcancada'))['meta_geral_alcancada__sum'] or 0

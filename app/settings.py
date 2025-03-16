@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     #'dal',
     #'dal_select2',
     'carteira',
-    'chat_ai'
+    'chat_ai',
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +54,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'carteira.middleware.AtualizaProventosMiddleware',  # Adicione essa linha
+    
+    #middleware personalizada
+    #'carteira.middleware.AtualizaProventosMiddleware',  
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -132,3 +136,12 @@ STATICFILES_DIRS = (BASE_DIR/'base_statics/',)
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Configuração do Celery para usar Redis como broker
+#CELERY_BROKER_URL = 'pyamqp://guest@localhost//' #config quando for utilizar o rabbitmq
+CELERY_BROKER_URL = 'redis://localhost:6379/0' #config quando for utilizar o Radis
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'America/Sao_Paulo'
+CELERY_RESULT_BACKEND = 'django-db'

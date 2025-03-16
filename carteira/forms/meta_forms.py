@@ -78,7 +78,7 @@ class PrecoTetoForms(forms.ModelForm):
         (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
-        # ('FII-Infra', 'FII-Infra'),
+      ('FII-Infra', 'FII-Infra'),
     ]
     
     # Campos de escolha com widgets apropriados
