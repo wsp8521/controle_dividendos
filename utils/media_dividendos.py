@@ -63,7 +63,7 @@ def media_dividendos(ativo, tipo, anos):
             media_pagamento = sum(pagamentos_por_ano.values()) / anos
             
             # Armazenando o resultado no cache por 5 minutos
-            cache.set(cache_key, f'{media_pagamento:.2f}', timeout=60*30)
+            cache.set(cache_key, f'{media_pagamento:.2f}', timeout=600)
             
             return f'{media_pagamento:.2f}'
         

@@ -6,6 +6,15 @@
   <script>
     // Chama a função para esconder a mensagem após 5 segundos
     showAndHideSuccessMessage(1000)
-  
   </script>
+
+  {% block extra_scripts %}
+    {% if render_grafico %}
+      <script>
+        chartAtivoPorClasse('{{ ativo_por_classe|safe }}');
+        chartAtivoPorSetor('{{ ativo_por_setor|safe }}');
+        chartComposicaoPatrimonio('{{ patrimonio|safe }}');
+      </script>
+    {% endif %}
+  {% endblock %}
 </footer>

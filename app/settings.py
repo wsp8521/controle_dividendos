@@ -55,8 +55,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
-    #middleware personalizada
-    #'carteira.middleware.AtualizaProventosMiddleware',  
+
 ]
 
 ROOT_URLCONF = 'app.urls'

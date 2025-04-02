@@ -4,24 +4,26 @@ from datetime import timedelta
 import asyncio
 from yahooquery import Ticker
 
-def obter_cotacao(tiket):
-    cache_key = f"cotacao_key"
+from django.core.cache import cache
+from yahooquery import Ticker
+
+def obter_cotacao(tickers):
+    cache_key = "cotacao_key"
     cotacao = cache.get(cache_key)
-    resultados = {}
-    
+
     if not cotacao:
-        ativos = [f'{ticker}.SA' for ticker in tiket]
+        ativos = [f"{ticker}.SA" for ticker in tickers]
         tickers_obj = Ticker(ativos)
         price = tickers_obj.price
-        
-        for ativo in ativos:
-            cotacao = price.get(ativo, {}).get("regularMarketPrice")
-            resultados[ativo] = cotacao
-            cache.set(cache_key, resultados, timeout=600)  # Timeout de 5 minutos
-            
-        return resultados
-    return cotacao
 
+        resultados = {}
+        for ativo in ativos:
+            resultados[ativo] = price.get(ativo, {}).get("regularMarketPrice")
+
+        cache.set(cache_key, resultados, timeout=600)  # Armazena todas as cotações por 5 minutos
+        return resultados
+
+    return cotacao
 
 # # Função para formatar preços como moeda
 # def formatar_moeda(valor):

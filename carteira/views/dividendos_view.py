@@ -13,7 +13,7 @@ class ProventosRender(ListView):
     model = Proventos
     template_name = 'proventos/list.html'
     context_object_name = 'lists'
-    ordering = '-data_pgto'
+    ordering = 'data_pgto'
     paginate_by = 20
 
     def get_queryset(self):
@@ -21,13 +21,13 @@ class ProventosRender(ListView):
                
         if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
             # Filtra as operações pelo usuário logado
-            queryset = Proventos.objects.filter(fk_user_id=self.request.user.id).order_by(self.ordering)
+            queryset = Proventos.objects.filter(fk_user_id=self.request.user.id,valor_recebido__gt=0).order_by(self.ordering)
             cache.set('dividendos_listagem', queryset, timeout=300)  # salva dados no cache
         
         # Aplica o filtro adicional caso tenha sido fornecido um nome (parâmetro GET)
-        filter_name = self.request.GET.get('name')
+        filter_name = self.request.GET.get('ativo')
         if filter_name:
-            queryset = queryset.filter(ticket__icontains=filter_name)
+            queryset = queryset.filter(id_ativo__ticket__icontains=filter_name)
         return queryset
     
     def get_context_data(self, **kwargs):

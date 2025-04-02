@@ -2,6 +2,12 @@ from django.urls import path
 from carteira import views
 
 urlpatterns = [
+    
+     #DESH
+    path('', views.desh, name='desh'),
+    
+    # path('chart-ativo-classe/', views.ativo_por_classe, name='chart_ativo_classe'),
+    # path('chart-ativo-setor/', views.ativo_por_setor, name='chart_ativo_setor'),
 
 
     #CRUD ATIVO
@@ -9,6 +15,9 @@ urlpatterns = [
     path('ativo/create', views.CadastroAtivos.as_view(), name='create_ativo'),
     path('ativo/update/<int:pk>', views.AtivosUpdate.as_view(), name='update_ativo'),
     path('ativo/delete/<int:pk>', views.AtivoDelete.as_view(), name='delete_ativo'),
+    
+    #atualizar contacao
+    path("ativo/atualizar-cotacao/", views.atualizar_cotacao, name="atualizar_cotacao"),
     
     #CRUD OPERACAO
     path('operacao/', views.OperacaoRender.as_view(), name='list_operacao'),
@@ -27,6 +36,8 @@ urlpatterns = [
     #operaçao com proventos
     path('proventos/filtrar-ativos/', views.filtrar_ativos, name='filtrar_ativos'),
     path('proventos/pagamento/', views.pgto_proventos, name='pgto_proventos'),
+    path('proventos/pesquisar/', views.pesquisar_pagamento, name='pesquisar_proventos'),
+    path('status-tarefa/<str:task_id>/', views.verificar_status_tarefa, name='verificar_status_tarefa'),
     
     #CRUD META
     path('metas/', views.MetaRender.as_view(), name='list_metas'),
@@ -59,6 +70,4 @@ urlpatterns = [
     #CRUD SETOR
     path('setor/create', views.CadastroSetor.as_view(), name='create_setor'),
     
-    #CRUD desh
-    path('', views.desh, name='desh'),
 ]

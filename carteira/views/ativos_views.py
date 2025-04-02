@@ -1,7 +1,7 @@
-import json
 from carteira.models import Ativos
 from django.core.cache import cache
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 from carteira.forms import AtivosForm
 from utils.cotacao import obter_cotacao
 from django.contrib.messages.views import SuccessMessageMixin
@@ -17,13 +17,8 @@ class AtivoRender(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        #queryset = cache.get('ativo_listagem')  #recuperando dados no cache
-        
-        #if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
-            # Filtra as operações pelo usuário logado
+        # Filtra as operações pelo usuário logado
         queryset = Ativos.objects.filter(fk_user_id=self.request.user.id).order_by(self.ordering)
-            #cache.set('ativo_listagem', queryset, timeout=600)  # salva dados no cache
-         
         filter_name = self.request.GET.get('name')
         if filter_name:
             return queryset.filter(ticket__icontains=filter_name)
@@ -33,11 +28,18 @@ class AtivoRender(ListView):
         context = super().get_context_data(**kwargs)
         ativos = self.get_queryset()
         tickers = [ativo.ticket for ativo in ativos]
-        cotacoes = obter_cotacao(tickers)
+        
+        
+        # Recupera os dados do cache que foi setado na funçao o obter_cotacao
+        cache_key = "cotacao_key"
+        cotacoes = cache.get(cache_key)
+
+        if not cotacoes:
+            cotacoes = obter_cotacao(tickers)  # Busca novas cotações e armazena no cache
         
         lista_ativos = []
         for ativo in ativos:
-            cotacao = cotacoes.get(f'{ativo.ticket}.SA')
+            cotacao = cotacoes.get(f'{ativo.ticket}.SA') if cotacoes else None
             lista_ativos.append({
                 "pk": ativo.id,
                 "ativo": ativo.ativo,
@@ -89,6 +91,7 @@ class AtivosUpdate(SuccessMessageMixin, UpdateView):
         object = form.save(commit=False)
         cache.delete('ativo_listagem')  # Limpa o cache
         object.save()
+        cache.delete('dividendos_listagem')  # Limpa o cache da pagina dividendos
         return super().form_valid(form) #redirecionar o usuário para a URL de sucesso definida (success_url)
     
 #DELETE
@@ -97,3 +100,16 @@ class AtivoDelete( SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('list_ativo')
     success_message='Cadastro excluído com sucesso.'
     
+
+def atualizar_cotacao(request):
+    """Remove os dados do cache e busca novas cotações."""
+    cache_key = "cotacao_key"
+    
+    # Obtém os ativos do usuário logado
+    ativos = Ativos.objects.filter(fk_user_id=request.user.id)
+    tickers = [ativo.ticket for ativo in ativos]
+
+    # Força a atualização das cotações
+    novas_cotacoes = obter_cotacao(tickers)
+    cache.set(cache_key, novas_cotacoes, timeout=600)  # Armazena por 10 minutos
+    return JsonResponse({"status": "success", "mensagem": "Cotações atualizadas com sucesso!"})

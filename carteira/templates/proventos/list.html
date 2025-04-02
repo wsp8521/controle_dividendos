@@ -3,34 +3,41 @@
 {% block content %}
 {% include "global/componentes/menssage.html" %}
 <p class="h3">Dividendos</p>
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <form action="#" method="GET">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="name" placeholder="Pesquisar marca" value="{{ request.GET.name }}"/>
-                    {% if request.GET.name %}
-                        <a href="#" class="btn btn-primary">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
-                    {% else %}
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-        <div class="col-md-6">
-            <a href="#" class="btn btn-success float-end" 
-            data-bs-toggle="modal" 
-            data-bs-target="#cadastroModal"
-            hx-get = {% url "create_proventos" %}
-            hx-target = "#addContent"
-            hx-swap = "innerHTML">
-            <i class="bi bi-plus"></i>Cadastrar
-            </a>
-        </div>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form action="#" method="GET">
+            <div class="input-group">
+                <input type="text" class="form-control" name="ativo" placeholder="Pesquisar Ativo" value="{{ request.GET.ativo }}"/>
+                {% if request.GET.ativo %}
+                    <a href="#" class="btn btn-primary">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                {% else %}
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i>
+                    </button>
+                {% endif %}
+            </div>
+        </form>
     </div>
+
+    <div class="col-md-6 d-flex justify-content-end gap-2">
+
+        <a href="#" class="btn btn-success" id="iniciarPesquisaBtn" data-url="{% url 'pesquisar_proventos' %}">
+           <i class="bi bi-search"></i> Pesquisar Pagamento
+        </a>
+
+        <a href="#" class="btn btn-primary" 
+           data-bs-toggle="modal" 
+           data-bs-target="#cadastroModal"
+           hx-get="{% url 'create_proventos' %}"
+           hx-target="#addContent"
+           hx-swap="innerHTML">
+            <i class="bi bi-plus"></i> Cadastrar
+        </a>
+    </div>
+</div>
+
     <div class="table-responsive">
     {% if lists %}
        {% include "proventos/table.html" %}

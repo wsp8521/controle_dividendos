@@ -39,7 +39,7 @@ def busca_agenda_pagamento(ativo, tipo):
                         dados.append(valores)
                 
                 df = pd.DataFrame(dados, columns=['ativo', 'tipo', 'data_com', 'pagamento', 'valor'])    
-                return df  
+                return df      
             else:
                 return "Tabela não encontrada."
         else:
@@ -47,60 +47,48 @@ def busca_agenda_pagamento(ativo, tipo):
     except Exception as e:
         return f"Erro: {e}"
 
+def filtra_pagamentos(ativos):
+    dados_filtrados = []  # Lista para armazenar apenas os ativos com data de pagamento válida
 
+    # Obter o mês e ano atuais
+    mes_atual = datetime.now().month
+    ano_atual = datetime.now().year
 
-# Função para filtrar os dados por mês e ano
-def filtrar_por_mes_ano(df):
-    data_atual = datetime.now()
-    
-    # Criando uma cópia do df e removendo os registros que não possuem data de pagamento 
-    df = df[df['pagamento'] != "-"].copy()  
+    for ativo, tipo in ativos.items():
+        resultado = busca_agenda_pagamento(ativo, tipo)
+        
+        # Verifica se a resposta é um DataFrame e se a data de pagamento não está vazia ou inválida
+        if isinstance(resultado, pd.DataFrame):
+            # Filtra pagamentos do mês atual em diante
+            resultado['data_com'] = pd.to_datetime(resultado['data_com'], format='%d/%m/%Y')
+            resultado['pagamento'] = pd.to_datetime(resultado['pagamento'], format='%d/%m/%Y')
 
-    # Convertendo a coluna 'pagamento' para o tipo datetime
-    df['pagamento'] = pd.to_datetime(df['pagamento'], dayfirst=True, errors='coerce')
-    
-    # Filtrando os dados para o mês e ano especificados
-    df_filtrado = df[(df['pagamento'].dt.month >= data_atual.month) & (df['pagamento'].dt.year >= data_atual.year)]
-    
-    # Serializando os dados corretamente
-    dados_dict = df_filtrado.to_dict(orient='records')
-    
-    return dados_dict
+            # Filtra apenas os pagamentos a partir do mês atual
+            resultado_filtrado = resultado[resultado['pagamento'].dt.month >= mes_atual]
+            resultado_filtrado = resultado_filtrado[resultado_filtrado['pagamento'].dt.year >= ano_atual]
 
+            # Se houver mais de um pagamento no mesmo mês, exibe todos
+            for _, row in resultado_filtrado.iterrows():
+                if row['pagamento'].month == mes_atual:
+                    dados_filtrados.append(row)
+                    break  # Se já exibiu o pagamento do mês atual, não precisa continuar com o mesmo mês
+                else:
+                    dados_filtrados.append(row)
 
-    #return dados_dict
+    return dados_filtrados
 
+# Defina seus ativos e tipos aqui
 ativos = {
-    "BBAS3": "Ação",
-    "PSSA3": "Ação",
+    "KDIF11": "Ação",
     "CMIG4": "Ação",
     "MXRF11": "FII",
-    "KDIF11": "FI-INFRA"
+    "BBAS3": "FII"
 }
 
-dados_filtrados = []  # Lista para armazenar apenas os ativos com data de pagamento válida
+# Filtra e exibe os dados
+dados_filtrados = filtra_pagamentos(ativos)
 
-data_atual = datetime.now()
-
-# Defina o mês e ano desejados
-mes_desejado = 3  # Exemplo: Março
-ano_desejado = 2025  # Exemplo: 2025
-
-
-for ativo, tipo in ativos.items():
-    resultado = busca_agenda_pagamento(ativo, tipo)
-    
-    # Verifica se a resposta é um DataFrame
-    if isinstance(resultado, pd.DataFrame):  
-        resultado_filtrado = filtrar_por_mes_ano(resultado)   # Filtra os dados para o mês e ano especificados
-        dados_filtrados.append(resultado_filtrado)
-
-# # Exibir os dados filtrados
 for dado in dados_filtrados:
-    for registro in dado:  # Itera sobre cada registro (dicionário)
-        print(registro['ativo'])
-    
-    
-# for dados in dados_dict:  # Itera sobre cada lista de registros
-#     for registro in dados:  # Itera sobre cada registro (dicionário)
-#         print(registro['ativo'])
+    print(f"Ativo: {dado['ativo']}, Mês/Ano: {dado['pagamento'].strftime('%Y-%m')}")
+    print(f"  Data: {dado['data_com'].strftime('%d/%m/%Y')} - Pagamento: {dado['pagamento'].strftime('%d/%m/%Y')} - Valor: {dado['valor']}")
+    print("="*50)

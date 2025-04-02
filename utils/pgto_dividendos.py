@@ -1,13 +1,8 @@
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-
-import requests
-import pandas as pd
-import json
-from bs4 import BeautifulSoup
 from datetime import datetime
-from collections import defaultdict
+
 
 def busca_agenda_pagamento(ativo, classe):
     try:
@@ -43,10 +38,30 @@ def busca_agenda_pagamento(ativo, classe):
                         dados.append(valores)
                 
                 df = pd.DataFrame(dados, columns=['ativo', 'tipo', 'data_com', 'pagamento', 'valor'])    
-                return df.iloc[0]      
+                return df     
             else:
                 return "Tabela não encontrada."
         else:
             return f"Erro {response.status_code}"
     except Exception as e:
         return f"Erro: {e}"
+    
+
+
+# Função para filtrar os dados por mês e ano
+def filtrar_por_mes_ano(df):
+    data_atual = datetime.now()
+    
+    # Criando uma cópia do df e removendo os registros que não possuem data de pagamento 
+    df = df[df['pagamento'] != "-"].copy()  
+
+    # Convertendo a coluna 'pagamento' para o tipo datetime
+    df['pagamento'] = pd.to_datetime(df['pagamento'], dayfirst=True, errors='coerce')
+    
+    # Filtrando os dados para o mês e ano especificados
+    df_filtrado = df[(df['pagamento'].dt.month >= data_atual.month) & (df['pagamento'].dt.year >= data_atual.year)]
+    
+    # Serializando os dados corretamente
+    dados_dict = df_filtrado.to_dict(orient='records')
+    
+    return dados_dict

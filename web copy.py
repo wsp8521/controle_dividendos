@@ -39,7 +39,7 @@ def busca_agenda_pagamento(ativo, tipo):
                         dados.append(valores)
                 
                 df = pd.DataFrame(dados, columns=['ativo', 'tipo', 'data_com', 'pagamento', 'valor'])    
-                return df  
+                return df.iloc[0]      
             else:
                 return "Tabela não encontrada."
         else:
@@ -49,30 +49,17 @@ def busca_agenda_pagamento(ativo, tipo):
 
 
 
-# Função para filtrar os dados por mês e ano
-def filtrar_por_mes_ano(df):
-    data_atual = datetime.now()
-    
-    # Criando uma cópia do df e removendo os registros que não possuem data de pagamento 
-    df = df[df['pagamento'] != "-"].copy()  
-
-    # Convertendo a coluna 'pagamento' para o tipo datetime
-    df['pagamento'] = pd.to_datetime(df['pagamento'], dayfirst=True, errors='coerce')
-    
-    # Filtrando os dados para o mês e ano especificados
-    df_filtrado = df[(df['pagamento'].dt.month >= data_atual.month) & (df['pagamento'].dt.year >= data_atual.year)]
-    
-    # Serializando os dados corretamente
-    dados_dict = df_filtrado.to_dict(orient='records')
-    
-    return dados_dict
+#div = busca_agenda_pagamento("HSML11", 'FII')
 
 
-    #return dados_dict
 
+# # print(div)
+# ativos = [
+#     "MXRF11",
+#     "BBSE3"
+#     ]
 ativos = {
-    "BBAS3": "Ação",
-    "PSSA3": "Ação",
+    "KDIF11": "Ação",
     "CMIG4": "Ação",
     "MXRF11": "FII",
     "KDIF11": "FI-INFRA"
@@ -80,27 +67,13 @@ ativos = {
 
 dados_filtrados = []  # Lista para armazenar apenas os ativos com data de pagamento válida
 
-data_atual = datetime.now()
-
-# Defina o mês e ano desejados
-mes_desejado = 3  # Exemplo: Março
-ano_desejado = 2025  # Exemplo: 2025
-
-
 for ativo, tipo in ativos.items():
     resultado = busca_agenda_pagamento(ativo, tipo)
     
-    # Verifica se a resposta é um DataFrame
-    if isinstance(resultado, pd.DataFrame):  
-        resultado_filtrado = filtrar_por_mes_ano(resultado)   # Filtra os dados para o mês e ano especificados
-        dados_filtrados.append(resultado_filtrado)
+    # Verifica se a resposta é um DataFrame e se a data de pagamento não está vazia ou inválida
+    if isinstance(resultado, pd.Series) and resultado["pagamento"] != "-":
+        dados_filtrados.append(resultado)
 
-# # Exibir os dados filtrados
+# Exibir os dados filtrados
 for dado in dados_filtrados:
-    for registro in dado:  # Itera sobre cada registro (dicionário)
-        print(registro['ativo'])
-    
-    
-# for dados in dados_dict:  # Itera sobre cada lista de registros
-#     for registro in dados:  # Itera sobre cada registro (dicionário)
-#         print(registro['ativo'])
+    print(dado)

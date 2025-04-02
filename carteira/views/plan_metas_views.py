@@ -2,13 +2,14 @@ import json
 from datetime import datetime
 from django.db.models import Q, Sum 
 from carteira.forms import PlanForm
+from django.core.cache import cache
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from utils.cotacao import obter_cotacao
 from decimal import Decimal,InvalidOperation
 from utils.media_dividendos import media_dividendos
 from django.views.generic import ListView, DeleteView, CreateView
-from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao, PlanMetasCalc
+from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
@@ -48,14 +49,24 @@ class PlanMetasRender(ListView):
         filter_ativo = Q(ano=filter_ano) if filter_classe is None else Q(ano=filter_ano) & Q(classe=filter_classe)
         lista_ativos = []
         tickers = [ativo.id_ativo for ativo in plan_metas]
-        cotacoes = obter_cotacao(tickers)
+          # Recupera os dados do cache que foi setado na funçao o obter_cotacao
+        cache_key = "cotacao_key"
+        cotacoes = cache.get(cache_key)
+
+        if not cotacoes:
+            cotacoes = obter_cotacao(tickers)  # Busca novas cotações e armazena no cache
+            
+        # Busca médias de dividendos de uma só vez para evitar múltiplas chamadas
+        dividendos_cache = {ativo.id_ativo: media_dividendos(ativo.id_ativo, ativo.classe, 5) for ativo in plan_metas}
         
         for plan in plan_metas:
             get_preco_teto = PrecoTeto.objects.filter(id_ativo=plan.id_ativo).first()
             ativos = Ativos.objects.filter(ticket=plan.id_ativo).first()
             cota_restante = plan.qtd - ativos.qtdAtivo if (plan.qtd - ativos.qtdAtivo) > 0 else 0
-            cotacao = cotacoes.get(f'{plan.id_ativo}.SA')
-            dividendos = media_dividendos(plan.id_ativo, plan.classe, 5)
+            cotacao = cotacoes.get(f'{plan.id_ativo}.SA') if cotacoes else None
+            
+            # Busca no dicionário dividendos_cache pelo valor associado à chave ativo.id_ativo.
+            dividendos = dividendos_cache.get(plan.id_ativo, Decimal(0))
             rentabilidade = Decimal(get_preco_teto.rentabilidade)
             preco_teto_acoes = Decimal(dividendos) / (rentabilidade / 100)
             ipca = Decimal(get_preco_teto.ipca) if get_preco_teto.ipca is not None else Decimal(0)

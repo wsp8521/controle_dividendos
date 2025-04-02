@@ -1,6 +1,7 @@
 
 import json
 from django.db.models import Q, Sum 
+from django.core.cache import cache
 from utils.cotacao import obter_cotacao
 from decimal import Decimal
 from django.shortcuts import render
@@ -18,10 +19,18 @@ def calculadora_ativos(request):
     lista_ativos = []
     context = {}
     tickers = [ativo.id_ativo for ativo in queryset]
-    cotacoes = obter_cotacao(tickers)
+    
+    
+     # Recupera os dados do cache que foi setado na funçao o obter_cotacao
+    cache_key = "cotacao_key"
+    cotacoes = cache.get(cache_key)
+
+    if not cotacoes:
+        cotacoes = obter_cotacao(tickers)  # Busca novas cotações e armazena no cache
+
        
     for plan in queryset:
-        cotacao = cotacoes.get(f'{plan.id_ativo}.SA')
+        cotacao = cotacoes.get(f'{plan.id_ativo}.SA') if cotacoes else None
         total = plan.qtd_calc*Decimal(cotacao or 0)
         total_provento =  plan.qtd_calc * Decimal(plan.prov_cota)
         soma_total_ativo  = queryset.aggregate(Sum('qtd_calc'))['qtd_calc__sum']

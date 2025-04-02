@@ -1,0 +1,16 @@
+<form action="" method="GET" id="filterForm">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="ativo" id="flexRadioDefault1" value="FII" 
+        {% if request.GET.ativo == "FII" or not request.GET.ativo %} checked {% endif %} onchange="this.form.submit();">
+        <label class="form-check-label" for="flexRadioDefault1">
+          FII
+        </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="ativo" id="flexRadioDefault2" value="Ação" 
+        {% if request.GET.ativo == "Ação" %} checked {% endif %} onchange="this.form.submit();">
+        <label class="form-check-label" for="flexRadioDefault2">
+          Ações
+        </label>
+    </div>
+</form>

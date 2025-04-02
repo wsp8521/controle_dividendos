@@ -1,9 +1,18 @@
-from django.core.cache import cache
-from carteira.models import Proventos, Ativos
-from django.db.models import Sum
-from django.shortcuts import render
-from datetime import datetime
 
+from datetime import datetime
+from django.db.models import Sum
+from carteira.models import Proventos, Ativos
+from django.shortcuts import render
+from carteira.tasks import taks_agenda_pagamento
+from datetime import datetime
+from django.contrib import messages
+from django.http import JsonResponse
+from celery.result import AsyncResult
+
+
+'''
+     Funções responsávels pelo geranciamento dos pagamentos dos proventos
+'''
 
 def pgto_proventos(request):
      proventos = Proventos.objects.filter(fk_user_id=request.user.id,)
@@ -72,7 +81,6 @@ def pgto_proventos(request):
      }
      return render(request, "pgto_proventos/list.html", context)
 
-
 #associação dos pagamentos do mês ao ativo
 def assoc_pgto_ativo(ativo_data, proventos_data):
      prov_ativos = {}
@@ -88,8 +96,6 @@ def assoc_pgto_ativo(ativo_data, proventos_data):
                prov_ativos[ativo.ticket] = 'AGUARDANDO PAGAMENTO'               
      return prov_ativos
     
-
-
 #definindo a função de distribuição de proventos mensais
 def distribuicao_proventos(user, ano):
      dados = Proventos.objects.filter(
@@ -129,3 +135,24 @@ def distribuicao_proventos(user, ano):
      }
      
      return context
+
+#busca na internet os anuncios de pagamento de dividendos e salva na base de dados
+def pesquisar_pagamento(request):
+     
+     messages.success(request,"Inciciando as pesquisas")
+     user_id = request.user.id  # Pegando o ID do usuário logado
+     result_task = taks_agenda_pagamento.delay(user_id)
+     
+    # Retorna o ID da tarefa como JSON
+     return JsonResponse({'task_id': result_task.id})
+
+#responsável em vierificar o estatus da tarefa e devolver uma mensagem ao usário via javascritp
+
+def verificar_status_tarefa(request, task_id):
+    result = AsyncResult(task_id) # Obtém o resultado da tarefa
+    status = result.status  # 'PENDING', 'STARTED', 'SUCCESS', 'FAILURE', etc.
+    response_data = {'status': status}
+    if status == "SUCCESS":
+        response_data['result'] = result.result  # Inclui a mensagem com registros cadastrados
+    return JsonResponse(response_data)
+

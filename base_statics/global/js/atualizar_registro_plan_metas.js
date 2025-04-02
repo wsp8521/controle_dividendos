@@ -104,46 +104,6 @@ function atualizarMeta(elemento) {
     })
     .catch(error => console.error("Erro:", error));
 }
-
-// //atualiza o valor do investsimento no modulo calculadora
-// function atualizarValorInvestimento(elemento) {
-//     let metaId = elemento.getAttribute("data-meta-id");
-//     let campo = elemento.getAttribute("data-field");
-//     let novoValor = elemento.innerText.trim();  
-
-//     // Se for a coluna de proventos, garantir que está no formato correto
-//     if (campo === "valor_investimento") {
-//         novoValor = novoValor.replace(",", ".");  // Substitui vírgula por ponto
-//         if (isNaN(novoValor) || novoValor === "") {
-//             novoValor = "0";  // Evita erro ao enviar string vazia
-//         }
-//     }
-
-//     let dados = {};
-//     dados[campo] = novoValor;  
-
-//     fetch(`/plan-metas/calculadora/${metaId}`, {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//             "X-CSRFToken": getCookie("csrftoken")
-//         },
-//         body: JSON.stringify(dados)
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         if (data.status === "success") {
-//             destacarCelula(elemento, "success");
-//             setTimeout(() => { location.reload(); }, 1000);
-//         } else {
-//             exibirMensagem("Erro ao atualizar: " + data.message);
-//         }
-//     })
-//     .catch(error => console.error("Erro:", error));
-// }
-
-
-
 // Função para obter o CSRF Token do Django
 function getCookie(name) {
     let cookieValue = null;

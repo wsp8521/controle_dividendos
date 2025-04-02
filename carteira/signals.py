@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.core.cache import cache
 from django.db.models import Sum, Q
 from carteira.models import Operacao, Proventos, MetaAtivo
-from django.contrib.auth.decorators import login_required
+
 
 
 # Executa antes de uma Operação ser salva
@@ -95,6 +95,7 @@ def update_proventos(sender, instance, created, **kwargs):
         prov_diferenca = instance.valor_recebido - instance._old_proventos
         ativo.dividendos += prov_diferenca
     ativo.save()
+   
 
 
 # ATUALIZANDO TABAELA METAS
@@ -137,10 +138,14 @@ def atualizar_meta_ativos(sender, instance, **kwargs):
         }
     )
         
-# Sinais para limpar o cache ao salvar ou deletar uma operação
+# Sinais para limpar o cache ao salvar ou deletar +
 @receiver(post_save, sender=Operacao)
 @receiver(post_delete, sender=Operacao)
-
 def limpar_cache_operacoes(sender, **kwargs):
     cache.delete('operacao_listagem')
 
+
+@receiver(post_save, sender=Proventos)
+@receiver(post_delete, sender=Proventos)
+def limpar_cache_proventos(sender, **kwargs):
+    cache.delete('dividendos_listagem')  # Limpa o cache
