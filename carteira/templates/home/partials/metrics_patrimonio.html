@@ -1,0 +1,50 @@
+<div id="composicao-patrimonio" class="grafico">
+    <div class="row">
+        <!-- Primeira linha -->
+        <div class="col-md-4 text-center">
+            <div class="card bg-primary">
+                <h5 class="card-title text-center">Patrimônio</h5>
+                <h5 class="card-title text-center metrica">{{metricas_patrimonio.patrimonio_total}}</h5>
+            </div>
+        </div>
+        
+        <div class="col-md-4 text-center">
+            <div class="card bg-info">
+                <h5 class="card-title text-center">Investimento</h5>
+                <h5 class="card-title text-center  metrica">{{metricas_patrimonio.investimento}}</h5>
+            </div>
+            
+        </div>
+
+        <div class="col-md-4 text-center">
+            <div class="card bg-success">
+                <h5 class="card-title text-center">Rentabilidade</h5>
+                <h5 class="card-title text-center metrica">{{metricas_patrimonio.rentabilidade|floatformat:2}}%</h5>
+            </div>
+        </div>
+
+        <!-- Segunda linha -->
+        <div class="col-md-4 text-center">
+            <div class="card bg-success">
+                <h5 class="card-title text-center">Valorização dos ativos</h5>
+                <h5 class="card-title text-center metrica">{{metricas_patrimonio.valorizacao}}</h5>
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <div class="card bg-success">
+                <h5 class="card-title text-center">Dividendos </h5>
+                <h5 class="card-title text-center metrica">{{metricas_patrimonio.dividendos}}</h5>
+            </div>
+        </div>
+
+        <div class="col-md-4 text-center">
+            <div class="card bg-success">
+                <h5 class="card-title text-center">Total de ativos</h5>
+                <h5 class="card-title text-center metrica">{{metricas_patrimonio.total_ativo}}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+   

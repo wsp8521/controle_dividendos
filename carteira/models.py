@@ -30,6 +30,7 @@ class Ativos(models.Model):
     classe = models.CharField(max_length=10, null=False, blank=False)
     cnpj = models.CharField(max_length=20, verbose_name='CNPJ')
     setor = models.ForeignKey(SetorAtivo, on_delete=models.CASCADE, related_name="setor_ativo", verbose_name='Setor') 
+    corretora = models.CharField(max_length=255, null=False, blank=False, default="")
     qtdAtivo = models.IntegerField(verbose_name='Qtd', blank=True, null= True)
     investimento= models.DecimalField(max_digits=20, decimal_places=2, blank=True, null= True)
     dividendos= models.DecimalField(max_digits=20, decimal_places=2, blank=True, null= True)
@@ -182,3 +183,27 @@ class PrecoTeto(models.Model):
     
     def __str__(self):
         return self.classe
+    
+    
+####################################### RENTABILIDADE #############################################      
+class Rentabilidade(models.Model):
+    fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_rentabilidade",  null=True)
+    rentabilidade = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True, default=0)
+    ano= models.IntegerField(verbose_name='ano', null=True, blank=True)  
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em') 
+      
+    def __str__(self):
+        return self.ano
+    
+    
+####################################### CORRETORA #############################################      
+class Corretora(models.Model):
+    fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_corretora",  null=True)
+    nome_corretora = models.CharField(null=False, blank=False, max_length=255)
+    apelido = models.CharField(null=False, blank=False, max_length=255)
+    cnpj = models.CharField(max_length=20, verbose_name='CNPJ') 
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em') 
+    update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')
+    
+    def __str__(self):
+        return self.apelido

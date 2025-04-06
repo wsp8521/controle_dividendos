@@ -37,7 +37,7 @@ function chartAtivoPorClasse(data) {
             })),
             label: {
                 show: true,
-                formatter: '{b}: {c}',
+                formatter: '{b}: {d}%', // Exibe o valor em porcentagem no tooltip
                 textStyle: {
                     color: '#FFFFFF'
                 }
@@ -123,6 +123,7 @@ function chartAtivoPorSetor(data){
                 type: 'bar',
                 data: dataCharts.valores,
                 label: {
+                    
                     show: true,
                     position: 'right',
                     color: '#FFFFFF' // Cor dos rótulos dentro das barras
