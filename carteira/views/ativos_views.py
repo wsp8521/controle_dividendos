@@ -1,3 +1,4 @@
+import locale
 from carteira.models import Ativos
 from django.core.cache import cache
 from django.urls import reverse_lazy
@@ -6,6 +7,11 @@ from carteira.forms import AtivosForm
 from utils.cotacao import obter_cotacao
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView,DetailView
+from utils.cotacao import obter_cotacao
+from decimal import Decimal
+
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
 
 
 #READ
@@ -56,7 +62,49 @@ class AtivoRender(ListView):
         context['lists'] = lista_ativos
         return context
 
+#DETAIL
+class AtivoDetail(DetailView):
+    model = Ativos
+    template_name = "ativos/detail.html"
+    context_object_name='lists'
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ativo = self.get_object()
+        preco_medio = ativo.investimento / ativo.qtdAtivo if ativo.qtdAtivo else 0  
+        cotacoes = obter_cotacao([ativo.ticket])  # Corrigido: envia como lista
+        cotacao = cotacoes.get(f"{ativo.ticket}.SA")  # Busca a cotação do ativo específico
+        valor_mercado = Decimal(cotacao) * ativo.qtdAtivo if cotacao and ativo.qtdAtivo else 0
+        valorizacao = valor_mercado - ativo.investimento if ativo.investimento else 0
+        patrimonio =  valor_mercado + ativo.dividendos + ativo.investimento if ativo.investimento else 0
+        rentabilidade = (valorizacao + ativo.dividendos) / ativo.investimento * 100 if ativo.investimento else 0
+        
+    
+        
+        dados={
+            'ativo': ativo.ativo,
+            'cotacao': locale.currency(cotacao, grouping=True) if cotacao else 0,
+            'ticket': ativo.ticket,
+            'classe': ativo.classe,
+            'setor': ativo.setor,
+            'cnpj': ativo.cnpj, 
+            'qtdAtivo':ativo.qtdAtivo if ativo.qtdAtivo is not None else 0,
+            'investimento': locale.currency(ativo.investimento, grouping=True) or 0,
+            'proventos': locale.currency(ativo.dividendos, grouping=True) or 0,
+            'preco_medio': locale.currency(preco_medio, grouping=True),
+            'valor_mercado': locale.currency(valor_mercado, grouping=True),
+            'valorizacao': locale.currency(valorizacao, grouping=True) ,
+            'patrimonio': locale.currency(patrimonio, grouping=True),
+            'rentabilidade': rentabilidade,
+            
+        }
+        
+        context['lists'] = dados
+        return context
+        
+       
+       
+       
     
 #CRETE
 class CadastroAtivos(SuccessMessageMixin, CreateView):
@@ -100,7 +148,7 @@ class AtivoDelete( SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('list_ativo')
     success_message='Cadastro excluído com sucesso.'
     
-
+#FUNÇÕES GERAIS
 def atualizar_cotacao(request):
     """Remove os dados do cache e busca novas cotações."""
     cache_key = "cotacao_key"

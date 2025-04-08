@@ -1,0 +1,66 @@
+
+
+<div class="row" id="line-1">
+    <div class="col-md-3 text-center">
+        <div class="card bg-primary">
+            <h5 class="card-title text-center ">
+                Total de {% if lists.classe == 'Ação' %}Ações{% else %}Cotas{% endif %}
+            </h5>
+            <h5 class="card-title text-center display-6">{{lists.qtdAtivo}}</h5>
+        </div>
+    </div>
+
+    <div class="col-md-3 text-center">
+        <div class="card">
+            <p class="card-title text-center ">Investimento</p>
+            <h5 class="card-title text-center display-6">{{lists.investimento}}</h5>
+        </div>
+    </div>
+
+    <div class="col-md-3 text-center">
+        <div class="card">
+            <p class="card-title text-center ">Preço Médio</p>
+            <h5 class="card-title text-center display-6">{{lists.preco_medio}}</h5>
+        </div>
+    </div>
+
+    <div class="col-md-3 text-center">
+        <div class="card">
+            <p class="card-title text-center">Valor de Mercado</p>
+            <h5 class="card-title text-center display-6">{{lists.valor_mercado}}</h5>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4" id="line-2">
+ 
+
+    <div class="col-md-3 text-center">
+        <div class="card ">
+            <p class="card-title text-center ">Dividendos</p>
+            <h5 class="card-title text-center display-6">{{lists.proventos}}</h5>
+        </div>
+    </div>
+
+    <div class="col-md-3 text-center">
+        <div class="card">
+            <p class="card-title text-center">Patrimônio total</p>
+            <h5 class="card-title text-center display-6">{{lists.patrimonio}}</h5>
+        </div>
+    </div>
+
+    <div class="col-md-3 text-center">
+        <div class="card {% if lists.rentabilidade < 0 %} bg-danger {% else %}bg-success{% endif %}">
+            <p class="card-title text-center ">
+                {% if lists.rentabilidade < 0 %} Perdas {% else %}Ganhos{% endif %}</p>
+            <h5 class="card-title text-center display-6">{{lists.valorizacao}}</h5>
+        </div>
+    </div>
+
+    <div class="col-md-3 text-center">
+        <div class="card {% if lists.rentabilidade < 0 %} bg-danger {% else %}bg-success{% endif %}">
+            <p class="card-title text-center ">Rentabilidade</P>
+            <h5 class="card-title text-center display-6">{{lists.rentabilidade|floatformat:2}}%</h5>
+        </div>
+    </div>
+</div>

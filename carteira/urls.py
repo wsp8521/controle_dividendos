@@ -6,12 +6,9 @@ urlpatterns = [
      #DESH
     path('', views.desh, name='desh'),
     
-    # path('chart-ativo-classe/', views.ativo_por_classe, name='chart_ativo_classe'),
-    # path('chart-ativo-setor/', views.ativo_por_setor, name='chart_ativo_setor'),
-
-
     #CRUD ATIVO
     path('ativo/', views.AtivoRender.as_view(), name='list_ativo'),
+    path('ativo/detail/<int:pk>', views.AtivoDetail.as_view(), name='detail_ativo'),
     path('ativo/create', views.CadastroAtivos.as_view(), name='create_ativo'),
     path('ativo/update/<int:pk>', views.AtivosUpdate.as_view(), name='update_ativo'),
     path('ativo/delete/<int:pk>', views.AtivoDelete.as_view(), name='delete_ativo'),
