@@ -12,7 +12,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   {% block extra_scripts %}{% endblock %}
   <script src="{% static "global/js/atualizar_registro_plan_metas.js" %}"></script>
-  <script src="{% static "global/js/scripts.js" %}"></script>
+  <script src="{% static "global/js/scripts.js" %}"></script>  
+ <script src="{% static "global/js/main.js" %}"  type="module"></script>  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="{% static "global/css/style.css" %}">
 </head>
@@ -33,11 +34,6 @@
 
   </div>
   {% include 'global/componentes/footer.html' %}
-  <script>
-    // Chama a função para esconder a mensagem após 5 segundos
-    showAndHideSuccessMessage(1000)
-
-  </script>
 </body>
 
 </html>

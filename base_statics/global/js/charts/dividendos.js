@@ -50,9 +50,6 @@ function chartDividendosMensal(data) {
     })
   
 }
-
-
-
 //Grafico tipo pizza composição dos diveidendos
 function chartComposicaoDividendos(data) {
   document.addEventListener("DOMContentLoaded", function() {
@@ -123,3 +120,61 @@ function chartComposicaoDividendos(data) {
       });
   });
 }
+
+
+/*********************************************
+ * PÁGINA DETALHES DOS ATIVOS
+ * *****************************************/
+function chartProventos(data){
+    document.addEventListener("DOMContentLoaded", function() {
+        let dados = JSON.parse(data);  // JSON válido  
+        var grafico = echarts.init(document.getElementById('proventos-ativo'));
+    
+        opcoes = {
+            title: {
+              show: true,
+              text: 'Distribuição de Dividendos do ano',
+              left: '50%',
+              textAlign: 'center',
+              padding: [10, 20],
+              textStyle: {
+                  color: '#FFFFFF'
+              }
+          },
+            xAxis: {
+              type: 'category',
+              data: dados.ano,
+              axisLabel: {
+                color: '#fff',
+                interval: 0  // <-- mostra todos os rótulos
+            }
+    
+            },
+            yAxis: {
+              type: 'value'
+            },
+            series: [
+              {
+                data: dados.valor,
+                type: 'line',
+                smooth: true
+              }
+            ],
+    
+            tooltip: {
+                show: true,
+              trigger: 'axis',
+              formatter: params => 'R$ ' + params[0].value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+            },
+          };
+    
+        grafico.setOption(opcoes);
+    
+        // Ajusta o gráfico ao redimensionar a tela
+        window.addEventListener('resize', function () {
+            grafico.resize();
+        });
+
+
+
+    })}

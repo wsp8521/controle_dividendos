@@ -15,6 +15,7 @@ urlpatterns = [
     
     #atualizar contacao
     path("ativo/atualizar-cotacao/", views.atualizar_cotacao, name="atualizar_cotacao"),
+    path('get-setores/', views.get_setores_por_classe, name='get_setores'),
     
     #CRUD OPERACAO
     path('operacao/', views.OperacaoRender.as_view(), name='list_operacao'),
@@ -46,14 +47,12 @@ urlpatterns = [
     path('plan-metas/', views.PlanMetasRender.as_view(), name='list_plan'),
     path('plan-metas/create', views.CadastroPlan.as_view(), name='create_plan'),
     path('plan-metas/delete/<int:pk>', views.PlanDelete.as_view(), name='delete_plan'),
-    path('plan-metas/filtrar-ativos/', views.filtrar_ativos, name='filtrar_plan'),
     path('plan-metas/update/<int:pk>', views.update_qtd_ativo, name='update_plan'),
+    path('plan-metas/filtrar-ativos/', views.filtrar_ativos, name='filtrar_plan'),
     
     #calculadaora
     path('plan-metas/calculadora/', views.calculadora_ativos, name='calculadora_plan'),
     path('plan-metas/calculadora/<int:pk>', views.update_valor_investido, name='calc_investimento'),
-    
-    
     
     #CRUD PRECO TETO
     path('preco/', views.PrecoTetoRender.as_view(), name='list_preco_teto'),

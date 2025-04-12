@@ -11,41 +11,63 @@
 
 <div class="modal-body">
     <!-- Formulário de Cadastro -->
-    <form  method="POST"
-    action="{% if form.instance.pk %}{% url 'update_ativo' form.instance.pk %}{% else %}{% url 'create_ativo' %}{% endif %}">
-     
+    <form method="POST"
+          action="{% if form.instance.pk %}{% url 'update_ativo' form.instance.pk %}{% else %}{% url 'create_ativo' %}{% endif %}">
         {% csrf_token %}
-        {% for field in form %}
-     
-        <div class="mb-3">
-            {{ field.label_tag }}
-            {{ field }}
-           
-                <!-- Campo de Setor -->
 
-                <!-- Botão Adicionar Setor -->
-                {% if field.name == 'setor' %}
-                <a href="#" class="btn btn-info" id="add-sector-btn" 
-                data-bs-toggle="modal" 
-                data-bs-target="#cadastroModal"
-                hx-get = {% url "create_setor" %}
-                hx-target = "#addContent"
-                hx-swap = "innerHTML">
-                    <i class="bi bi-plus"></i>Cadastrar
-                </a>
-                {% endif %}
-        
-            {{ field.errors }}
-            {% if field.help_text %}
-              <small class="text-muted">{{ field.help_text|safe }}</small>
-            {% endif %}
+        <div class="container-fluid">
+            <div class="row">
+                {% for field in form %}
+                    {% if field.name == 'ativo' %}
+                        <!-- Campo ativo ocupa 100% -->
+                        <div class="col-12 mb-3">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                            {% if field.help_text %}
+                                <small class="text-muted">{{ field.help_text|safe }}</small>
+                            {% endif %}
+                        </div>
+                    {% elif field.name == 'setor' %}
+                        <!-- Campo setor com botão ao lado -->
+                        <div class="col-md-6 mb-3">
+                            {{ field.label_tag }}
+                            <div class="d-flex align-items-center gap-2">
+                                {{ field }}
+                                {% comment %} <a href="#" class="btn btn-info btn-sm" id="add-sector-btn" 
+                                   data-bs-toggle="modal" 
+                                   data-bs-target="#cadastroModal"
+                                   hx-get="{% url 'create_setor' %}"
+                                   hx-target="#addContent"
+                                   hx-swap="innerHTML">
+                                    <i class="bi bi-plus"></i>
+                                </a> {% endcomment %}
+                            </div>
+                            {{ field.errors }}
+                            {% if field.help_text %}
+                                <small class="text-muted">{{ field.help_text|safe }}</small>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <!-- Demais campos lado a lado -->
+                        <div class="col-md-6 mb-3">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                            {% if field.help_text %}
+                                <small class="text-muted">{{ field.help_text|safe }}</small>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         </div>
-
-        {% endfor %}
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %}</button>
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %}
+            </button>
         </div>
     </form>
 </div>

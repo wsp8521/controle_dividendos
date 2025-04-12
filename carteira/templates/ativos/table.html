@@ -1,33 +1,32 @@
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th>Ativo</th>
-            <th>Tiket</th>
-            <th>Classe</th>
-            <th>setor</th>
-            <th>qtd</th>
-            <th>investimento</th>
-            <th>dividendos</th>
-            <th>Cotação</th>
-            <th>Ações</th>
+            <th class="text-center">Ativo</th>
+            <th class="text-center">Tiket</th>
+            <th class="text-center">Classe</th>
+            <th class="text-center">Setor</th>
+            <th class="text-center">QTD</th>
+            <th class="text-center">Investimento</th>
+            <th class="text-center">Dividendos</th>
+            <th class="text-center">Cotação</th>
+            <th class="text-center">Ações</th>
         </tr>
     </thead>
+    
     <tbody id="tbodyAtivos">
         {% for list in lists %}
             <tr>
-                <td>{{ list.ativo }}</td>
-                <td>{{ list.ticket }}</td>
-                <td>{{ list.classe }}</td>
-                <td>{{ list.setor }}</td>
-                <td>{{ list.qtd }}</td>
-                <td>{{ list.investimento }}</td>
-                <td>{{ list.dividendos }}</td>
-                <td>{{ list.cotacao }}</td>
+                <td> {{ list.ativo }}</td>
+                <td class="text-center">{{ list.ticket }}</td>
+                <td class="text-center">{{ list.classe }}</td>
+                <td class="text-center">{{ list.setor }}</td>
+                <td class="text-center">{{ list.qtd }}</td>
+                <td class="text-center">{{ list.investimento }}</td>
+                <td class="text-center">{{ list.dividendos }}</td>
+                <td class="text-center">{{ list.cotacao }}</td>
                 <td style="width:8em">
 
-                    <!--btn visualizar-->
-                    <a href="{% url "detail_ativo" list.pk %}" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i></a>
-
+    
                     <!--btn Atualizar-->
                     <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" 
                     data-bs-target="#cadastroModal"
@@ -35,6 +34,9 @@
                     hx-target = "#addContent"
                     hx-swap = "innerHTML"
                     ><i class="bi bi-pencil-fill"></i></a>
+
+                     <!--btn visualizar-->
+                     <a href="{% url "detail_ativo" list.pk %}" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i></a>
 
                     <!--btn deleter-->
                     <a  onclick="modal(this)" 

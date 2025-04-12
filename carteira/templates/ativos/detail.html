@@ -1,5 +1,13 @@
 {% extends "global/base.html" %}
-{% block title %}Ativos{% endblock title %}
+
+{% load static %}
+
+{% block extra_scripts %}
+<script src="{% static 'global/js/charts/ativos.js' %}"></script>
+<script src="{% static 'global/js/charts/dividendos.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+{% endblock %}
+{% block title %}Detalhes ativo {{lists.ticket}}{% endblock title %}
 {% block content %}
 
 <div class="container mt-4" id="detalhe-ativo">
@@ -10,8 +18,9 @@
             <td class="lead">CNPJ: {{ lists.cnpj }}</td>
             <td class="lead">Classe: {{ lists.classe }}</td>
             <td class="lead">Setor: {{ lists.setor }}</td>
+            <td class="lead">Corretora: {{ lists.corretora.apelido }}</td>
             <td class="lead">Cotação atual: {{ lists.cotacao }}</td>
-            <td class="lead">Filtrar: </td>
+            {% comment %} <td class="lead">Filtrar: </td>
             <td class="lead">
                 <form id="filter-ano">
                         <select class="form-select" name="ano" onchange="this.form.submit();">
@@ -23,7 +32,7 @@
                         </select>
                     </form>
                     
-            </td>
+            </td> {% endcomment %}
 
         </tr>
     </table>

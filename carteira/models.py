@@ -9,6 +9,7 @@ class SetorAtivo(models.Model):
         verbose_name = "Setor"
         verbose_name_plural = "Setor"
         ordering=['-id']
+    fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_setor", null=True)    
     setor = models.CharField(max_length=20, verbose_name='setor')
     setor_classe = models.CharField(max_length=20, verbose_name='classe', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
@@ -29,8 +30,9 @@ class Ativos(models.Model):
     ticket = models.CharField(max_length=10)
     classe = models.CharField(max_length=10, null=False, blank=False)
     cnpj = models.CharField(max_length=20, verbose_name='CNPJ')
-    setor = models.ForeignKey(SetorAtivo, on_delete=models.CASCADE, related_name="setor_ativo", verbose_name='Setor') 
-    corretora = models.CharField(max_length=255, null=False, blank=False, default="")
+    setor = models.ForeignKey(SetorAtivo, on_delete=models.CASCADE, related_name="setor_ativo", verbose_name='Setor', default="") 
+    corretora = models.ForeignKey('Corretora', on_delete=models.CASCADE, related_name='ativos_corretora', null=True, blank=True, verbose_name='Corretora')
+   
     qtdAtivo = models.IntegerField(verbose_name='Qtd', blank=True, null= True)
     investimento= models.DecimalField(max_digits=20, decimal_places=2, blank=True, null= True)
     dividendos= models.DecimalField(max_digits=20, decimal_places=2, blank=True, null= True)
@@ -188,6 +190,7 @@ class PrecoTeto(models.Model):
 ####################################### RENTABILIDADE #############################################      
 class Rentabilidade(models.Model):
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_rentabilidade",  null=True)
+    id_ativo = models.ForeignKey(Ativos, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Ativo') #relacionando campo com a pk da tbl ativo
     rentabilidade = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True, default=0)
     ano= models.IntegerField(verbose_name='ano', null=True, blank=True)  
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em') 

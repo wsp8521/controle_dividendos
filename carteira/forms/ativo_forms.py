@@ -5,37 +5,57 @@ from carteira import models
 class AtivosForm(forms.ModelForm):
     class Meta:
         model = models.Ativos
-        fields=['ativo','ticket','classe','cnpj','setor','qtdAtivo','investimento','dividendos']
+        fields=['ativo','ticket','cnpj','classe','setor','qtdAtivo','investimento','dividendos', 'corretora']
         widgets={
-            'ativo':forms.TextInput(attrs={'class':'form-control'}), #alterando atribuutos do campo
+            'ativo':forms.TextInput(attrs={'class':'form-control', 'id':'nome-ativo'}), #alterando atribuutos do campo
             'ticket':forms.TextInput(attrs={'class':'form-control'}),
             'cnpj':forms.TextInput(attrs={'class':'form-control'}),
             'qtdAtivo': forms.NumberInput(attrs={'class': 'form-control'}),
             'dividendos': forms.NumberInput(attrs={'class': 'form-control'}),
             'investimento': forms.NumberInput(attrs={'class': 'form-control'}),
+           
         }
+        
+    #clslist_corretora = models.Corretora.filter(id_usuario=request.user.id)
         
     classe_options = [
          (False, 'Classe do ativo'),
         ('Ação', 'Ação'),
         ('FII', 'FII'),
         ('FII-Infra', 'FII-Infra'),
+        ('FII-Agro', 'FII-Agro'),
     ]
     
-    classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
+    classe = forms.ChoiceField(
+        choices=classe_options, 
+        widget=forms.Select(attrs={
+                                    'class': 'form-control', 
+                                    'id': 'id-classe', }))
     
      # Definindo o campo setor como um ModelChoiceField que busca dados da tabela Setor
     setor = forms.ModelChoiceField(
-        queryset=models.SetorAtivo.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control'}),
+        queryset=models.SetorAtivo.objects.none(),  # por padrão vazio
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'id-setor'}),
         empty_label="Selecione o setor",
-       
     )
+
         
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         is_edit = kwargs.pop('is_edit', False)  # Parâmetro extra para verificar o contexto (adição ou edição de registro)
         super().__init__(*args, **kwargs)
-   
+        
+          # Filtra a corretora apenas do usuário logado
+        if user is not None:
+            #exibe no campo a corretora do usuáiro logado
+            self.fields['corretora'].queryset = models.Corretora.objects.filter(fk_user=user)
+            self.fields['corretora'].widget.attrs.update({'class': 'form-select'})
+            
+            # Filtra o setor apenas do usuário logado
+            self.fields['setor'].queryset = models.SetorAtivo.objects.filter(fk_user=user) 
+            self.fields['setor'].widget.attrs.update({'class': 'form-select'})
+            
+            
         # Remove os campos que não devem aparecer no formulário no modo adição
         if not is_edit:
             for field in ['qtdAtivo', 'dividendos', 'investimento']:
@@ -55,6 +75,7 @@ class SetorForm(forms.ModelForm):
         ('Ação', 'Ação'),
         ('FII', 'FII'),
         ('FII-Infra', 'FII-Infra'),
+        ('FII-Agro', 'FII-Agro'),
     ]
     
     setor_classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(attrs={'class': 'form-control'}))
@@ -100,6 +121,7 @@ class OperacaoForm(forms.ModelForm):
         ('Ação', 'Ação'),
         ('FII', 'FII'),
         ('FII-Infra', 'FII-Infra'),
+        ('FII-Agro', 'FII-Agro'),
     ]
     
     font_recuso=[
@@ -124,7 +146,7 @@ class OperacaoForm(forms.ModelForm):
         widget=forms.Select(
             attrs={
                 'class': 'form-control',
-                'onchange':"filtrarAtivos('/operacao')"
+               
                 
                 }),
             required=True, error_messages={'required': 'Este campo é obrigatório.'  # Mensagem de erro personalizada

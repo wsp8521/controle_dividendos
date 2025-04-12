@@ -36,6 +36,7 @@ class ProventosForm(forms.ModelForm):
         ('Ação', 'Ação'),
         ('FII', 'FII'),
         ('FII-Infra', 'FII-Infra'),
+        ('FII-Agro', 'FII-Agro'),
     ]
     
     op_options = [
@@ -49,7 +50,6 @@ class ProventosForm(forms.ModelForm):
         choices=classe_options, 
         widget=forms.Select(attrs={
             'class': 'form-control',
-            'onchange':"filtrarAtivos('/proventos')"
             }))
     tipo_provento = forms.ChoiceField(choices=op_options, widget=forms.Select(attrs={'class': 'form-control'}))
     

@@ -7,13 +7,16 @@
 </p>
 
 <p class="h3">Ativos</p>
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <form action="#" method="GET">
+<div class="row mb-3">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+
+            <!-- Formulário de busca à esquerda -->
+            <form action="#" method="GET" class="d-flex align-items-center gap-2" style="min-width: 400px;">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="name" placeholder="Pesquisar marca" value="{{ request.GET.name }}"/>
-                    {% if request.GET.name %}
-                        <a href="#" class="btn btn-primary">
+                    <input type="text" class="form-control" name="ativo" placeholder="Pesquisar por nome ou ticket" value="{{ request.GET.name }}"/>
+                    {% if request.GET.ativo %}
+                        <a href="{% url "list_ativo" %}" class="btn btn-primary">
                             <i class="bi bi-x-lg"></i>
                         </a>
                     {% else %}
@@ -23,24 +26,28 @@
                     {% endif %}
                 </div>
             </form>
-        </div>
 
-        <div class="col-md-6 d-flex justify-content-end gap-2">
-            <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn"  >
-                <i class="bi bi-search"></i> Atualizar cotação
-             </a>
-            
-            <a href="#" class="btn btn-primary float-end" 
-            data-bs-toggle="modal" 
-            data-bs-target="#cadastroModal"
-            hx-get = {% url "create_ativo" %}
-            hx-target = "#addContent"
-            hx-swap = "innerHTML">
-                <i class="bi bi-plus"></i>Cadastrar
-            </a>
-        </div>
+            <!-- Botões à direita -->
+            <div class="d-flex gap-2">
+                <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn">
+                    <i class="bi bi-search"></i> Atualizar cotação
+                </a>
+                
+                <a href="#" class="btn btn-primary"
+                   data-bs-toggle="modal" 
+                   data-bs-target="#cadastroModal"
+                   hx-get="{% url 'create_ativo' %}"
+                   hx-target="#addContent"
+                   hx-swap="innerHTML">
+                    <i class="bi bi-plus"></i> Cadastrar
+                </a>
+            </div>
 
+        </div>
     </div>
+</div>
+
+
     <div class="table-responsive">
     {% if lists %}
        {% include "ativos/table.html" %}

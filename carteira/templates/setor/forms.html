@@ -1,36 +1,66 @@
-<div class="modal-header">
-    <h5 class="modal-title" id="cadastroModalLabel">
-        {% if form.instance.pk %}
-            Editar Ativo
-        {% else %}
-            Cadastrar Novo Ativo
-        {% endif %}
-    </h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-</div>
+<div id="mensagem-setor"></div>
 
-<div class="modal-body">
-    <!-- Formulário de Cadastro -->
-    <form  method="POST"
-    action="#">
-     
-        {% csrf_token %}
-        {% for field in form %}
-     
+<form 
+    method="POST"
+    hx-post="{% url 'create_setor' %}" 
+    hx-target="this"
+    hx-swap="none"
+    id="form-cadastro-setor"
+>
+    {% csrf_token %}
+    {% for field in form %}
         <div class="mb-3">
             {{ field.label_tag }}
             {{ field }}
             {{ field.errors }}
-            {% if field.help_text %}
-              <small class="text-muted">{{ field.help_text|safe }}</small>
-            {% endif %}
         </div>
+    {% endfor %}
 
-        {% endfor %}
+    <div class="modal-footer">
+    
+        <a href="#" class="btn btn-secondary"
+        data-bs-toggle="modal" 
+        data-bs-target="#cadastroModal"
+        hx-get="{% url 'create_ativo' %}" 
+        hx-target="#addContent"
+        hx-swap="innerHTML">
+         <i class="bi bi-close"></i> Fechar
+     </a>
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </div>
+</form>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %}</button>
-        </div>
-    </form>
-</div>
+<script>
+    document.body.addEventListener('htmx:afterRequest', function(evt) {
+        if (evt.detail.xhr.responseType === '' && evt.detail.xhr.responseText.startsWith('{')) {
+            const data = JSON.parse(evt.detail.xhr.responseText);
+    
+            // Adiciona nova opção no select de setor do modal de ativo
+            const select = document.querySelector('#id_setor');
+            if (select) {
+                const option = new Option(data.nome, data.id, true, true);
+                select.appendChild(option);
+                select.value = data.id;
+            }
+    
+            // Mostra mensagem de sucesso dentro do modal
+            const mensagemDiv = document.getElementById('mensagem-setor');
+            if (mensagemDiv) {
+                mensagemDiv.innerHTML = `
+                    <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                        ${data.mensagem}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                    </div>
+                `;
+            }
+    
+            // Opcional: limpa os campos do formulário
+            const form = document.getElementById('form-cadastro-setor');
+            if (form) {
+                form.reset();
+            }
+
+        }
+    });
+    </script>
+    

@@ -11,9 +11,10 @@
 
 <div class="modal-body">
     <!-- Formulário de Cadastro -->
-    <form  method="POST"
+    <form  method="POST"  data-url="/operacao"
     action="{% if form.instance.pk %}{% url 'update_operacao' form.instance.pk %}{% else %}{% url 'create_operacao' %}{% endif %}">
-     
+  
+
         {% csrf_token %}
         {% for field in form %}
      

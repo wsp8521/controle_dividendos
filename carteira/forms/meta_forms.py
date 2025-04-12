@@ -39,6 +39,7 @@ class PlanForm(forms.ModelForm):
         ('Ação', 'Ação'),
         ('FII', 'FII'),
         ('FII-Infra', 'FII-Infra'),
+        ('FII-Agro', 'FII-Agro'),
     ]
     
     classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(
@@ -79,6 +80,7 @@ class PrecoTetoForms(forms.ModelForm):
         ('Ação', 'Ação'),
         ('FII', 'FII'),
       ('FII-Infra', 'FII-Infra'),
+      ('FII-Agro', 'FII-Agro'),
     ]
     
     # Campos de escolha com widgets apropriados
@@ -87,12 +89,5 @@ class PrecoTetoForms(forms.ModelForm):
             'class': 'form-control'}
         ))
     
-    # def __init__(self, *args, **kwargs):
-    #     is_edit = kwargs.pop('is_edit', False)  # Parâmetro extra para verificar o contexto (adição ou edição de registro)
-    #     super().__init__(*args, **kwargs)
-   
-    #     Remove os campos que não devem aparecer no formulário no modo adição
-    #     if not is_edit:
-    #         for field in ['classe']:
-    #             self.fields.pop(field)
+
 

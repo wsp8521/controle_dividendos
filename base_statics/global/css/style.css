@@ -1,5 +1,10 @@
 @import url('charts.css');
 
+
+/*FORMATAÇAO FORMULÁRIO DE CADASTRO DE ATIVOS*/
+
+
+
 .ag-theme-custom {
     --ag-background-color: #f5f5f5; /* Cor de fundo geral */
     --ag-header-background-color: #d9edf7; /* Cor de fundo do cabeçalho */
@@ -93,11 +98,14 @@
 }
 
 /*formatação detalhes do ativo*/
-#detalhe-ativo table{width:70vw}
+#detalhe-ativo table{width:80vw}
+#detalhe-ativo .card{height: 15vh;}
 #line-1 .col-md-3:nth-child(2) .card {background-color:#808080;}
 #line-1 .col-md-3:nth-child(3) .card {background-color:#0080c0;}
 #line-1 .col-md-3:nth-child(4) .card {background-color:#8000ff;}
 
+
+#line-2{margin-bottom: 20px;}
 #line-2 .col-md-3:nth-child(1) .card {background-color:#800080;}
 #line-2 .col-md-3:nth-child(2) .card {background-color:#ff8000;}
 #line-2 .col-md-3:nth-child(3) .card {background-color:#ff409f;}

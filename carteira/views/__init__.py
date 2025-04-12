@@ -9,3 +9,4 @@ from .plan_metas_views import*
 from .pgto_proventos_views import *
 #from .pagamento_view import*
 from .calculadora_view import*
+from .aux_views import*

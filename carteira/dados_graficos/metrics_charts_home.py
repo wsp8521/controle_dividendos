@@ -81,7 +81,6 @@ def grafico_composicao_dividendos(id_user):
 # FUNÇÕES PARA CRIAÇÃO DOS DE METRICA
 # =========================================================================================================
 
-
 #patrimônio
 def metrica_patrimonio(id_user):
     dados_ativo = ativo(id_user)  # Obtendo os dados dos ativos do usuário
@@ -121,7 +120,7 @@ def metrica_patrimonio(id_user):
     #desempacotando a lista de ativos_info e atribuindo o valor do ticker, quantidade e classe
     for ticker, qtd, classe, proventos, investimento in ativos_info:
         valor_mercado = qtd * cotacoes.get(f'{ticker}.SA', 0)
-        valor_total = Decimal(valor_mercado) +Decimal(proventos) + Decimal(investimento)
+        valor_total = Decimal(valor_mercado) +Decimal(proventos or 0) + Decimal(investimento or 0)
         patrimonio_por_classe[classe] += Decimal(valor_total)
     
     patrimonio_por_classe = {classe: float(valor) for classe, valor in patrimonio_por_classe.items()}

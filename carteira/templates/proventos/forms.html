@@ -11,7 +11,7 @@
 
 <div class="modal-body">
     <!-- Formulário de Cadastro -->
-    <form  method="POST"
+    <form  method="POST" data-url="/proventos"
     action="{% if form.instance.pk %}{% url 'update_proventos' form.instance.pk %}{% else %}{% url 'create_proventos' %}{% endif %}">
      
         {% csrf_token %}

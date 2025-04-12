@@ -191,3 +191,47 @@ document.addEventListener("DOMContentLoaded", function() {
         console.warn("Elemento #atualizarCotacaoBtn não encontrado!");
     }
 });
+
+   // //xxxxxxxxxxxxxxxxxxxxxxxxx FILTRAR SETOR POR CLASSE -FORM CADASTRO DE ATIVO xxxxxxxxxxxxxxxxxxxxxx
+//    function FiltrarSetor() {
+//     const classeField = document.getElementById("id-classe");
+//     const setorField = document.getElementById("id-setor");
+
+//     if (classeField && setorField) {
+//         classeField.addEventListener("change", function() {
+//             const selectedClasse = this.value;
+
+//             fetch(`/get-setores/?classe=${selectedClasse}`)
+//                 .then(response => response.json())
+//                 .then(data => {
+//                     // Limpa os setores atuais
+//                     setorField.innerHTML = '<option value="">---</option>';
+//                     data.forEach(item => {
+//                         const option = document.createElement("option");
+//                         option.value = item.id;
+//                         option.textContent = item.setor;
+//                         setorField.appendChild(option);
+//                     });
+//                 });
+//         });
+//     }
+// }
+
+   
+
+    // classeField.addEventListener("change", function() {
+    //     const selectedClasse = this.value;
+
+    //     fetch(`/get-setores/?classe=${selectedClasse}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setorField.innerHTML = '<option value="">Selecione o setor</option>';
+    //             data.forEach(item => {
+    //                 const option = document.createElement("option");
+    //                 option.value = item.id;
+    //                 option.textContent = item.setor;
+    //                 setorField.appendChild(option);
+    //             });
+    //         });
+    // });
+//});

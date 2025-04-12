@@ -196,15 +196,6 @@ class PlanDelete(DeleteView):
     success_message='Cadastro excluído com sucesso.'
     
 
-def filtrar_ativos(request):
-    classe = request.GET.get('classe', '')
-    
-    # Filtra os ativos com base na classe
-    ativos = Ativos.objects.filter(classe=classe, fk_user_id=request.user.id,)
-    #ativos = Ativos.objects.filter(classe=classe, qtdAtivo__gt=0)
-    
-    # Prepara a resposta em formato JSON
-    ativos_data = [{'id': ativo.pk, 'nome': ativo.ticket} for ativo in ativos]
-    return JsonResponse({'ativos': ativos_data})
+
 
 

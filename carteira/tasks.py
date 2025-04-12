@@ -34,9 +34,4 @@ def atualizar_cotacoes_task():
     if tickers:
         novas_cotacoes = obter_cotacao(tickers)
         cache.set(cache_key, novas_cotacoes, timeout=600)  # Armazena por 5 minutos
-        
-    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-    print("CACHE ATUALZIADO COM SUCESSO")
-    print("xxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-
     return f"Atualizado {len(tickers)} ativos"

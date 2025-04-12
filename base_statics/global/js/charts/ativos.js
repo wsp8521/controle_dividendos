@@ -152,3 +152,91 @@ function chartAtivoPorSetor(data){
 
      })
 }
+
+/*********************************************
+ * PÁGINA DETALHES DOS ATIVOS
+ * *****************************************/
+function chartOperacao(data) {
+    document.addEventListener("DOMContentLoaded", function () {
+        let dataCharts = JSON.parse(data);  // Parse do JSON vindo do backend
+
+        const valores = dataCharts.valor;
+        const anos = dataCharts.ano;
+
+        // Encontra o maior valor
+        const maxValor = Math.max(...valores);
+
+        // Constrói os dados da série, destacando o maior valor com a cor vermelha
+        const dadosSerie = valores.map(valor => {
+            if (valor === maxValor) {
+                return {
+                    value: valor,
+                    itemStyle: {
+                        color: '#a90000'  // vermelho
+                    }
+                };
+            }
+            return valor;
+        });
+
+        const grafico = echarts.init(document.getElementById('operaca-ativo'));
+
+        const option = {
+            title: {
+                show: true,
+                text: 'Aquisição de Ativos por Ano',
+                left: '50%',
+                textAlign: 'center',
+                padding: [10, 20],
+                textStyle: {
+                    color: '#FFFFFF'
+                }
+            },
+            tooltip: {
+                show:false,
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: anos,
+                axisLabel: {
+                    color: 'white', // Cor dos rótulos do eixo X
+                    rotate: 45,
+                    interval: 0
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    color: 'white', // Cor dos nomes das categorias
+                    //fontWeight: 'bold' // Deixa o texto mais destacado
+                }
+            },
+            series: [
+                {
+                    name: 'Quantidade',
+                    type: 'bar',
+                    data: dadosSerie,
+                    label: {
+                        show: true,
+                        color: '#FFFFFF', // Cor dos rótulos dentro das barras
+                        position: 'top'
+                    },
+                    itemStyle: {
+                        color: '#5470C6'  // cor padrão
+                    }
+                }
+            ]
+        };
+
+        grafico.setOption(option);
+
+        window.addEventListener('resize', function () {
+            grafico.resize();
+        });
+    });
+}
+

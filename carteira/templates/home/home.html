@@ -14,6 +14,17 @@
 {% block content %}
 <p class="h3">{{ title }}</p>
 <div class="container">
+    <p class="h3">Ativos</p>
+    <div class="graficos-container">
+        <div id="ativo-por-classe" class="grafico"></div>
+        <div class="grafico">
+        {% include "home/charts/filter_ativo.html" %}
+         <div id="ativo-por-setor" class="grafico" ></div>
+        </div>
+    </div> 
+</div>
+
+<div class="container">
     <p class="h3">Dividendos</p>
     <div class="graficos-container">
         <div id="chart-proventos-mensais" class="grafico"></div>
@@ -28,21 +39,5 @@
         {% include "home/partials/metrics_patrimonio.html" %}
     </div> 
 </div>
-
-
-<div class="container">
-    <p class="h3">Ativos</p>
-    <div class="graficos-container">
-        <div id="ativo-por-classe" class="grafico"></div>
-        <div class="grafico">
-        {% include "home/charts/filter_ativo.html" %}
-         <div id="ativo-por-setor" class="grafico" ></div>
-        </div>
-    </div> 
-</div>
-
-
-
-
 
 {% endblock %}
