@@ -1,7 +1,7 @@
 from datetime import datetime
+from calendar import month_name
 from django.core.cache import cache
 from django.urls import reverse_lazy
-from django.http import JsonResponse
 from carteira.forms import OperacaoForm
 from carteira.models import Operacao, Ativos
 from django.contrib.messages.views import SuccessMessageMixin
@@ -18,17 +18,45 @@ class OperacaoRender(ListView):
 
     def get_queryset(self):
         queryset = cache.get('operacao_listagem')  #recuperando dados no cache
-               
+        
+        #Filtros
+        filter_ativo= self.request.GET.get('ativo')
+        filter_classe = self.request.GET.get('classe_ativos')
+        filter_operacao = self.request.GET.get('operacao')
+        filter_mes = self.request.GET.get('mes')
+        filter_ano = self.request.GET.get('anos')
+        
         if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
             # Filtra as operações pelo usuário logado
             queryset = Operacao.objects.filter(fk_user_id=self.request.user.id,).order_by(self.ordering)
             cache.set('produtos_listagem', queryset, timeout=300)  # salva dados no cache
         
-        # Aplica o filtro adicional caso tenha sido fornecido um nome (parâmetro GET)
-        filter_name = self.request.GET.get('name')
-        if filter_name:
-            queryset = queryset.filter(ticket__icontains=filter_name)
+        #aplicando filtros
+        if filter_ativo:
+            queryset = queryset.filter(id_ativo__ticket__icontains=filter_ativo)
+        
+        if filter_classe:
+            queryset = queryset.filter(classe=filter_classe)
+        
+        if filter_operacao:
+            queryset = queryset.filter(tipo_operacao=filter_operacao)
+            
+        if filter_mes:
+            queryset = queryset.filter(mes=filter_mes)
+            
+        if filter_ano:
+            queryset = queryset.filter(ano=filter_ano)
+           
         return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        meses = [(i, month_name[i]) for i in range(1, 13)]
+        ano = Operacao.objects.filter(fk_user_id=self.request.user.id).values_list('ano', flat=True).distinct().order_by('-ano')
+        
+        context['meses'] = meses
+        context['anos'] = ano
+        return context
 
     
 #CRETE

@@ -100,6 +100,7 @@ class Operacao(models.Model):
     valor_cota = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='valor da cota')
     fonte_recurso = models.CharField(max_length=20, verbose_name='Fonte de recurso', null=True, blank=True )
     valor_total = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='Total da Operaçao')
+    mes= models.CharField(max_length=15, verbose_name='mês', null=True, blank=True)
     ano= models.IntegerField(verbose_name='ano', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
     update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')
@@ -114,6 +115,11 @@ class Operacao(models.Model):
         # Atualiza automaticamente o campo ano com base em data_operacao
         if self.data_operacao:
             self.ano = self.data_operacao.year
+            
+         # Atualiza automaticamente o campo ano com base em data_operacao
+        if self.data_operacao:
+            self.mes = self.data_operacao.month
+            
         super().save(*args, **kwargs)
     
     
@@ -196,7 +202,7 @@ class Rentabilidade(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em') 
       
     def __str__(self):
-        return self.ano
+         return str(self.ano)
     
     
 ####################################### CORRETORA #############################################      

@@ -5,8 +5,11 @@ from django.db.models import Sum, Q
 from carteira.models import Operacao, Proventos, MetaAtivo
 
 
+# ==============================================================================
+#                                 SIGNALS - OPERAÇÃO
+# ==============================================================================
 
-# Executa antes de uma Operação ser salva
+# Armazena quantiade antiga antes de executar a operação
 @receiver(pre_save, sender=Operacao) 
 def capture_old_operacao(sender, instance, **kwargs):
      # Verifica se o usuário logado corresponde ao usuário da operação
@@ -22,25 +25,10 @@ def capture_old_operacao(sender, instance, **kwargs):
         instance._old_qtd = 0
         instance._old_valor_total = 0
         
-        
-# Executa antes de uma Operação ser salva
-@receiver(pre_save, sender=Proventos)
-def capture_old_proventos(sender, instance, **kwargs):
-    # Verifica se o usuário logado corresponde ao usuário da operação
-    if instance.fk_user != instance.fk_user:
-        return  # Caso o usuário não corresponda, não faz nada
-    
-    if instance.pk:  # Verifica se a operação já existe (não é criação)
-        # Captura o estado antigo
-        instance._old_proventos = Proventos.objects.get(pk=instance.pk).valor_recebido
-    else:
-        # Define como 0 caso seja uma nova operação
-        instance._old_proventos = 0
-
-
-# Atualiza campos qtdAtivo e investimentos na tabela ativos
+# Atualiza campos qtdAtivo e investimentos na tabela ativos ao adicinar nova operação
 @receiver(post_save, sender=Operacao)  
 def update_qtd_ativo(sender, instance, created, **kwargs):
+    
     # Verifica se o usuário logado corresponde ao usuário da operação
     if instance.fk_user != instance.fk_user:
         return  # Caso o usuário não corresponda, não faz nada
@@ -70,10 +58,63 @@ def update_qtd_ativo(sender, instance, created, **kwargs):
             ativo.investimento -= dif_total
         else:  # Tipo "compra" ou outro
             ativo.qtdAtivo += qtd_diferenca
-            ativo.investimento += dif_total
-            
+            ativo.investimento += dif_total        
     ativo.save()
+    
+    
+# Atualiza campos qtdAtivo e investimentos na tabela ativos ao remover nova operação
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+from .models import Operacao  # ou de onde estiver importando
+from decimal import Decimal
+
+
+@receiver(post_delete, sender=Operacao)
+def update_qtd_ativo_remove(sender, instance, **kwargs):
+    ativo = instance.id_ativo
+
+    # Inicializa se vier como None
+    if ativo.qtdAtivo is None:
+        ativo.qtdAtivo = 0
+    if ativo.investimento is None:
+        ativo.investimento = Decimal("0.00")
+
+    
+    ativo.qtdAtivo -= instance.qtd
+    ativo.investimento -= instance.valor_total
+
+    # Impede valores negativos
+    if ativo.qtdAtivo < 0:
+        ativo.qtdAtivo = 0
+    if ativo.investimento < 0:
+        ativo.investimento = Decimal("0.00")
+
+    ativo.save()
+    
+# Sinais para limpar o cache ao salvar ou deletar +
+@receiver(post_save, sender=Operacao)
+@receiver(post_delete, sender=Operacao)
+def limpar_cache_operacoes(sender, **kwargs):
+    cache.delete('operacao_listagem')
   
+
+  
+# ==============================================================================
+#                                 SIGNALS - PROVENTOS
+# ==============================================================================       
+# Executa antes de uma Operação ser salva
+@receiver(pre_save, sender=Proventos)
+def capture_old_proventos(sender, instance, **kwargs):
+    # Verifica se o usuário logado corresponde ao usuário da operação
+    if instance.fk_user != instance.fk_user:
+        return  # Caso o usuário não corresponda, não faz nada
+    
+    if instance.pk:  # Verifica se a operação já existe (não é criação)
+        # Captura o estado antigo
+        instance._old_proventos = Proventos.objects.get(pk=instance.pk).valor_recebido
+    else:
+        # Define como 0 caso seja uma nova operação
+        instance._old_proventos = 0
 
 # ATUALIZAR PROVENTOS NA TABELA ATIVOS
 @receiver(post_save, sender=Proventos)     
@@ -96,8 +137,15 @@ def update_proventos(sender, instance, created, **kwargs):
         ativo.dividendos += prov_diferenca
     ativo.save()
    
+@receiver(post_save, sender=Proventos)
+@receiver(post_delete, sender=Proventos)
+def limpar_cache_proventos(sender, **kwargs):
+    cache.delete('dividendos_listagem')  # Limpa o cache
 
 
+ # ==============================================================================
+#                                 SIGNALS - PANO DE METAS
+# ============================================================================== 
 # ATUALIZANDO TABAELA METAS
 @receiver(post_save, sender=Operacao)
 def atualizar_meta_ativos(sender, instance, **kwargs):
@@ -137,15 +185,3 @@ def atualizar_meta_ativos(sender, instance, **kwargs):
             "meta_geral_alcancada": meta_anual_anterior + total_qtd
         }
     )
-        
-# Sinais para limpar o cache ao salvar ou deletar +
-@receiver(post_save, sender=Operacao)
-@receiver(post_delete, sender=Operacao)
-def limpar_cache_operacoes(sender, **kwargs):
-    cache.delete('operacao_listagem')
-
-
-@receiver(post_save, sender=Proventos)
-@receiver(post_delete, sender=Proventos)
-def limpar_cache_proventos(sender, **kwargs):
-    cache.delete('dividendos_listagem')  # Limpa o cache

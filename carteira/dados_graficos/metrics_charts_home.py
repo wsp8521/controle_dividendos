@@ -105,7 +105,7 @@ def metrica_patrimonio(id_user):
         cache.set(cache_key, cotacoes, timeout=3600)  # Salva no cache por 1 hora
 
     # Calculando a valorização total
-    total_valorizacao = sum(qtd * cotacoes.get(f'{ticker}.SA', 0) for ticker, qtd, _,_,_ in ativos_info)
+    total_valorizacao = sum(qtd or 0 * cotacoes.get(f'{ticker}.SA', 0) for ticker, qtd, _,_,_ in ativos_info)
 
     # Calculando o patrimônio total
     patrimonio_total = total_investido + Decimal(total_valorizacao) + total_dividendos
@@ -119,7 +119,7 @@ def metrica_patrimonio(id_user):
 
     #desempacotando a lista de ativos_info e atribuindo o valor do ticker, quantidade e classe
     for ticker, qtd, classe, proventos, investimento in ativos_info:
-        valor_mercado = qtd * cotacoes.get(f'{ticker}.SA', 0)
+        valor_mercado = qtd or 0 * cotacoes.get(f'{ticker}.SA', 0)
         valor_total = Decimal(valor_mercado) +Decimal(proventos or 0) + Decimal(investimento or 0)
         patrimonio_por_classe[classe] += Decimal(valor_total)
     

@@ -11,7 +11,7 @@
 
 <div class="modal-body">
     <!-- Formulário de Cadastro -->
-    <form method="POST" id="form-preco-teto"
+    <form method="POST" id="form-preco-teto" data-url="/preco"
           action="{% url 'create_preco_teto' %}">
         {% csrf_token %}
         

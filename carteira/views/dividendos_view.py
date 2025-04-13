@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.core.cache import cache
+from calendar import month_name
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from carteira.forms import ProventosForm
@@ -13,27 +14,53 @@ class ProventosRender(ListView):
     model = Proventos
     template_name = 'proventos/list.html'
     context_object_name = 'lists'
-    ordering = 'data_pgto'
+    ordering = '-data_pgto'
     paginate_by = 20
 
     def get_queryset(self):
         queryset = cache.get('dividendos_listagem')  #recuperando dados no cache
+        
+         #Filtros
+        filter_ativo= self.request.GET.get('ativo')
+        filter_classe = self.request.GET.get('classe_ativos')
+        filter_tipo_proventos = self.request.GET.get('tipo_proventos')
+        filter_mes = self.request.GET.get('mes')
+        filter_ano = self.request.GET.get('anos')
+        filter_status = self.request.GET.get('status')
                
         if not queryset:  # verificando se ha dados no chace. se nao tiver, buscar no banco de daos
             # Filtra as operações pelo usuário logado
             queryset = Proventos.objects.filter(fk_user_id=self.request.user.id,valor_recebido__gt=0).order_by(self.ordering)
             cache.set('dividendos_listagem', queryset, timeout=300)  # salva dados no cache
         
-        # Aplica o filtro adicional caso tenha sido fornecido um nome (parâmetro GET)
-        filter_name = self.request.GET.get('ativo')
-        if filter_name:
-            queryset = queryset.filter(id_ativo__ticket__icontains=filter_name)
+       
+        #aplicando filtros
+        if filter_ativo:
+            queryset = queryset.filter(id_ativo__ticket__icontains=filter_ativo)
+        
+        if filter_classe:
+            queryset = queryset.filter(classe=filter_classe)
+        
+        if filter_tipo_proventos:
+            queryset = queryset.filter(tipo_provento=filter_tipo_proventos)
+            
+        if filter_mes:
+            queryset = queryset.filter(mes=filter_mes)
+            
+        if filter_ano:
+            queryset = queryset.filter(ano=filter_ano)
+          
+        if filter_status:
+            queryset = queryset.filter(status=filter_status)
+       
         return queryset
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         proventos = self.get_queryset()
-
+        meses = [(i, month_name[i]) for i in range(1, 13)]
+        ano = proventos.filter(fk_user_id=self.request.user.id).values_list('ano', flat=True).distinct().order_by('-ano')
+        
         # Cria uma lista com os dados para exibir na tabela
         dados_tabela = []
         for provento in proventos:
@@ -59,6 +86,9 @@ class ProventosRender(ListView):
             })
 
         context['lists'] = dados_tabela
+        context['meses'] = meses
+        context['anos'] = ano
+    
         return context
     
  
@@ -103,13 +133,3 @@ class ProventosDelete( SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('list_proventos')
     success_message='Cadastro excluído com sucesso.'
     
-# def filtrar_ativos(request):
-#     #classe = request.GET.get('classe', '')
-#     classe = "Ação"
-    
-#     # Filtra os ativos com base na classe
-#     ativos = Ativos.objects.filter(classe=classe, qtdAtivo__gt=0, fk_user_id=request.user.id)
-    
-#     # Prepara a resposta em formato JSON
-#     ativos_data = [{'id': ativo.pk, 'nome': ativo.ticket} for ativo in ativos]
-#     return JsonResponse({'ativos': ativos_data})

@@ -38,8 +38,9 @@ class MetaAtivoAdmin(admin.ModelAdmin):
     
 @admin.register(SetorAtivo)
 class SetorAtivoAdmin(admin.ModelAdmin):
-    list_display=("id", "setor","created_at","update_at")
+    list_display=("setor","setor_classe","created_at","update_at")
     list_display_links=("setor",)
+    list_filter = ("setor","setor_classe",)
     
     
 @admin.register(PrecoTeto)
@@ -60,4 +61,9 @@ class CorretoraAdmin(admin.ModelAdmin):
 class RentabilidadeAdmin(admin.ModelAdmin):
     list_display=("id", "rentabilidade",)
   
+  
+@admin.register(PlanMetas)
+class PlanMetasAdmin(admin.ModelAdmin):
+    list_display=("id_ativo", "classe","qtd", "qtd_calc","prov_cota","ano")
+    list_display_links=("id_ativo",)
     

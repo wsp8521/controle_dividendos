@@ -1,10 +1,11 @@
-   // //xxxxxxxxxxxxxxxxxxxxxxxxx FILTRAR SETOR POR CLASSE - FORM CADASTRO DE ATIVO xxxxxxxxxxxxxxxxxxxxxx
+   // ========= FILTRAR SETOR POR CLASSE - FORM CADASTRO DE ATIVO =======
    // filtros.js
    export function FiltrarSetor() {
     const classeField = document.getElementById("id-classe");
     const setorField = document.getElementById("id-setor");
 
         classeField.addEventListener("change", function () {
+            
             const selectedClasse = this.value
             if (selectedClasse!="False"){ //verifica se foi selecionado uma opção
                 setorField.disabled = false
@@ -33,6 +34,7 @@ export function filtrarAtivos(url) {
    
     classeSelect.addEventListener("change", function () {
     const classe = this.value; // Aqui pega o valor atualizado
+
     if(classe!="False"){
         //     // Faz a requisição AJAX para filtrar os ativos
         fetch(`${url}/filtrar-ativos/?classe=${classe}`)

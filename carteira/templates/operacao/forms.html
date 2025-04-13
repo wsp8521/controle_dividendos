@@ -3,36 +3,38 @@
         {% if form.instance.pk %}
             Editar Operação
         {% else %}
-            Cadastrar Novo Operação
+            Cadastrar Nova Operação
         {% endif %}
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
 </div>
 
 <div class="modal-body">
-    <!-- Formulário de Cadastro -->
-    <form  method="POST"  data-url="/operacao"
-    action="{% if form.instance.pk %}{% url 'update_operacao' form.instance.pk %}{% else %}{% url 'create_operacao' %}{% endif %}">
-  
-
+    <form method="POST" data-url="/operacao"
+          action="{% if form.instance.pk %}{% url 'update_operacao' form.instance.pk %}{% else %}{% url 'create_operacao' %}{% endif %}">
+        
         {% csrf_token %}
-        {% for field in form %}
-     
-        <div class="mb-3">
-            {{ field.label_tag }}
-            {{ field }}
-           
-            {{ field.errors }}
-            {% if field.help_text %}
-              <small class="text-muted">{{ field.help_text|safe }}</small>
-            {% endif %}
+        
+        <div class="container-fluid">
+            <div class="row">
+                {% for field in form %}
+                    <div class="col-md-6 mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {{ field.errors }}
+                        {% if field.help_text %}
+                            <small class="text-muted">{{ field.help_text|safe }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-
-        {% endfor %}
 
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            <button type="submit" class="btn btn-primary">{% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %}</button>
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Atualizar{% else %}Cadastrar{% endif %}
+            </button>
         </div>
     </form>
-</div> 
+</div>

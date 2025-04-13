@@ -3,28 +3,67 @@
 {% block content %}
 {% include "global/componentes/menssage.html" %}
 <p class="h3">Dividendos</p>
-<div class="row mb-3">
-    <div class="col-md-6">
-        <form action="#" method="GET">
-            <div class="input-group">
-                <input type="text" class="form-control" name="ativo" placeholder="Pesquisar Ativo" value="{{ request.GET.ativo }}"/>
-                {% if request.GET.ativo %}
-                    <a href="#" class="btn btn-primary">
-                        <i class="bi bi-x-lg"></i>
-                    </a>
-                {% else %}
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-search"></i>
-                    </button>
-                {% endif %}
-            </div>
-        </form>
-    </div>
 
-    <div class="col-md-6 d-flex justify-content-end gap-2">
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3" >
+    
+    <!-- Formulário de Filtros -->
+    <form action="#" method="GET" class="d-flex flex-wrap align-items-center gap-2">
+        <!-- Campo Ativo -->
+        <input type="text" class="form-control w-auto" style="min-width: 120px;" name="ativo" placeholder="Ativo" value="{{ request.GET.ativo }}">
 
+        <!-- Classe -->
+        <select name="classe_ativos" class="form-select w-auto" style="min-width: 120px;" onchange="this.form.submit()">
+            <option value="">Classe</option>
+            <option value="Ação" {% if request.GET.classe_ativos == "Ação" %}selected{% endif %}>Ação</option>
+            <option value="FII" {% if request.GET.classe_ativos == "FII" %}selected{% endif %}>FII</option>
+            <option value="FII-Infra" {% if request.GET.classe_ativos == "FII-Infra" %}selected{% endif %}>FII-Infra</option>
+            <option value="FII-Agro" {% if request.GET.classe_ativos == "FII-Agro" %}selected{% endif %}>FII-Agro</option>
+        </select>
+
+        <!-- Tipo Proventos -->
+        <select name="tipo_proventos" class="form-select w-auto" style="min-width: 130px;" onchange="this.form.submit()">
+            <option value="">Proventos</option>
+            <option value="Dividendos" {% if request.GET.tipo_proventos == "Dividendos" %}selected{% endif %}>Dividendos</option>
+            <option value="JCP" {% if request.GET.tipo_proventos == "JCP" %}selected{% endif %}>JCP</option>
+        </select>
+
+        <!-- Status -->
+        <select name="status" class="form-select w-auto" style="min-width: 110px;" onchange="this.form.submit()">
+            <option value="">Status</option>
+            <option value="PAGO" {% if request.GET.status == "PAGO" %}selected{% endif %}>PAGO</option>
+            <option value="A PAGAR" {% if request.GET.status == "A PAGAR" %}selected{% endif %}>A PAGAR</option>
+        </select>
+
+        <!-- Mês -->
+        <select name="mes" class="form-select w-auto" style="min-width: 90px;" onchange="this.form.submit()">
+            <option value="">Mês</option>
+            {% for numero, nome in meses %}
+                <option value="{{ numero }}" {% if request.GET.mes == numero|stringformat:"s" %}selected{% endif %}>{{ nome }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Ano -->
+        <select name="anos" class="form-select w-auto" style="min-width: 90px;" onchange="this.form.submit()">
+            <option value="">Ano</option>
+            {% for ano in anos %}
+                <option value="{{ ano }}" {% if request.GET.anos == ano|stringformat:"s" %}selected{% endif %}>{{ ano }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Botão de ação -->
+        <div>
+            {% if request.GET.ativo or request.GET.mes or request.GET.anos or request.GET.classe or request.GET.tipo_proventos or request.GET.classe_ativos or request.GET.status %}
+                <a href="{% url "list_proventos" %}" class="btn btn-primary"><i class="bi bi-x-lg"></i></a>
+            {% else %}
+                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Botões de ação -->
+    <div class="d-flex gap-2">
         <a href="#" class="btn btn-success" id="iniciarPesquisaBtn" data-url="{% url 'pesquisar_proventos' %}">
-           <i class="bi bi-search"></i> Pesquisar Pagamento
+            <i class="bi bi-search"></i> Pesquisar Pagamento
         </a>
 
         <a href="#" class="btn btn-primary" 
@@ -38,14 +77,15 @@
     </div>
 </div>
 
-    <div class="table-responsive">
+<!-- Tabela -->
+<div class="table-responsive">
     {% if lists %}
-       {% include "proventos/table.html" %}
+        {% include "proventos/table.html" %}
     {% else %}
         <p class="h3">Nenhum registro encontrado.</p>
     {% endif %}
-    </div>
-    {% include "global/componentes/modal_forms.html" %}
-    {% include "global/componentes/pagination.html" %}
+</div>
 
+{% include "global/componentes/modal_forms.html" %}
+{% include "global/componentes/pagination.html" %}
 {% endblock %}

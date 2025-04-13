@@ -44,7 +44,11 @@ class PlanForm(forms.ModelForm):
     
     classe = forms.ChoiceField(choices=classe_options, widget=forms.Select(
         attrs={
-            'class': 'form-control'}
+            'class': 'form-control',
+            'name':'classe',
+        
+
+            }
         ))
     
 ####################################### PREÇO TETO #############################################    

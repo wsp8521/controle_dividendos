@@ -50,6 +50,7 @@ class ProventosForm(forms.ModelForm):
         choices=classe_options, 
         widget=forms.Select(attrs={
             'class': 'form-control',
+    
             }))
     tipo_provento = forms.ChoiceField(choices=op_options, widget=forms.Select(attrs={'class': 'form-control'}))
     

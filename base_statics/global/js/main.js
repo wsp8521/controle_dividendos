@@ -1,7 +1,8 @@
 import { FiltrarSetor, filtrarAtivos } from './filtros.js';
+import { showInputFonteRecurso } from './controllers.js';
 
 
-/**FILTROS */
+/**AÇOES NOS FORMULÁIROS DO MODAL */
 document.body.addEventListener('htmx:afterSwap', (event) => {
    
     // Executa apenas se o conteúdo veio para o modal
@@ -16,8 +17,14 @@ document.body.addEventListener('htmx:afterSwap', (event) => {
         if (document.querySelector("select[name='classe']") && document.querySelector("select[name='id_ativo']")) {
             /*pegado o link de forma dinamica*/
             const form = document.querySelector("form[data-url]");
-            const url = form.getAttribute("data-url");
+            const url = form.getAttribute("data-url")
             filtrarAtivos(url); // passe a URL correta se precisar
+        }
+
+
+           // Executa a função para exibir/ocultar o campo Fonte de Recurso
+           if (document.getElementById("id_fonte_recurso")) {
+            showInputFonteRecurso();
         }
     }
 });

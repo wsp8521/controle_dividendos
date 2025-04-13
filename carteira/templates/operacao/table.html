@@ -1,6 +1,6 @@
 <table class="table table-striped table-bordered">
     <thead>
-        <tr>
+        <tr class="text-center">
             <th>Ativo</th>
             <th>Classe</th>
             <th>Operacção</th>
@@ -13,7 +13,7 @@
     </thead>
     <tbody >
         {% for list in lists %}
-            <tr>
+            <tr class="text-center">
                 <td>{{ list.id_ativo }}</td>
                 <td>{{ list.classe }}</td>
                 <td>{{ list.tipo_operacao }}</td>
@@ -25,7 +25,7 @@
                 <td style="width:8em">
 
                     <!--btn visualizar-->
-                    <a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i></a>
+                    {% comment %} <a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i></a> {% endcomment %}
 
                     <!--btn Atualizar-->
                     <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" 

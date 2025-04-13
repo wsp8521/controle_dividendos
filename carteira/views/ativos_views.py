@@ -1,5 +1,6 @@
 import locale
 import json
+from decimal import Decimal
 from django.db.models import Sum, Q
 from carteira.models import Ativos
 from django.core.cache import cache
@@ -7,14 +8,11 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 from carteira.forms import AtivosForm
 from utils.cotacao import obter_cotacao
-from decimal import Decimal
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView,DetailView
 from carteira.dados_graficos.metric_chart_detail_ativo import chart_ativo_proventos
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-
-
 
 #READ
 class AtivoRender(ListView):
@@ -79,8 +77,6 @@ class AtivoDetail(DetailView):
         context = super().get_context_data(**kwargs)
         ativo = self.get_object()
         dados_graficos = chart_ativo_proventos(self.request.user.id, ativo)  # Passa o ID do ativo
-        #operacao = Operacao.objects.filter(fk_user_id=self.request.user.id, id_ativo=ativo).exclude(tipo_operacao="Venda")
-        #proventos = Proventos.objects.filter(fk_user_id=self.request.user.id, id_ativo=ativo)
         render_grafico = True
         
         # dados de metricas
@@ -89,8 +85,9 @@ class AtivoDetail(DetailView):
         cotacao = cotacoes.get(f"{ativo.ticket}.SA")  # Busca a cotação do ativo específico
         valor_mercado = Decimal(cotacao) * ativo.qtdAtivo if cotacao and ativo.qtdAtivo else 0
         valorizacao = valor_mercado - ativo.investimento if ativo.investimento else 0
-        patrimonio =  valor_mercado + ativo.dividendos + ativo.investimento if ativo.investimento else 0
-        rentabilidade = (valorizacao + ativo.dividendos) / ativo.investimento * 100 if ativo.investimento else 0
+        dividendos =  ativo.dividendos if ativo.dividendos else 0
+        patrimonio =  valor_mercado + dividendos + ativo.investimento if ativo.investimento else 0
+        rentabilidade = (valorizacao + dividendos) / ativo.investimento * 100 if ativo.investimento else 0
         
         dados={
             'ativo': ativo.ativo,
@@ -111,8 +108,7 @@ class AtivoDetail(DetailView):
               
         }
        
-        
-        
+    
         context['lists'] = dados
         context['grafico'] = {
             'grafico_operacao': json.dumps(dados_graficos['chart_operacao']),

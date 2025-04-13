@@ -47,35 +47,37 @@ function hiddenCampoIpca() {
 }
 
 //xxxxxxxxxxxxxxxxxxxxxxxxx Função para filtrar ativos com base na classe selecionada xxxxxxxxxxxxxxxxxxxxxx
-    function filtrarAtivos(url) {
-        const classeSelect = document.querySelector("select[name='classe']");  // Selecionando o select de classe
-        const ativoSelect = document.querySelector("select[name='id_ativo']");  // Selecionando o select de ativos
-        const classe = classeSelect.value;
+    // function filtrarAtivos(url) {
+    //     const classeSelect = document.querySelector("select[name='classe']");  // Selecionando o select de classe
+    //     const ativoSelect = document.querySelector("select[name='id_ativo']");  // Selecionando o select de ativos
+    //     const classe = classeSelect.value;
+
+    //     console.log(classeSelect)
         
-        if (classe) {
-            // Faz a requisição AJAX para filtrar os ativos
-            fetch(`${url}/filtrar-ativos/?classe=${classe}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Limpa as opções de ativos
-                    ativoSelect.innerHTML = '<option value="">Selecione um ativo...</option>';
+    //     if (classe) {
+    //         // Faz a requisição AJAX para filtrar os ativos
+    //         fetch(`${url}/filtrar-ativos/?classe=${classe}`)
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 // Limpa as opções de ativos
+    //                 ativoSelect.innerHTML = '<option value="">Selecione um ativo...</option>';
                     
-                    // Adiciona as opções recebidas da API
-                    data.ativos.forEach(ativo => {
-                        const option = document.createElement("option");
-                        option.value = ativo.id;
-                        option.textContent = ativo.nome;
-                        ativoSelect.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error("Erro ao buscar ativos:", error);
-                });
-        } else {
-            // Se não houver classe selecionada, limpa o campo de ativos
-            ativoSelect.innerHTML = '<option value="">Selecione uma classe primeiro...</option>';
-        }
-    }
+    //                 // Adiciona as opções recebidas da API
+    //                 data.ativos.forEach(ativo => {
+    //                     const option = document.createElement("option");
+    //                     option.value = ativo.id;
+    //                     option.textContent = ativo.nome;
+    //                     ativoSelect.appendChild(option);
+    //                 });
+    //             })
+    //             .catch(error => {
+    //                 console.error("Erro ao buscar ativos:", error);
+    //             });
+    //     } else {
+    //         // Se não houver classe selecionada, limpa o campo de ativos
+    //         ativoSelect.innerHTML = '<option value="">Selecione uma classe primeiro...</option>';
+    //     }
+    // }
 
     // //xxxxxxxxxxxxxxxxxxxxxxxxx PopUp de pesquisa de proventos xxxxxxxxxxxxxxxxxxxxxx
 

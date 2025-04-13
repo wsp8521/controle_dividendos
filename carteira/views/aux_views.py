@@ -36,4 +36,5 @@ def filtrar_ativos(request):
     
     # Prepara a resposta em formato JSON
     ativos_data = [{'id': ativo.pk, 'nome': ativo.ticket} for ativo in ativos]
+    print(ativos_data)
     return JsonResponse({'ativos': ativos_data})

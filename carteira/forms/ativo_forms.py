@@ -30,7 +30,10 @@ class AtivosForm(forms.ModelForm):
         choices=classe_options, 
         widget=forms.Select(attrs={
                                     'class': 'form-control', 
-                                    'id': 'id-classe', }))
+                                    'id': 'id-classe', 
+                    
+                                    
+                                    }))
     
      # Definindo o campo setor como um ModelChoiceField que busca dados da tabela Setor
     setor = forms.ModelChoiceField(
@@ -52,8 +55,17 @@ class AtivosForm(forms.ModelForm):
             self.fields['corretora'].widget.attrs.update({'class': 'form-select'})
             
             # Filtra o setor apenas do usuário logado
-            self.fields['setor'].queryset = models.SetorAtivo.objects.filter(fk_user=user) 
+            self.fields['setor'].queryset = models.SetorAtivo.objects.all()
             self.fields['setor'].widget.attrs.update({'class': 'form-select'})
+            
+            if is_edit:
+                   # Filtra por classe caso já tenha sido selecionada
+                classe_selecionada = None
+                if 'classe' in self.data:
+                    classe_selecionada = self.data.get('classe')
+                elif self.instance and self.instance.pk:
+                    classe_selecionada = self.instance.classe
+                self.fields['setor'].queryset = models.SetorAtivo.objects.filter(setor_classe=classe_selecionada)
             
             
         # Remove os campos que não devem aparecer no formulário no modo adição
@@ -117,7 +129,7 @@ class OperacaoForm(forms.ModelForm):
     # Definindo as opções dos campos select
       
     classe_options = [
-         (False, 'Classe do ativo'),
+         ("", 'Classe do ativo'),  
         ('Ação', 'Ação'),
         ('FII', 'FII'),
         ('FII-Infra', 'FII-Infra'),
@@ -129,6 +141,7 @@ class OperacaoForm(forms.ModelForm):
         ('Aporte', 'Aporte'),
         ('Bonificação', 'Bonificação'),
         ('Dividendos', 'Dividendos'),
+        ('Desdobramento', 'Desdobramento'),
     ]
     
     op_options = [
@@ -136,7 +149,7 @@ class OperacaoForm(forms.ModelForm):
         ('Compra', 'Compra'),
         ('Venda', 'Venda'),
         ('Bonificação', 'Bonificação'),
-        ('Dação', 'Dação'),
+        # ('Dação', 'Dação'),
         ('Desdobramento', 'Desdobramento'),
     ]
 
@@ -146,7 +159,7 @@ class OperacaoForm(forms.ModelForm):
         widget=forms.Select(
             attrs={
                 'class': 'form-control',
-               
+                'name': 'wesett', 
                 
                 }),
             required=True, error_messages={'required': 'Este campo é obrigatório.'  # Mensagem de erro personalizada
@@ -156,5 +169,19 @@ class OperacaoForm(forms.ModelForm):
     tipo_operacao = forms.ChoiceField(choices=op_options, widget=forms.Select(attrs={'class': 'form-control'}))
     fonte_recurso = forms.ChoiceField(choices=font_recuso, widget=forms.Select(attrs={'class': 'form-control'}))
    
- 
+    def __init__(self, *args, **kwargs):
+        is_edit = kwargs.pop('is_edit', False)  # Parâmetro extra para verificar o contexto (adição ou edição de registro)
+        super().__init__(*args, **kwargs)
+        
+        if is_edit:
+            
+            print("dfjslkdfjsldfjlsdjfslfjlksdfj")
+            #     # Filtra por classe caso já tenha sido selecionada
+            # classe_selecionada = None
+            # if 'classe' in self.data:
+            #     classe_selecionada = self.data.get('classe')
+            # elif self.instance and self.instance.pk:
+            #     classe_selecionada = self.instance.classe
+            # self.fields['ativo'].queryset = models.Ativos.objects.filter(classe=classe_selecionada)
+
 
