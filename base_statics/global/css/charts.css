@@ -3,6 +3,8 @@
 /* *************************************************************************/
 @import url('variables.css');
 
+
+
 .graficos-container {
     display: flex;
     justify-content: flex-start; /* Alinha os gráficos à esquerda */
@@ -55,6 +57,8 @@
     
     justify-content: center; /* alinha verticalmente */
     align-items: center;     /* alinha horizontalmente */
+    border-radius: 10px;box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+border: 1px solid rgba(255, 255, 255, 0.05);padding: 0 !important;
    
 }
 
@@ -81,10 +85,10 @@
 
 #composicao-patrimonio .metrica{font-size: 2em; font-weight: none;}
 
-
 /*gráficos dividendos*/
 #chart-proventos-mensais{width:var(--container-grafico)}
 #metrica-dividendos .card{height: 120px;}
+
 #chart-composicao-dividendos{
     width: calc(var(--container-grafico) + 20vw);
 

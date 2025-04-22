@@ -80,11 +80,11 @@ class PlanMetasRender(ListView):
             recomendacao = "Comprar" if diferenca < 0 else "Não comprar"
             
             if plan.qtd == ativos.qtdAtivo:
-                status_meta = "Alcançada"
+                status_meta = 1  #Alcançada
             elif ativos.qtdAtivo > plan.qtd:
-                status_meta = "Ultrapassada"
+                status_meta = 2  # Ultrapassada
             else:
-                status_meta = "Não alcançada"
+                status_meta = 0  #Não alcançada"
                     
             lista_ativos.append({
                 "pk": plan.id,

@@ -33,7 +33,7 @@ urlpatterns = [
     
     #operaçao com proventos
     path('proventos/filtrar-ativos/', views.filtrar_ativos, name='filtrar_ativos'),
-    path('proventos/pagamento/', views.pgto_proventos, name='pgto_proventos'),
+    path('proventos/agenda/', views.pgto_proventos, name='pgto_proventos'),
     path('proventos/pesquisar/', views.pesquisar_pagamento, name='pesquisar_proventos'),
     path('status-tarefa/<str:task_id>/', views.verificar_status_tarefa, name='verificar_status_tarefa'),
     

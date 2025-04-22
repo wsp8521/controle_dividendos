@@ -19,6 +19,7 @@ class ProventosRender(ListView):
 
     def get_queryset(self):
         queryset = cache.get('dividendos_listagem')  #recuperando dados no cache
+        self.filter_url_pag_nav = ""
         
          #Filtros
         filter_ativo= self.request.GET.get('ativo')
@@ -37,29 +38,37 @@ class ProventosRender(ListView):
         #aplicando filtros
         if filter_ativo:
             queryset = queryset.filter(id_ativo__ticket__icontains=filter_ativo)
+            self.filter_url_pag_nav += f"&ativo={filter_ativo}"
         
         if filter_classe:
             queryset = queryset.filter(classe=filter_classe)
-        
+            self.filter_url_pag_nav += f"&classe_ativo={filter_classe}"
+           
+    
         if filter_tipo_proventos:
             queryset = queryset.filter(tipo_provento=filter_tipo_proventos)
+            self.filter_url_pag_nav += f"&tipo_proventos={filter_tipo_proventos}"
             
         if filter_mes:
             queryset = queryset.filter(mes=filter_mes)
+            self.filter_url_pag_nav += f"&mes={filter_mes}"
             
         if filter_ano:
             queryset = queryset.filter(ano=filter_ano)
+            self.filter_url_pag_nav += f"&anos={filter_ano}"
           
         if filter_status:
             queryset = queryset.filter(status=filter_status)
+            self.filter_url_pag_nav += f"&status={filter_status}"
        
         return queryset
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        proventos = self.get_queryset()
+        page_obj = context['page_obj']  # já paginado
+        proventos = page_obj.object_list
         meses = [(i, month_name[i]) for i in range(1, 13)]
-        ano = proventos.filter(fk_user_id=self.request.user.id).values_list('ano', flat=True).distinct().order_by('-ano')
+        ano = self.get_queryset().filter(fk_user_id=self.request.user.id).values_list('ano', flat=True).distinct().order_by('-ano')
         
         # Cria uma lista com os dados para exibir na tabela
         dados_tabela = []
@@ -88,6 +97,7 @@ class ProventosRender(ListView):
         context['lists'] = dados_tabela
         context['meses'] = meses
         context['anos'] = ano
+        context['url_filter_pagination'] = self.filter_url_pag_nav or ""
     
         return context
     

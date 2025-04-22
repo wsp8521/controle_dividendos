@@ -82,62 +82,63 @@ def grafico_composicao_dividendos(id_user):
 # =========================================================================================================
 
 #patrimônio
+from collections import defaultdict
+from decimal import Decimal
+from django.db.models import Sum
+import locale
+from datetime import datetime
+
 def metrica_patrimonio(id_user):
     dados_ativo = ativo(id_user)  # Obtendo os dados dos ativos do usuário
     
-    # Obtendo os valores do banco de dados
+    # Total investido (incluindo reinvestimentos)
     total_investido = dados_ativo.aggregate(Sum('investimento'))['investimento__sum'] or Decimal(0)
     total_dividendos = dados_ativo.aggregate(Sum('dividendos'))['dividendos__sum'] or Decimal(0)
     total_ativo = dados_ativo.aggregate(Sum('qtdAtivo'))['qtdAtivo__sum'] or 0
 
-    # Obtendo os tickers e quantidades dos ativos
+    # Obtendo dados relevantes
     ativos_info = [(ativo.ticket, ativo.qtdAtivo, ativo.classe, ativo.dividendos, ativo.investimento) for ativo in dados_ativo]
-        
-    #armazenando o tiketer em uma lista. ignorando a quantidade e a classe atraves do _,_
-    tickers = [ticket for ticket, _, _,_,_ in ativos_info]
- 
-    # Recupera os dados do cache ou busca novas cotações
+    tickers = [ticket for ticket, _, _, _, _ in ativos_info]
+
+    # Recupera cotação atual
     cache_key = "cotacao_key"
     cotacoes = cache.get(cache_key)
 
     if not cotacoes:
-        cotacoes = obter_cotacao(tickers)  # Busca novas cotações e armazena no cache
-        cache.set(cache_key, cotacoes, timeout=3600)  # Salva no cache por 1 hora
+        cotacoes = obter_cotacao(tickers)
+        cache.set(cache_key, cotacoes, timeout=3600)
 
-    # Calculando a valorização total
-    total_valorizacao = sum(qtd or 0 * cotacoes.get(f'{ticker}.SA', 0) for ticker, qtd, _,_,_ in ativos_info)
+    # Cálculo do valor de mercado atual (patrimônio atual)
+    total_valor_mercado = sum((qtd or 0) * Decimal(cotacoes.get(f'{ticker}.SA', 0)) for ticker, qtd, _, _, _ in ativos_info)
 
-    # Calculando o patrimônio total
-    patrimonio_total = total_investido + Decimal(total_valorizacao) + total_dividendos
-    
-    # Cálculo da rentabilidade
-    rentabilidade = (patrimonio_total / total_investido) * 100 if total_investido else 0
+    # Cálculo da valorização (valor de mercado - valor investido)
+    lucro_ou_prejuizo = total_valor_mercado - total_investido
+
+    # Rentabilidade líquida
+    rentabilidade = ((total_valor_mercado - total_investido) / total_investido * 100) if total_investido else Decimal(0)
     rentabilidade = round(rentabilidade, 2)
-    
-    # Calculando patrimônio por classe
-    patrimonio_por_classe = defaultdict(Decimal)
 
-    #desempacotando a lista de ativos_info e atribuindo o valor do ticker, quantidade e classe
-    for ticker, qtd, classe, proventos, investimento in ativos_info:
-        valor_mercado = qtd or 0 * cotacoes.get(f'{ticker}.SA', 0)
-        valor_total = Decimal(valor_mercado) +Decimal(proventos or 0) + Decimal(investimento or 0)
-        patrimonio_por_classe[classe] += Decimal(valor_total)
-    
+    # Patrimônio por classe
+    patrimonio_por_classe = defaultdict(Decimal)
+    for ticker, qtd, classe, _, _ in ativos_info:
+        valor_mercado = (qtd or 0) * Decimal(cotacoes.get(f'{ticker}.SA', 0))
+        patrimonio_por_classe[classe] += valor_mercado
+
     patrimonio_por_classe = {classe: float(valor) for classe, valor in patrimonio_por_classe.items()}
- 
+
     return {
-        "total_ativo": '{:,.0f}'.format(total_ativo).replace(',', '.'), #acrescentendo separador de milhar
-        "investimento": locale.currency(total_investido, grouping=True), #formato moeda 
+        "total_ativo": '{:,.0f}'.format(total_ativo).replace(',', '.'),  # separador de milhar
+        "investimento": locale.currency(total_investido, grouping=True),
         "dividendos": locale.currency(total_dividendos, grouping=True),
-        "valorizacao": locale.currency(total_valorizacao, grouping=True),
-        "patrimonio_total": locale.currency(patrimonio_total, grouping=True),
+        "valorizacao": locale.currency(lucro_ou_prejuizo, grouping=True),
+        "patrimonio_total": locale.currency(total_valor_mercado, grouping=True),
         "rentabilidade": rentabilidade,
-        "patrimonio_por_classe": patrimonio_por_classe  # Para o gráfico de pizza
+        "patrimonio_por_classe": patrimonio_por_classe
     }
-   
-#metrica dividendos    
+
+# permanece inalterada
 def metrica_dividendos(id_user):
-    dados = dividendos(id_user).filter(ano=datetime.now().year)  # Filtra os dividendos do ano atual 
+    dados = dividendos(id_user).filter(ano=datetime.now().year)
     total_dividendos = dados.aggregate(Sum('valor_recebido'))['valor_recebido__sum'] or Decimal(0)
     media_mensal = total_dividendos / 12 if total_dividendos else 0
     proximos_pagamentos = dados.filter(status="A PAGAR").aggregate(Sum('valor_recebido'))['valor_recebido__sum'] or Decimal(0)

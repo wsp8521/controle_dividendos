@@ -1,22 +1,9 @@
-<div class="col-md-12">
-<div class="table-responsive"> 
-  <table class="table table-bordered text-center align-middle">
-    <thead class="table-warning">
-      <tr>
-        <th colspan="8">CONTROLE DE METAS FII</th>
-        <th colspan="2">ANO: 2025</th>
-      </tr>
-      <tr class="table-light">
-        <th colspan="5">METAS GERAL: {{meta_geral}} COTAS</th>
-        <th colspan="5">INVESTIMENTO NECESSÁRIO: R$ {{investimento_total|floatformat:2}}</th>
-      </tr>
-      <tr class="table-light">
-        <th colspan="3">Meta do ano: {{meta_anual}} COTAS</th>
-        <th colspan="3">Alcançada em 2025: {{meta_alcancada}}</th>
-        <th colspan="4">{{meta_status}}</th>
-      </tr>
-      <!--TABELA-->
-      <tr class="table-primary">
+<div class="box-table">
+  <div class="card-header">📈 Plano de aquisições</div>
+  <table class="table table-striped table-dark">
+    <thead>
+      <!-- TABELA -->
+      <tr class="text-center">
         <th>ATIVOS</th>
         <th>QTD ATUAL</th>
         <th>METAS DO ANO</th>
@@ -24,41 +11,72 @@
         <th>QTD. RESTANTE</th>
         <th>COTAÇÃO</th>
         <th>TOTAL</th>
-        <th>DIFERENÇA </th>
-        <th>RECOMENDAÇÃO</th> 
-        <th>AÇÃO</th> 
+        <th>DIFERENÇA</th>
+        <th>RECOMENDAÇÃO</th>
+        <th>AÇÃO</th>
       </tr>
     </thead>
     <tbody>
       {% for list in lists %}
-      <tr>
-        <td>{{ list.ativo }}</td>
-        <td>{{ list.qtd_atual }}</td>
-        <td>
-          <span 
-          class="form-control editable-meta text-center"
-          contenteditable="true" 
-          data-field="qtd"
-          data-meta-id="{{ list.pk }}"
-           >{{ list.qtd }}</span>
-        </td>
-        <td>{{list.status}}</td>
-        <td>{{list.cota_restante}}</td>
-        <td>{{list.cotacao}}</td>
-        <td>R$ {{list.total|floatformat:2}}</td>
-        <td  class="{% if list.diferenca > 0 %}text-success{% else %}text-danger{% endif %}">R$ {{ list.diferenca|floatformat:2 }}</td> <!-- Formato de moeda -->
-        
-        <td class="{% if list.diferenca < 0 %}bg-success{% else %}bg-danger{% endif %}">{{ list.recomendacao }}</td>
-        <td><!--btn deleter-->
-          <a  onclick="modal(this)" 
-          data-page="plan-metas" 
-          data-name="{{list.ativo}}" 
-          data-id="{{list.pk}}"
-           href="#" 
-           class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></i></a></td> 
-      </tr>
-    {% endfor %}
+        <tr class="text-center">
+          <td>{{ list.ativo }}</td>
+          <td>{{ list.qtd_atual }}</td>
+          <td>
+            <span class="form-control editable-meta text-center" contenteditable="true" data-field="qtd" data-meta-id="{{ list.pk }}">{{ list.qtd }}</span>
+          </td>
+          <td>
+            <span class="badge  {% if list.status == 1 %}
+                bg-primary
+              {% elif list.status == 2 %}
+                bg-success
+              {% else %}
+                bg-danger
+              {% endif %}">
+              {% if list.status == 1 %}
+                Alcançada
+              {% elif list.status == 2 %}
+                Ultrapassad
+              {% else %}
+                Não alcançada
+              {% endif %}
+            </span>
+          </td>
+          <td>{{ list.cota_restante }}</td>
+          <td>{{ list.cotacao }}</td>
+          <td>R$ {{ list.total|floatformat:2 }}</td>
+          <td>
+            <span class="badge {% if list.diferenca > 0 %}
+                
+              text-success
+
+              {% else %}
+                
+              text-danger
+
+              {% endif %}">
+              R$ {{ list.diferenca|floatformat:2 }}
+            </span>
+          </td> <!-- Formato de moeda -->
+
+          <td>
+            <span class=" badge {% if list.diferenca < 0 %}
+                
+              bg-success
+
+              {% else %}
+                
+              bg-danger
+
+              {% endif %}">
+              {{ list.recomendacao }}
+            </span>
+          </td>
+          <td>
+            <!-- btn deleter -->
+            <a onclick="modal(this)" data-page="plan-metas" data-name="{{ list.ativo }}" data-id="{{ list.pk }}" href="#" class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></a>
+          </td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>
-</div> 

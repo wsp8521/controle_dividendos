@@ -1,52 +1,56 @@
-<table class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th class="text-center">Ativo</th>
-            <th class="text-center">Tiket</th>
-            <th class="text-center">Classe</th>
-            <th class="text-center">Setor</th>
-            <th class="text-center">QTD</th>
-            <th class="text-center">Investimento</th>
-            <th class="text-center">Dividendos</th>
-            <th class="text-center">Cotação</th>
-            <th class="text-center">Ações</th>
-        </tr>
-    </thead>
-    
-    <tbody id="tbodyAtivos">
-        {% for list in lists %}
-            <tr>
-                <td> {{ list.ativo }}</td>
-                <td class="text-center">{{ list.ticket }}</td>
-                <td class="text-center">{{ list.classe }}</td>
-                <td class="text-center">{{ list.setor }}</td>
-                <td class="text-center">{{ list.qtd }}</td>
-                <td class="text-center">{{ list.investimento }}</td>
-                <td class="text-center">{{ list.dividendos }}</td>
-                <td class="text-center">{{ list.cotacao }}</td>
-                <td style="width:8em">
 
-    
-                    <!--btn Atualizar-->
-                    <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" 
-                    data-bs-target="#cadastroModal"
-                    hx-get = {% url "update_ativo" list.pk %}
-                    hx-target = "#addContent"
-                    hx-swap = "innerHTML"
-                    ><i class="bi bi-pencil-fill"></i></a>
+<div class="box-table">
+  <div class="card-header">📈 Lista de Ativos</div>
+    <table class="table table-striped table-dark " id="table-ativo">
+     <thead>
+       <tr>
+         <th class="text-center">Ativo</th>
+         <th class="text-center">Tiket</th>
+         <th class="text-center">Classe</th>
+         <th class="text-center">Setor</th>
+         <th class="text-center">QTD</th>
+         <th class="text-center">Investimento</th>
+         <th class="text-center">Dividendos</th>
+         <th class="text-center">Cotação</th>
+         <th class="text-center">Ações</th>
+       </tr>
+     </thead>
+     <tbody id="tbodyAtivos">
+       {% for list in lists %}
+       <tr>
+         <td >{{ list.ativo }}</td>
+         <td class="text-center">{{ list.ticket }}</td>
+         <td class="text-center">{{ list.classe }}</td>
+         <td class="text-center">{{ list.setor }}</td>
+         <td class="text-center">{{ list.qtd }}</td>
+         <td class="text-center">{{ list.investimento }}</td>
+         <td class="text-center">{{ list.dividendos }}</td>
+         <td class="text-center">{{ list.cotacao }}</td>
+         <td class="text-center" style="min-width: 8em">
+           <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" 
+             data-bs-target="#cadastroModal"
+             hx-get="{% url 'update_ativo' list.pk %}"
+             hx-target="#addContent"
+             hx-swap="innerHTML">
+             <i class="bi bi-pencil-fill"></i>
+           </a>
 
-                     <!--btn visualizar-->
-                     <a href="{% url "detail_ativo" list.pk %}" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i></a>
+           <a href="{% url 'detail_ativo' list.pk %}" class="btn btn-info btn-sm">
+             <i class="bi bi-eye-fill"></i>
+           </a>
 
-                    <!--btn deleter-->
-                    <a  onclick="modal(this)" 
-                    data-page="ativo" 
-                    data-name="{{list.ativo}}" 
-                    data-id="{{list.pk}}"
-                     href="#" 
-                     class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></i></a>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+           <a onclick="modal(this)" 
+             data-page="ativo" 
+             data-name="{{ list.ativo }}" 
+             data-id="{{ list.pk }}"
+             href="#" 
+             class="btn btn-danger btn-sm">
+             <i class="bi bi-trash-fill"></i>
+           </a>
+         </td>
+       </tr>
+       {% endfor %}
+     </tbody>
+   </table>
+ </div>
+

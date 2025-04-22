@@ -7,10 +7,17 @@ from django.contrib.auth import get_user_model
 from carteira.tarefas.agenda_dividendos import agenda_dividendos
     
 
-User = get_user_model()
+
 
 @shared_task
-def taks_agenda_pagamento(id_user):
+def taks_agenda_pagamento():
+    User = get_user_model()
+    for user in User.objects.all():
+        agenda_dividendos(user.id)
+
+@shared_task
+def taks_buscar_agenda_pagamento(id_user):
+    User = get_user_model()
     user = User.objects.get(id=id_user) #obtando o id do usuário
     return agenda_dividendos(id_user=user.id)
     

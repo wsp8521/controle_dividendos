@@ -1,9 +1,91 @@
 @import url('charts.css');
 
+#pagination{margin-top: 20px;}
+.nav-tabs .nav-link.active {
+  background-color: #0d6efd;
+  color: #fff;
+}
 
+/*FORMATAÇAO BARRA DE MENU*/
+.custom-nav-link {
+    color: #adb5bd;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+  }
+  
+  .custom-nav-link:hover {
+    color: #ffffff;
+    background-color: #343a40;
+    text-decoration: none;
+  }
+  
+  .custom-nav-link.active {
+    background-color: #0d6efd;
+    color: white !important;
+    border-left: 4px solid #0a58ca;
+    font-weight: 500;
+  }
+  
+  .section-title {
+    color: #ced4da;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 12px 8px 4px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 16px;
+    margin-bottom: 4px;
+    position: relative;
+  }
+  
+  .section-title::before {
+    content: "•";
+    color: #0d6efd;
+    margin-right: 6px;
+    font-size: 1rem;
+    vertical-align: middle;
+  }
+  
+
+/*FORMATAÇAO GERAL DOS FORMULARIOS*/
+input, select{background-color: #FFFFFF !important; color: #343a40 !important;}
+input::placeholder {color: #343a40 !important; opacity: 1; }
+
+
+/*FORMATAÇAO GERAL DAS TABELAS*/
+.box-table {
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 !important;
+  }
+
+  .table{margin: 0 !important; }
+
+  .card-header {
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #444;
+    padding: 10px;
+  }
+
+  /* tr th:nth-child(n+2):not(:nth-child(5)):not(:nth-child(7)) {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+   */
+
+  /* #table-ativo td:nth-child(n+6){width: 7vw;} aplica formatação a partir do sexto elemtno */
+  #table-ativo td:nth-child(1){width: 30.w !important;}
+
+ 
 /*FORMATAÇAO FORMULÁRIO DE CADASTRO DE ATIVOS*/
-
-
 
 .ag-theme-custom {
     --ag-background-color: #f5f5f5; /* Cor de fundo geral */
@@ -54,31 +136,29 @@
 }
 
 /*Estilização pagina pagamento proventos*/
-.ativo {
-    max-height: 400px; /* Define altura máxima */
-    overflow-y: auto; /* Adiciona rolagem vertical */
-    position: relative;
+#table-agenda-pagamento .table-pagamentos {
+  max-height: 400px;
+  overflow-y: auto;
+  position: relative;
+}
+#pgto-pendente {
+  max-height: 74vh;
+  overflow-y: auto;
+  position: relative;
 }
 
-.table thead th {
-    position: sticky;
-    top: -2px;
-    background: #343a40; /* Cor do cabeçalho */
-    color: white;
-    z-index: 2;
-}
+#table-agenda-pagamento table tr{text-align: center;}
+
 
 .table tfoot td {
     position: sticky;
+    font-weight: bold;
+    font-size: large;
     bottom: 0;
-    background: #ffc107; /* Cor do rodapé */
     z-index: 2;
 }
 
-.table {
-    border-collapse: collapse; /* Remove espaços extras */
-    width: 100%;
-}
+
 
 /* CSS para o pop-up de carregamento da pagina dividendos */
 #loading-popup {
@@ -100,6 +180,7 @@
 /*formatação detalhes do ativo*/
 #detalhe-ativo table{width:80vw}
 #detalhe-ativo .card{height: 15vh;}
+#line-1{margin-top: 10px;}
 #line-1 .col-md-3:nth-child(2) .card {background-color:#808080;}
 #line-1 .col-md-3:nth-child(3) .card {background-color:#0080c0;}
 #line-1 .col-md-3:nth-child(4) .card {background-color:#8000ff;}

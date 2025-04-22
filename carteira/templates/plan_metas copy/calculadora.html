@@ -1,0 +1,104 @@
+{% extends "global/base.html" %}
+{% block content %}
+{% include "global/componentes/menssage.html" %}
+<p id="successMessageCotacao" style="display: none;" class="alert alert-success">
+    <!-- A mensagem será inserida aqui -->
+</p>
+
+<div class="container mt-4">
+    <h4 class="text-center bg-success p-2">DISTRIBUIÇÃO DE COMPRA</h4>
+    <br>
+<form action="#"  method="GET" class="filter-product" >
+    <div class="input-group">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="tipo_calc" id="flexRadioDefault1" value="FII" 
+            {% if request.GET.tipo_calc == "FII" %} checked {% endif %} onchange="this.form.submit();">
+            <label class="form-check-label" for="flexRadioDefault1">
+              Fundos Imobiliários
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="tipo_calc" id="flexRadioDefault2" value="Ação" 
+            {% if request.GET.tipo_calc == "Ação" %} checked {% endif %} onchange="this.form.submit();">
+            <label class="form-check-label" for="flexRadioDefault2">
+              Ações
+            </label>
+        </div>
+</form>
+    <br>
+    <br>
+
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>VALOR</th>
+                <th colspan="{% if request.GET.tipo_calc == "FII" %}3{% else %}2{% endif %}">
+                    <span 
+                    id="valor-investimento"  
+                    data-field="valor_investimento"
+                    class="form-control editable-meta text-center"
+                    data-meta-id="{{id_class}}" 
+                     contenteditable="true" >R$ {{valor_investimento|floatformat:2}}
+                    </span>
+                </th>
+                
+              <th colspan="2">SALDO {{saldo}} </th>
+            </tr>
+            <tr>
+                <th class="bg-info">ATIVOS</th>
+                <th class="bg-info">QTD</th>
+                <th class="bg-info">COTAÇÃO</th> <!-- Nova Coluna -->
+                <th class="bg-info">TOTAL</th>
+                
+                <!-- Exibe as colunas "PROV" e "TOTAL PROV" apenas se for "FII" -->
+                {% if request.GET.tipo_calc == "FII" %}
+                    <th class="prov-col bg-info">PROV</th>
+                    <th class="prov-col bg-info">TOTAL PROV</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+          {% for ativo in ativos %}
+            <tr>
+              <td>{{ ativo.ativo }}</td>
+              <td><!-- Exibe a quantidade -->
+                <span 
+                class="form-control editable-meta text-center"
+                contenteditable="true" 
+                data-field="qtd_calc"
+                data-meta-id="{{ ativo.pk }}"
+                >{{ ativo.qtd_calc }}</span>
+              </td>
+              <td>R$ {{ ativo.cotacao }}</td> <!-- Exibe a cotação -->
+              <td>{{ ativo.total}}</td>
+         
+              <!-- Exibe as colunas "PROV" e "TOTAL PROV" apenas se for "FII" -->
+              {% if request.GET.tipo_calc == "FII" %}
+                <td class="prov-col">
+                  <span 
+                  class="form-control editable-meta text-center" 
+                  contenteditable="true" 
+                  data-field="proventos"
+                  data-meta-id="{{ ativo.pk }}">{{ativo.proventos}}</span>
+                </td>
+                <td class="prov-col">{{ativo.total_provento|floatformat:2}}</td>
+              {% endif %}
+          </tr>
+          {% endfor %}
+            <tr class="fw-bold">
+                <td>Total</td>
+                <td colspan="1">{{soma_total_ativo}}</td>
+                <td></td>
+                <td>R$ {{soma_total_diheiro}}</td>
+       
+                <!-- Exibe as colunas "PROV" e "TOTAL PROV" apenas se for "FII" -->
+                {% if request.GET.tipo_calc == "FII" %}
+                  <td class="prov-col">{{soma_prov}}</td>
+                  <td class="prov-col">{{soma_total_prov}}</td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

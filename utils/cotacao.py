@@ -1,7 +1,6 @@
-import yfinance as yf
+
 from django.core.cache import cache
 from datetime import timedelta
-import asyncio
 from yahooquery import Ticker
 
 from django.core.cache import cache

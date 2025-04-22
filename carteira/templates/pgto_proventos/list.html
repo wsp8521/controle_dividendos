@@ -1,48 +1,43 @@
 {% extends "global/base.html" %}
 {% block title %}Pagamento de dividendos{% endblock title %}
 {% block content %}
-<p class="h3">Pagamento de dividendos</p>
 
-<form action="#" method="GET" class="filter-product">
-    <div class="row">
-        <!-- Mês -->
-        <div class="col-md-6 form-group">
-            <label for="mes" class="form-label">Mês</label>
-            <select id="mes" class="form-select" name="mes" onchange="this.form.submit();">
-                {% for mes in meses %}
-                    <option value="{{ mes.0 }}" {% if mes.0 == mes_selecionado %}selected{% endif %}>
-                        {{ mes.1 }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
+<!-- Título e formulário lado a lado -->
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+  <p class="h3 mb-0">Pagamento de dividendos</p>
 
-        <!-- Ano -->
-        <div class="col-md-6 form-group">
-            <label for="ano" class="form-label">Ano</label>
-            <select id="ano" class="form-select" name="ano" onchange="this.form.submit();">
-                {% for ano in anos %}
-                    <option value="{{ ano }}" {% if ano|stringformat:"s" == ano_selecionado %}selected{% endif %}>
-                        {{ ano }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
+  <form action="#" method="GET" class="d-flex gap-2">
+    <!-- Mês -->
+    <div class="form-group">
+      <label for="mes" class="form-label">Mês</label>
+      <select id="mes" class="form-select" name="mes" onchange="this.form.submit();">
+        {% for mes in meses %}
+          <option value="{{ mes.0 }}" {% if mes.0 == mes_selecionado %}selected{% endif %}>
+            {{ mes.1 }}
+          </option>
+        {% endfor %}
+      </select>
     </div>
-</form>
 
-<br/>
-
-<div class="container mt-4">
-    <div class="row">
-      {% include "pgto_proventos/table_fii.html" %}
-        {% include "pgto_proventos/table_acao.html" %}
-        {% include "pgto_proventos/tbl_rend_mensal.html" %}
-        {% include "pgto_proventos/pgto_pendente_fii.html" %}
+    <!-- Ano -->
+    <div class="form-group">
+      <label for="ano" class="form-label">Ano</label>
+      <select id="ano" class="form-select" name="ano" onchange="this.form.submit();">
+        {% for ano in anos %}
+          <option value="{{ ano }}" {% if ano|stringformat:"s" == ano_selecionado %}selected{% endif %}>
+            {{ ano }}
+          </option>
+        {% endfor %}
+      </select>
     </div>
+  </form>
+</div>
+
+<!-- Tabelas -->
+<div id="table-agenda-pagamento">
+  {% include "pgto_proventos/table.html" %}
 </div>
 
 {% include "global/componentes/modal_forms.html" %}
 {% include "global/componentes/pagination.html" %}
-
 {% endblock %}

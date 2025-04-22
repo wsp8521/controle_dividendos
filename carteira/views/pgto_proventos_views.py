@@ -3,7 +3,7 @@ from datetime import datetime
 from django.db.models import Sum
 from carteira.models import Proventos, Ativos
 from django.shortcuts import render
-from carteira.tasks import taks_agenda_pagamento
+from carteira.tasks import taks_buscar_agenda_pagamento
 from datetime import datetime
 from django.contrib import messages
 from django.http import JsonResponse
@@ -15,8 +15,8 @@ from celery.result import AsyncResult
 '''
 
 def pgto_proventos(request):
-     proventos = Proventos.objects.filter(fk_user_id=request.user.id,)
-     ativos = Ativos.objects.filter(fk_user_id=request.user.id, qtdAtivo__gt=0, classe="FII")
+     proventos = Proventos.objects.filter(fk_user_id=request.user.id)
+     ativos = Ativos.objects.filter(fk_user_id=request.user.id, qtdAtivo__gt=0, classe__icontains="FII")
      
       # Pegando o mê e o ano atual
      mes_atual_str = str(datetime.today().month) #Pegando o mês atual como string SEM zero à esquerda
@@ -25,10 +25,11 @@ def pgto_proventos(request):
      #dados filtrados
      filter_ano = request.GET.get('ano') if request.GET.get('ano') else ano_atual
      filter_mes = request.GET.get('mes') if request.GET.get('mes') else mes_atual_str
-     queryset = proventos.filter(ano = filter_ano,mes = filter_mes).order_by('-data_pgto')
+     filter_status =  request.GET.get("filtro_status") if request.GET.get('filtro_status') else "todos"
+     queryset_proventos = proventos.filter(ano = filter_ano,mes = filter_mes).order_by('-data_pgto')
      ano_list = proventos.values_list('ano', flat=True).distinct().order_by('-ano')
-     total_proventos_fii = queryset.filter(classe='FII').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
-     total_proventos_acao = queryset.filter(classe='Ação').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
+     total_proventos_fii = queryset_proventos.filter(classe__icontains='FII').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
+     total_proventos_acao = queryset_proventos.filter(classe='Ação').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
      proventos_acumulados_fii = proventos.filter(classe='FII').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
      proventos_acumulados_acao = proventos.filter(classe='Ação').aggregate(Sum('valor_recebido'))['valor_recebido__sum']
      proventos_mensais = distribuicao_proventos(request.user.id, filter_ano)
@@ -49,8 +50,9 @@ def pgto_proventos(request):
     ]
      fiis = []
      acoes = []
-
-     for ativo in queryset:
+     
+     
+     for ativo in queryset_proventos:
           dado = {
                'ativo': ativo.id_ativo,
                'classe': ativo.classe,
@@ -59,11 +61,30 @@ def pgto_proventos(request):
                'acumulado':proventos.filter(id_ativo=ativo.id_ativo).aggregate(Sum('valor_recebido'))['valor_recebido__sum'],
           }
      
-          if ativo.classe == "FII":
+          #segregando dados por tipo de classe
+          if "FII" in ativo.classe:
                fiis.append(dado)
           else:
                acoes.append(dado)
                
+     #seprando os fiis que foram pagos dos não pagos 
+     pgto_fiis = {}
+     lists_provento = {item.id_ativo.ticket: item.valor_recebido for item in queryset_proventos}
+
+     for ativo in ativos:
+          if ativo.ticket not in lists_provento:
+               pgto_fiis[ativo.ticket] = 0
+          else:
+               pgto_fiis[ativo.ticket] = lists_provento[ativo.ticket]
+
+     #aplicando filtro
+     if filter_status=="0":
+          pgto_fiis = {ativo: valor for ativo, valor in pgto_fiis.items() if valor == 0}
+     
+     if filter_status == "1":
+          pgto_fiis = {ativo: valor for ativo, valor in pgto_fiis.items() if valor != 0}
+         
+                   
      context = {
           "ativo":ativos,
           "meses": meses,
@@ -77,25 +98,11 @@ def pgto_proventos(request):
           'proventos_acumulados_fii': proventos_acumulados_fii,
           'proventos_acumulados_acao': proventos_acumulados_acao,
           'proventos_mensais': proventos_mensais,  # Adiciona o resultado da função ao context
-          'assoc_pgto_ativo':assoc_pgto_ativo(ativos, queryset)
+          'assoc_pgto_ativo': pgto_fiis  #assoc_pgto_ativo(ativos, queryset_proventos)
      }
      return render(request, "pgto_proventos/list.html", context)
 
-#associação dos pagamentos do mês ao ativo
-def assoc_pgto_ativo(ativo_data, proventos_data):
-     prov_ativos = {}
-     # Loop para cada ativo
-     for ativo in ativo_data:
-          # Filtra os proventos para o ativo específico
-          rendimento = proventos_data.filter(id_ativo=ativo).first()  # Pega o primeiro provento encontrado
-
-          # Verifica se o provento foi encontrado
-          if rendimento:
-               prov_ativos[ativo.ticket] = rendimento.valor_recebido
-          else:
-               prov_ativos[ativo.ticket] = 'AGUARDANDO PAGAMENTO'               
-     return prov_ativos
-    
+  
 #definindo a função de distribuição de proventos mensais
 def distribuicao_proventos(user, ano):
      dados = Proventos.objects.filter(
@@ -141,7 +148,7 @@ def pesquisar_pagamento(request):
      
      messages.success(request,"Inciciando as pesquisas")
      user_id = request.user.id  # Pegando o ID do usuário logado
-     result_task = taks_agenda_pagamento.delay(user_id)
+     result_task = taks_buscar_agenda_pagamento.delay(user_id)
      
     # Retorna o ID da tarefa como JSON
      return JsonResponse({'task_id': result_task.id})

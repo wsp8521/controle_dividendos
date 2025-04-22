@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Controle de Metas FII</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    .badge-status-ultrapassada {
+      background-color: #e0f7e9;
+      color: #146c43;
+    }
+
+    .badge-status-alcancada {
+      background-color: #e9f1fb;
+      color: #0d6efd;
+    }
+
+    .badge-status-nao-alcancada {
+      background-color: #fff0f0;
+      color: #dc3545;
+    }
+
+    .badge-recom-comprar {
+      background-color: #e6f4ea;
+      color: #198754;
+    }
+
+    .badge-recom-nao-comprar {
+      background-color: #faeaea;
+      color: #b02a37;
+    }
+
+    .card-header {
+      background-color: #f8f9fa;
+      font-weight: 500;
+    }
+
+    .table thead {
+      background-color: #f1f3f5;
+    }
+
+    .text-green {
+      color: #198754;
+    }
+
+    .text-red {
+      color: #dc3545;
+    }
+
+    .select-filtro {
+      min-width: 180px;
+    }
+
+    .titulo-pagina {
+      background-color: #1e1f22;
+      color: white;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .titulo-pagina h3 {
+      margin: 0;
+    }
+
+    .btn-green {
+      background-color: #198754;
+      color: white;
+    }
+
+    .btn-blue {
+      background-color: #0d6efd;
+      color: white;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <!-- Cabeçalho -->
+  <div class="titulo-pagina">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap">
+      <h3>Plano de metas Ano: 2025</h3>
+      <div class="d-flex gap-2 mt-2 mt-md-0">
+        <button class="btn btn-green"><i class="bi bi-search"></i> Atualizar cotação</button>
+        <button class="btn btn-success"><i class="bi bi-plus-lg"></i> Cadastrar</button>
+        <button class="btn btn-blue"><i class="bi bi-calculator"></i> Calculadora</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conteúdo -->
+  <div class="container py-2">
+
+    <!-- Filtros -->
+    <div class="d-flex align-items-center gap-3 mb-4 flex-wrap">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="tipo" id="fii" checked>
+        <label class="form-check-label" for="fii">Fundos Imobiliários</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="tipo" id="acoes">
+        <label class="form-check-label" for="acoes">Ações</label>
+      </div>
+
+      <select class="form-select select-filtro" aria-label="Filtro por Status">
+        <option selected>Status</option>
+        <option value="1">Ultrapassada</option>
+        <option value="2">Alcançada</option>
+        <option value="3">Não Alcançada</option>
+      </select>
+
+      <select class="form-select select-filtro" aria-label="Filtro por Recomendação">
+        <option selected>Recomendação</option>
+        <option value="1">Comprar</option>
+        <option value="2">Não Comprar</option>
+      </select>
+
+      <select class="form-select select-filtro" aria-label="Filtro por Ano">
+        <option selected>Ano</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+      </select>
+    </div>
+
+    <!-- Cards de meta -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="card h-100">
+          <div class="card-header">Meta Geral</div>
+          <div class="card-body">
+            <h5 class="card-title">2.306 cotas</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100">
+          <div class="card-header">Meta do Ano</div>
+          <div class="card-body">
+            <h5 class="card-title">533 cotas</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100">
+          <div class="card-header">Alcançada em 2025</div>
+          <div class="card-body">
+            <h5 class="card-title">405 cotas</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card h-100">
+          <div class="card-header">Faltam</div>
+          <div class="card-body">
+            <h5 class="card-title">128 cotas</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investimento -->
+    <div class="mb-4">
+      <div class="alert alert-primary d-flex justify-content-between align-items-center" role="alert">
+        <span><strong>Investimento necessário:</strong> R$ 523,60</span>
+      </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>Ativo</th>
+            <th>Qtd. Atual</th>
+            <th>Meta</th>
+            <th>Status</th>
+            <th>Restante</th>
+            <th>Cotação</th>
+            <th>Diferença</th>
+            <th>Recomendação</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BBSE3</td>
+            <td>170</td>
+            <td><input type="number" class="form-control" value="169"></td>
+            <td><span class="badge rounded-pill badge-status-ultrapassada">Ultrapassada</span></td>
+            <td>0</td>
+            <td>R$ 40,74</td>
+            <td class="text-green">+R$ 2,74</td>
+            <td><span class="badge rounded-pill badge-recom-nao-comprar">Não comprar</span></td>
+            <td><button class="btn btn-sm btn-outline-danger" title="Excluir"><i class="bi bi-trash"></i></button></td>
+          </tr>
+          <tr>
+            <td>KDIF11</td>
+            <td>20</td>
+            <td><input type="number" class="form-control" value="20"></td>
+            <td><span class="badge rounded-pill badge-status-alcancada">Alcançada</span></td>
+            <td>0</td>
+            <td>R$ 124,01</td>
+            <td class="text-red">-R$ 57,66</td>
+            <td><span class="badge rounded-pill badge-recom-comprar">Comprar</span></td>
+            <td><button class="btn btn-sm btn-outline-danger" title="Excluir"><i class="bi bi-trash"></i></button></td>
+          </tr>
+          <tr>
+            <td>XPML11</td>
+            <td>15</td>
+            <td><input type="number" class="form-control" value="20"></td>
+            <td><span class="badge rounded-pill badge-status-nao-alcancada">Não alcançada</span></td>
+            <td>5</td>
+            <td>R$ 104,72</td>
+            <td class="text-red">-R$ 23,95</td>
+            <td><span class="badge rounded-pill badge-recom-comprar">Comprar</span></td>
+            <td><button class="btn btn-sm btn-outline-danger" title="Excluir"><i class="bi bi-trash"></i></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

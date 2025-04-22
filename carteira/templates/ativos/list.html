@@ -5,28 +5,58 @@
 <p id="successMessageCotacao" style="display: none;" class="alert alert-success">
     <!-- A mensagem será inserida aqui -->
 </p>
-
+<div class="container-fluid">
 <p class="h3">Ativos</p>
 <div class="row mb-3">
     <div class="col-md-12">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
 
             <!-- Formulário de busca à esquerda -->
-            <form action="#" method="GET" class="d-flex align-items-center gap-2" style="min-width: 400px;">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="ativo" placeholder="Pesquisar por nome ou ticket" value="{{ request.GET.name }}"/>
-                    {% if request.GET.ativo %}
-                        <a href="{% url "list_ativo" %}" class="btn btn-primary">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
-                    {% else %}
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    {% endif %}
+            <form action="#" method="GET">
+                <div class="row g-2 align-items-center">
+                    <!-- Campo de pesquisa -->
+                    <div class="col-md">
+                        <input type="text" class="form-control" name="ativo" placeholder="Nome ou ticket" value="{{ request.GET.ativo }}">
+                    </div>
+
+                           <!-- Classe -->
+                           <div class="col-md">
+                            <select name="classe_ativos" class="form-select" onchange="this.form.submit()">
+                                <option value="">Classe</option>
+                                <option value="Ação" {% if request.GET.classe_ativos == "Ação" %}selected{% endif %}>Ação</option>
+                                <option value="FII" {% if request.GET.classe_ativos == "FII" %}selected{% endif %}>FII</option>
+                                <option value="FII-Infra" {% if request.GET.classe_ativos == "FII-Infra" %}selected{% endif %}>FII-Infra</option>
+                                <option value="FII-Agro" {% if request.GET.classe_ativos == "FII-Agro" %}selected{% endif %}>FII-Agro</option>
+                            </select>
+                        </div>
+{% comment %} 
+                           <!-- Operação -->
+                           <div class="col-md-3">
+                            <select name="operacao" class="form-select" onchange="this.form.submit()">
+                                <option value="">Setor</option>
+                                <option value="Compra" {% if request.GET.operacao == "Compra" %}selected{% endif %}>Compra</option>
+                                <option value="Venda" {% if request.GET.operacao == "Venda" %}selected{% endif %}>Venda</option>
+                                <option value="Bonificação" {% if request.GET.operacao == "Bonificação" %}selected{% endif %}>Bonificação</option>
+                                <option value="Desdobramento" {% if request.GET.operacao == "Desdobramento" %}selected{% endif %}>Desdobramento</option>
+                            </select>
+                        </div> {% endcomment %}
+            
+                  
+                    <!-- Botão de ação -->
+                    <div class="col-md-auto">
+                        {% if request.GET.ativo or request.GET.mes or request.GET.anos or request.GET.classe or request.GET.operacao or request.GET.classe_ativos %}
+                            <a href="{% url "list_ativo" %}" class="btn btn-primary">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        {% else %}
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        {% endif %}
+                    </div>
                 </div>
             </form>
-
+             
             <!-- Botões à direita -->
             <div class="d-flex gap-2">
                 <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn">
@@ -47,14 +77,13 @@
     </div>
 </div>
 
-
-    <div class="table-responsive">
     {% if lists %}
        {% include "ativos/table.html" %}
     {% else %}
         <p class="h3">Nenhum registro encontrado.</p>
     {% endif %}
-    </div>
+
     {% include "global/componentes/pagination.html" %}
     {% include "global/componentes/modal_forms.html" %}
+</div>
 {% endblock %}

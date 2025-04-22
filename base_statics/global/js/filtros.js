@@ -64,3 +64,21 @@ export function filtrarAtivos(url) {
 })
 }
 
+// ========= FILTRAR STATUS - PÁGINA AGENDA NA TABELA FII PENDENTE =======
+export function filtrarStatus(selectElement) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('filtro_status', selectElement.value);
+    window.history.replaceState({}, '', url); // Atualiza a URL sem reload
+  
+    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const novaTabela = doc.querySelector('#pgto-pendente');
+        if (novaTabela) {
+          document.querySelector('#pgto-pendente').innerHTML = novaTabela.innerHTML;
+        }
+      });
+  }
+  

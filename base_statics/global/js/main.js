@@ -1,5 +1,6 @@
-import { FiltrarSetor, filtrarAtivos } from './filtros.js';
+import { FiltrarSetor, filtrarAtivos, filtrarStatus } from './filtros.js';
 import { showInputFonteRecurso } from './controllers.js';
+
 
 
 /**AÇOES NOS FORMULÁIROS DO MODAL */
@@ -29,4 +30,13 @@ document.body.addEventListener('htmx:afterSwap', (event) => {
     }
 });
 
-/**PERSISTENCIA DE DADOS - FORM ADICONAR ATIVO  */
+//FILTRAR STATUS
+document.addEventListener("DOMContentLoaded", function () {
+    const filtroStatus = document.getElementById("filtro_ativo");
+  
+    if (filtroStatus) {
+      filtroStatus.addEventListener("change", function () {
+        filtrarStatus(this);
+      });
+    }
+  });

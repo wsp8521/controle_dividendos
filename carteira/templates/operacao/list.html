@@ -2,6 +2,7 @@
 {% block title %}Operação{% endblock title %}
 {% block content %}
 {% include "global/componentes/menssage.html" %}
+<div class="container-fluid">
 <p class="h3">Operação</p>
     <div class="row mb-3">
         <div class="col-md-6">
@@ -85,14 +86,13 @@
             </a>
         </div>
     </div>
-    <div class="table-responsive">
+ 
     {% if lists %}
        {% include "operacao/table.html" %}
     {% else %}
         <p class="h3">Nenhum registro encontrado.</p>
     {% endif %}
-    </div>
     {% include "global/componentes/modal_forms.html" %}
     {% include "global/componentes/pagination.html" %}
-
+</div>
 {% endblock %} 

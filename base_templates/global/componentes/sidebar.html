@@ -6,71 +6,63 @@
           <i class="bi bi-list fs-4"></i>
         </button>
         <div class="collapse d-sm-block" id="menuCollapse">
-          <ul class="nav flex-column align-items-start" id="menu">
-            <li>
-              <a href="{% url "desh" %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-speedometer2 fs-4"></i>
-                <span class="ms-1">Dashboard</span>
-              </a>
+          <ul class="nav flex-column w-100" id="menu">
+            <!-- GERAL -->
+            <li class="section-title">Geral</li>
+            {% url 'desh' as desh_url %}
+            <li><a href="{{ desh_url }}" class="nav-link custom-nav-link {% if request.path == desh_url %}active{% endif %}">
+              <i class="bi bi-speedometer2"></i> <span class="ms-2">Dashboard</span></a>
             </li>
- 
-              <li>
-                <a href="{% url "list_ativo" %}" class="nav-link px-0 align-middle">
-                  <i class="bi bi-truck fs-4"></i>
-                  <span class="ms-1">Ativos</span>
-                </a>
-              </li>
-
-  
-              <li>
-                <a href="{% url "list_operacao" %}" class="nav-link px-0 align-middle">
-                  <i class="bi bi-shop fs-4"></i>
-                  <span class="ms-1">Operação</span>
-                </a>
-              </li>
-      
-  
-              <li>
-                <a href="{% url "list_proventos" %}" class="nav-link px-0 align-middle">
-                  <i class="bi bi-tags fs-4"></i>
-                  <span class="ms-1">Cadastrar Proventos</span>
-                </a>
-              </li>
-
-              <li>
-                <a href="{% url "pgto_proventos" %}" class="nav-link px-0 align-middle">
-                  <i class="bi bi-tags fs-4"></i>
-                  <span class="ms-1">Agenda de pagametos</span>
-                </a>
-              </li>
-       
-            <li>
-              <a href="{% url "list_metas" %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-box-seam fs-4"></i>
-                <span class="ms-1">Metas</span>
-              </a>
+          
+            {% url 'list_ativo' as ativo_url %}
+            <li><a href="{{ ativo_url }}" class="nav-link custom-nav-link {% if request.path == ativo_url %}active{% endif %}">
+              <i class="bi bi-box"></i> <span class="ms-2">Ativos</span></a>
             </li>
-
-            <li>
-              <a href="{% url 'list_plan' %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-box-seam fs-4"></i>
-                <span class="ms-1">Plano de metas</span>
-              </a>
+          
+            <!-- FINANCEIRO -->
+            <li class="section-title">Financeiro</li>
+          
+            {% url 'list_operacao' as operacao_url %}
+            <li><a href="{{ operacao_url }}" class="nav-link custom-nav-link {% if request.path == operacao_url %}active{% endif %}">
+              <i class="bi bi-arrow-left-right"></i> <span class="ms-2">Operações</span></a>
             </li>
-            <li>
-              <a href="{% url 'list_preco_teto' %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-box-seam fs-4"></i>
-                <span class="ms-1">Preço teto</span>
-              </a>
+          
+            {% url 'list_proventos' as proventos_url %}
+            <li><a href="{{ proventos_url }}" class="nav-link custom-nav-link {% if request.path == proventos_url %}active{% endif %}">
+              <i class="bi bi-cash-coin"></i> <span class="ms-2">Rendimentos</span></a>
             </li>
-            <li>
-              <a href="http://127.0.0.1:8000/admin/" class="nav-link px-0 align-middle" target="_blank">
-                <i class="bi bi-box-seam fs-4"></i>
-                <span class="ms-1">Admin</span>
-              </a>
+          
+            {% url 'pgto_proventos' as agenda_url %}
+            <li><a href="{{ agenda_url }}" class="nav-link custom-nav-link {% if request.path == agenda_url %}active{% endif %}">
+              <i class="bi bi-calendar-range"></i> <span class="ms-2">Agenda</span></a>
             </li>
-     
+          
+            <!-- ESTRATÉGIA -->
+            <li class="section-title">Estratégia</li>
+          
+            {% url 'list_metas' as metas_url %}
+            <li><a href="{{ metas_url }}" class="nav-link custom-nav-link {% if request.path == metas_url %}active{% endif %}">
+              <i class="bi bi-bullseye"></i> <span class="ms-2">Metas</span></a>
+            </li>
+          
+            {% url 'list_plan' as plan_url %}
+            <li><a href="{{ plan_url }}" class="nav-link custom-nav-link {% if request.path == plan_url %}active{% endif %}">
+              <i class="bi bi-journal-richtext"></i> <span class="ms-2">Plano de Metas</span></a>
+            </li>
+          
+            {% url 'list_preco_teto' as preco_url %}
+            <li><a href="{{ preco_url }}" class="nav-link custom-nav-link {% if request.path == preco_url %}active{% endif %}">
+              <i class="bi bi-graph-up"></i> <span class="ms-2">Preço Teto</span></a>
+            </li>
+          
+            <!-- SISTEMA -->
+            <li class="section-title">Sistema</li>
+            <li><a href="/admin/" class="nav-link custom-nav-link {% if request.path == '/admin/' %}active{% endif %}" target="_blank">
+              <i class="bi bi-gear-wide-connected"></i> <span class="ms-2">Admin</span></a>
+            </li>
           </ul>
+          
+ 
         </div>
         <hr>
       </div>

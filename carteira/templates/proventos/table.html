@@ -1,6 +1,8 @@
 
 
-<table class="table table-striped table-bordered">
+<div class="box-table">
+    <div class="card-header">💵 Lista de rendimentos</div>
+    <table class="table table-striped table-dark " id="table-proventos">
     <thead>
         <tr class="text-center">
             <th>Ativo</th>
@@ -24,11 +26,9 @@
                 <td>{{ list.qtd_cota }}</td>
                 <td>R$ {{ list.valor_por_cota|floatformat:2 }}</td> <!-- Formato de moeda -->
                 <td>{{ list.data_pgto|date:"d/m/Y"}}</td>
-                <td class="{% if list.status == "PAGO" %}bg-success {% else %}bg-danger{% endif %}"
-                
-                
-                
-                >{{ list.status}}</td>
+                <td><span class="{% if list.status == 'PAGO' %}badge bg-success{% else %}badge bg-danger{% endif %}">
+                    {{ list.status }}
+                </span></td>
                 <td style="width:8em">
 
                     {% comment %} <!--btn visualizar-->

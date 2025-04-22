@@ -4,9 +4,7 @@
 {% include "global/componentes/menssage.html" %}
 <p class="h3">Metas</p>
     <div class="row mb-3">
-        <div class="col-md-6">
-            
-        </div>
+        <div class="col-md-6"></div>
         <div class="col-md-6">
             <a href="#" class="btn btn-success float-end" 
             data-bs-toggle="modal" 
@@ -19,16 +17,27 @@
         </div>
     </div>
     <div  class="col-md-12  ">
-        <div class="row" style="display:flex">
-    {% if lists %}
-       {% include "metas_geral/table_fii.html" %}
-       {% include "metas_geral/table_acao.html" %}
-    {% else %}
-        <p class="h3">Nenhum registro encontrado.</p>
-    {% endif %}
-  
+        <ul class="nav nav-tabs mb-4" id="metaTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="fii-tab" data-bs-toggle="tab" data-bs-target="#fii" type="button" role="tab">Meta FII</button>
+            </li>
+            <li class="nav-item" role="presentation">
+            <button class="nav-link" id="acoes-tab" data-bs-toggle="tab" data-bs-target="#acoes" type="button" role="tab">Meta Ações</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="metaTabsContent">
+            {% if metas_fii %}
+                {% include "metas_geral/table_fii.html" %}
+            {% else %}
+                <p class="h3">Nenhuma meta cadastrada.</p>
+         {% endif %}
+         {% if metas_acoes %}
+            {% include "metas_geral/table_acao.html" %}
+        {% else %}
+            <p class="h3">Nenhuma meta cadastrada.</p>
+        {% endif %}
+        </div>   
     </div>
-</div>
     {% include "global/componentes/modal_forms.html" %}
     {% include "global/componentes/pagination.html" %}
 
