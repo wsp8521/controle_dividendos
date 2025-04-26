@@ -26,65 +26,78 @@ function destacarCelula(elemento, tipo) {
 /***********************************************************
  ************** FUNÇÕES DE ATUALIZAÇÃO *********************
 ***********************************************************/
+
 document.addEventListener("DOMContentLoaded", function() {
     let cells = document.querySelectorAll("[contenteditable=true]");
 
     cells.forEach(cell => {
-        let valorOriginal = cell.innerText.trim();
+        let valorOriginal = cell.innerText.trim(); // Guarda o valor antes da edição
 
         cell.addEventListener("keypress", function(event) {
             if (event.keyCode === 13) {  // Se pressionar Enter
-                event.preventDefault();
+                event.preventDefault(); // Impede quebra de linha
                 if (this.innerText.trim() !== valorOriginal) {
                     atualizarMeta(this);
 
+                    // Atualiza o TOTAL PROV em tempo real se for campo relevante
                     let campo = this.getAttribute("data-field");
-                    let metaId = this.getAttribute("data-meta-id");
-
                     if (campo === "qtd_calc" || campo === "proventos") {
-                        atualizarTotalProvento(metaId);  // Atualiza TOTAL PROV + TOTAL DINHEIRO + SALDO
-                    }
-                    
-                    if (campo === "valor_investimento") {
-                        atualizarTotalProvento(metaId);  // Atualiza SALDO quando editar valor investimento
+                        let metaId = this.getAttribute("data-meta-id");
+                        atualziarTotais(metaId);
                     }
                 }
             }
         });
+
+        // (Opcional) Se quiser atualizar também ao perder foco, descomente:
+        // cell.addEventListener("blur", function() {
+        //     if (this.innerText.trim() !== valorOriginal) {
+        //         atualizarMeta(this);
+        //         let campo = this.getAttribute("data-field");
+        //         if (campo === "qtd_calc" || campo === "proventos") {
+        //             let metaId = this.getAttribute("data-meta-id");
+        //             atualizarTotalProvento(metaId);
+        //         }
+        //     }
+        // });
     });
 });
 
+// Atualiza a quantidade de ativos no módulo plano de metas
 function atualizarMeta(elemento) {
     let metaId = elemento.getAttribute("data-meta-id");
     let campo = elemento.getAttribute("data-field");
-    let novoValor = elemento.innerText.trim();
+    let novoValor = elemento.innerText.trim();  
 
+    // Tentar capturar o tipo_calc apenas se existir o input
     let tipoCalcInput = document.querySelector('input[name="tipo_calc"]:checked');
-    let tipoCalc = tipoCalcInput ? tipoCalcInput.value : null;
+    let tipoCalc = tipoCalcInput ? tipoCalcInput.value : null;  // Se não existir, deixa null ou outro valor padrão
 
-    if (campo === "proventos" || campo === "valor_investimento") {
-        novoValor = novoValor.replace(",", ".");
+    // Se for a coluna de proventos, garantir que está no formato correto
+    if (campo === "proventos") {
+        novoValor = novoValor.replace(",", ".");  // Substitui vírgula por ponto
         if (isNaN(novoValor) || novoValor === "") {
-            novoValor = "0";
+            novoValor = "0";  // Evita erro ao enviar string vazia
         }
     }
 
     let dados = {};
-    dados[campo] = novoValor;
+    dados[campo] = novoValor; 
 
-    if (tipoCalc !== null) {
-        dados['tipo_calc'] = tipoCalc;
+    if (tipoCalc !== null) {  
+        dados['tipo_calc'] = tipoCalc;  // Só adiciona se existir
     }
 
+    // Montando a URL para o fetch
     let url;
     if (campo === "valor_investimento" && isNaN(metaId)) {
         url = `/plan-metas/calculadora/investimento/`;
     } else {
-        url = (campo === "valor_investimento" && !isNaN(metaId))
-            ? `/plan-metas/calculadora/${metaId}`
+        url = (campo === "valor_investimento" && !isNaN(metaId)) 
+            ? `/plan-metas/calculadora/${metaId}` 
             : `/plan-metas/update/${metaId}`;
     }
-
+ 
     fetch(url, {
         method: "POST",
         headers: {
@@ -104,11 +117,11 @@ function atualizarMeta(elemento) {
     .catch(error => console.error("Erro:", error));
 }
 
-function atualizarTotalProvento(metaId) {
+function atualizarTotais(metaId) {
     // Atualizar TOTAL PROV da linha
     let qtdSpan = document.querySelector(`span[data-meta-id="${metaId}"][data-field="qtd_calc"]`);
     let provSpan = document.querySelector(`span[data-meta-id="${metaId}"][data-field="proventos"]`);
-    let totalProvCell = qtdSpan ? qtdSpan.closest('tr').querySelectorAll('.prov-col')[1] : null; // Segunda célula prov-col da linha (TOTAL PROV)
+    let totalProvCell = qtdSpan.closest('tr').querySelectorAll('.prov-col')[1]; // Segunda célula prov-col da linha (TOTAL PROV)
 
     if (qtdSpan && provSpan && totalProvCell) {
         let qtd = parseFloat(qtdSpan.innerText.replace(",", "."));
@@ -118,6 +131,7 @@ function atualizarTotalProvento(metaId) {
         if (isNaN(provento)) provento = 0;
 
         let totalProvento = qtd * provento;
+
         let totalFormatado = totalProvento.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
         totalProvCell.textContent = totalFormatado;
@@ -176,6 +190,7 @@ function atualizarTotalProvento(metaId) {
         }
     }
 }
+
 
 // Função para obter o CSRF Token do Django
 function getCookie(name) {

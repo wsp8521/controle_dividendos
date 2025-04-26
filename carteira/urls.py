@@ -52,6 +52,7 @@ urlpatterns = [
     
     #calculadaora
     path('plan-metas/calculadora/', views.calculadora_ativos, name='calculadora_plan'),
+    path('plan-metas/calculadora/investimento/', views.create_valor_investido, name='create_investimento'),
     path('plan-metas/calculadora/<int:pk>', views.update_valor_investido, name='calc_investimento'),
     
     #CRUD PRECO TETO

@@ -58,6 +58,7 @@ class PrecoTetoForms(forms.ModelForm):
         fields = ['classe', 'id_ativo', 'rentabilidade', "ipca"]
         labels = {
             'ipca': 'IPCA+',  # Novo label para o campo ipca
+            'rentabilidade':'Rentabilidade desejada',
         }
         widgets = {
             'rentabilidade': forms.NumberInput(

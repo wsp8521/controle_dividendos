@@ -192,3 +192,33 @@ input::placeholder {color: #343a40 !important; opacity: 1; }
 #line-2 .col-md-3:nth-child(3) .card {background-color:#ff409f;}
 
 
+/*formatação pagina plano de meta*/
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#header-table {
+  width: 60%; /* Define a largura do primeiro elemento */
+
+  padding: 5px; /* Adiciona um pouco de espaçamento interno */
+}
+
+#investimento {
+  background-color: rgba(12, 55, 76, 0.758); /* Verde com 40% de opacidade */
+
+  width: 40%; /* Define a largura do segundo elemento */
+  height: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px; /* Alinha os elementos com um pequeno espaço entre eles */
+  border-radius: 5px;
+  border: 1px solid #2692a2;
+  padding: 5px; /* Adiciona um pouco de espaçamento interno */
+  text-align: justify;
+}
+#container-cards, #container-metrica{margin: 0 !important;}
+#form-filtro{margin:20px 20px;}

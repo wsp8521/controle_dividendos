@@ -6,7 +6,7 @@
     <div class="row mb-3">
         <div class="col-md-6"></div>
         <div class="col-md-6">
-            <a href="#" class="btn btn-success float-end" 
+            <a href="#" class="btn btn-primary float-end" 
             data-bs-toggle="modal" 
             data-bs-target="#cadastroModal"
             hx-get = {% url "create_metas" %}
@@ -26,16 +26,8 @@
             </li>
         </ul>
         <div class="tab-content" id="metaTabsContent">
-            {% if metas_fii %}
-                {% include "metas_geral/table_fii.html" %}
-            {% else %}
-                <p class="h3">Nenhuma meta cadastrada.</p>
-         {% endif %}
-         {% if metas_acoes %}
+            {% include "metas_geral/table_fii.html" %}
             {% include "metas_geral/table_acao.html" %}
-        {% else %}
-            <p class="h3">Nenhuma meta cadastrada.</p>
-        {% endif %}
         </div>   
     </div>
     {% include "global/componentes/modal_forms.html" %}

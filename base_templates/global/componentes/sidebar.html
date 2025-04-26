@@ -39,6 +39,12 @@
           
             <!-- ESTRATÉGIA -->
             <li class="section-title">Estratégia</li>
+
+            {% url 'list_preco_teto' as preco_url %}
+            <li><a href="{{ preco_url }}" class="nav-link custom-nav-link {% if request.path == preco_url %}active{% endif %}">
+              <i class="bi bi-graph-up"></i> <span class="ms-2">Preço Teto</span></a>
+            </li>
+          
           
             {% url 'list_metas' as metas_url %}
             <li><a href="{{ metas_url }}" class="nav-link custom-nav-link {% if request.path == metas_url %}active{% endif %}">
@@ -50,10 +56,6 @@
               <i class="bi bi-journal-richtext"></i> <span class="ms-2">Plano de Metas</span></a>
             </li>
           
-            {% url 'list_preco_teto' as preco_url %}
-            <li><a href="{{ preco_url }}" class="nav-link custom-nav-link {% if request.path == preco_url %}active{% endif %}">
-              <i class="bi bi-graph-up"></i> <span class="ms-2">Preço Teto</span></a>
-            </li>
           
             <!-- SISTEMA -->
             <li class="section-title">Sistema</li>

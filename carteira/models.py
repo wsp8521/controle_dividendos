@@ -159,7 +159,7 @@ class PlanMetas(models.Model):
     id_ativo = models.ForeignKey(Ativos, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Ativos") #relacionando campo com a pk da tbl ativo
     classe = models.CharField(max_length=10, null=False, blank=False, default="")
     qtd = models.IntegerField(verbose_name="Quantidade", default=0, blank=True, null=True)   
-    qtd_calc = models.IntegerField( default=0, blank=True, null=True)   
+    qtd_calc = models.IntegerField( default=0, blank=True, null=True)   #campo utilizado na tela caluladora
     prov_cota = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='proventos', blank=True, null=True, default=0)  
     ano = models.IntegerField(verbose_name="Ano", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
@@ -184,7 +184,7 @@ class PrecoTeto(models.Model):
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_preco_teto",  null=True) #relacionando campo com a pk da tbl user
     id_ativo = models.ForeignKey(Ativos, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Ativos") #relacionando campo com a pk da tbl ativo
     classe = models.CharField(max_length=10, null=False, blank=False, default="")
-    rentabilidade = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='Rentabilidade', default=6)
+    rentabilidade = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='Rentabilidade desejada', default=6)
     ipca = models.DecimalField(max_digits=20, decimal_places=2,verbose_name='IPCA+', null=True, blank=True,)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em')
     update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')

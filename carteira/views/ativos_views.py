@@ -1,11 +1,10 @@
 import locale
 import json
 from decimal import Decimal
-from django.db.models import Sum, Q
+from django.db.models import Q
 from carteira.models import Ativos
 from django.core.cache import cache
 from django.urls import reverse_lazy
-from django.http import JsonResponse
 from carteira.forms import AtivosForm
 from utils.cotacao import obter_cotacao
 from django.contrib.messages.views import SuccessMessageMixin

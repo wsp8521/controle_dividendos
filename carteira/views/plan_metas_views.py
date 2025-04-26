@@ -1,20 +1,22 @@
 import json
+import locale
 from datetime import datetime
-from django.db.models import Q, Sum 
+from django.db.models import Q, Sum
 from carteira.forms import PlanForm
 from django.core.cache import cache
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from utils.cotacao import obter_cotacao
-from decimal import Decimal,InvalidOperation
+from decimal import Decimal, InvalidOperation
 from utils.media_dividendos import media_dividendos
 from django.views.generic import ListView, DeleteView, CreateView
 from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
-
+# Class to Render the List of Financial Goals
 class PlanMetasRender(ListView):
     model = PlanMetas
     template_name = 'plan_metas/list.html'
@@ -33,14 +35,14 @@ class PlanMetasRender(ListView):
         if filter_ano:
             queryset = queryset.filter(ano=filter_ano)  # Aplica o filtro de ano selecionado
         else:
-             queryset = queryset.filter(ano=ano_atual)  # Aplica o filtro de ano atual       
+            queryset = queryset.filter(ano=ano_atual)  # Aplica o filtro de ano atual       
         return queryset
     
     def get_context_data(self, **kwargs):
         plan_metas = self.get_queryset()
         context = super().get_context_data(**kwargs)
         anos_lista = PlanMetas.objects.filter(fk_user_id=self.request.user.id).values_list('ano', flat=True).distinct().order_by('-ano')
-        meta_ativo = MetaAtivo.objects.filter(fk_user_id=self.request.user.id)
+        meta_ativo = MetaAtivo.objects.filter(fk_user_id=self.request.user.id, ano=datetime.now().year)
         operacao = Operacao.objects.filter(fk_user_id=self.request.user.id)
         filter_status = self.request.GET.get('status')  # Pega o filtro de status da URL
         filter_ano = self.request.GET.get('ano') if self.request.GET.get('ano') else datetime.now().year
@@ -49,7 +51,8 @@ class PlanMetasRender(ListView):
         filter_ativo = Q(ano=filter_ano) if filter_classe is None else Q(ano=filter_ano) & Q(classe=filter_classe)
         lista_ativos = []
         tickers = [ativo.id_ativo for ativo in plan_metas]
-          # Recupera os dados do cache que foi setado na funçao o obter_cotacao
+        
+        # Recupera os dados do cache que foi setado na função obter_cotacao
         cache_key = "cotacao_key"
         cotacoes = cache.get(cache_key)
 
@@ -67,10 +70,10 @@ class PlanMetasRender(ListView):
             
             # Busca no dicionário dividendos_cache pelo valor associado à chave ativo.id_ativo.
             dividendos = dividendos_cache.get(plan.id_ativo, Decimal(0))
-            rentabilidade = Decimal(get_preco_teto.rentabilidade)
-            preco_teto_acoes = Decimal(dividendos) / (rentabilidade / 100)
-            ipca = Decimal(get_preco_teto.ipca) if get_preco_teto.ipca is not None else Decimal(0)
-            preco_teto_fii = (Decimal(dividendos) / (ipca + get_preco_teto.rentabilidade)) * 100
+            rentabilidade = Decimal(get_preco_teto.rentabilidade) if get_preco_teto and get_preco_teto.rentabilidade else 0
+            preco_teto_acoes = Decimal(dividendos) / (Decimal(rentabilidade) / Decimal(100)) if rentabilidade != 0 else 0
+            ipca = Decimal(get_preco_teto.ipca) if get_preco_teto and get_preco_teto.ipca else Decimal(0)
+            preco_teto_fii = (Decimal(dividendos) / (ipca + rentabilidade)) * 100 if rentabilidade != 0 else 0
             preco_teto = preco_teto_acoes if plan.classe == "Ação" else preco_teto_fii
             diferenca = Decimal(cotacao or 0) - preco_teto
             if cotacao is not None:
@@ -80,12 +83,12 @@ class PlanMetasRender(ListView):
             recomendacao = "Comprar" if diferenca < 0 else "Não comprar"
             
             if plan.qtd == ativos.qtdAtivo:
-                status_meta = 1  #Alcançada
+                status_meta = 1  # Alcançada
             elif ativos.qtdAtivo > plan.qtd:
                 status_meta = 2  # Ultrapassada
             else:
-                status_meta = 0  #Não alcançada"
-                    
+                status_meta = 0  # Não alcançada
+                
             lista_ativos.append({
                 "pk": plan.id,
                 "ativo": plan.id_ativo,
@@ -110,39 +113,38 @@ class PlanMetasRender(ListView):
         if filter_recomendacao:
             lista_ativos = [item for item in lista_ativos if item["recomendacao"] == filter_recomendacao]
             
-        #obtendo total necessário apra investimento
-        invesimento_total = sum(item["total"] for item in lista_ativos)
+        # Obtendo total necessário para investimento
+        investimento_total = sum(item["total"] for item in lista_ativos)
 
         # Ordena os anos em ordem decrescente
         anos_unicos = sorted(set(anos_lista), reverse=True)
         
-        if meta_ativo.filter(filter_ativo): #Verifica se há metas do ano cadastrado
-            #exibindo quantiadde total de ativos com base no ano e na calsse
-            meta_geral =meta_ativo.filter(filter_ativo).aggregate(Sum("meta_geral"))['meta_geral__sum']  
-            meta_anual = meta_ativo.filter(filter_ativo).aggregate(Sum("meta_anual"))['meta_anual__sum'] 
+        if meta_ativo.filter(filter_ativo):  # Verifica se há metas do ano cadastrado
+            meta_geral = meta_ativo.filter(filter_ativo).aggregate(Sum("meta_geral"))['meta_geral__sum']
+            meta_anual = meta_ativo.filter(filter_ativo).aggregate(Sum("meta_anual"))['meta_anual__sum']
             meta_alcancada = operacao.filter(filter_ativo & ~Q(tipo_operacao="Venda")).aggregate(Sum("qtd"))['qtd__sum'] or 0
-            meta_status = f"Falta {meta_anual-meta_alcancada}" if meta_anual-meta_alcancada>=0 else f'Superado {(meta_anual-meta_alcancada)*-1}'
+            meta_status = f"Falta {meta_anual-meta_alcancada}" if meta_anual-meta_alcancada >= 0 else f'Superado {(meta_anual-meta_alcancada)*-1}'
         else:
             meta_geral = 0
             meta_anual = 0
             meta_alcancada = 0
-            meta_status = "Nenhuma meta encontrada para o ano selecionado."
+            meta_status = 0
             
             messages.error(self.request, "Nenhuma meta encontrada para o ano selecionado.")
         
-        # context['total_ativo'] = PlanMetas.objects.aaggregate
         context['ano_atual'] = datetime.now().year
-        context['investimento_total'] = invesimento_total
+        context['investimento_total'] = locale.currency(investimento_total, grouping=True) if investimento_total else 0
         context['meta_geral'] = meta_geral
         context['meta_anual'] = meta_anual
         context['meta_alcancada'] = meta_alcancada
         context['meta_status'] = meta_status
         context['lists'] = lista_ativos
+        context['is_meta_ativos'] = True if meta_ativo else False
         context['anos_disponiveis'] = anos_unicos  # Passando anos agrupados para o template
         return context
 
 
-# #CRETE
+# Class to Handle the Creation of New Financial Goals
 class CadastroPlan(CreateView):
     model = PlanMetas
     form_class = PlanForm
@@ -155,11 +157,11 @@ class CadastroPlan(CreateView):
         object.fk_user = self.request.user  # Define o usuário autenticado
         object.ano = datetime.now().year         
         object.save()
-        return super().form_valid(form) #redirecionar o usuário para a URL de sucesso definida (success_url) 
+        return super().form_valid(form)  # Redireciona o usuário para a URL de sucesso definida (success_url) 
  
-#UPDATE 
+
+# Function to Handle Updates to Active Quantities
 def update_qtd_ativo(request, pk):
-      
     if request.method == "POST":
         try:
             data = json.loads(request.body)  # Obtém os dados passados no JavaScript
@@ -187,15 +189,10 @@ def update_qtd_ativo(request, pk):
             return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
     return JsonResponse({"status": "error", "message": "Método inválido!"}, status=400)
-   
 
-# #DELET
+
+# Class to Handle Deleting Financial Goals
 class PlanDelete(DeleteView):
-    model=PlanMetas
+    model = PlanMetas
     success_url = reverse_lazy('list_plan')
-    success_message='Cadastro excluído com sucesso.'
-    
-
-
-
-
+    success_message = 'Cadastro excluído com sucesso.'

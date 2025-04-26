@@ -100,7 +100,7 @@ def pgto_proventos(request):
           'proventos_mensais': proventos_mensais,  # Adiciona o resultado da função ao context
           'assoc_pgto_ativo': pgto_fiis  #assoc_pgto_ativo(ativos, queryset_proventos)
      }
-     return render(request, "pgto_proventos/list.html", context)
+     return render(request, "agenda_pgto/list.html", context)
 
   
 #definindo a função de distribuição de proventos mensais

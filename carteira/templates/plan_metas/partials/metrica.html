@@ -1,0 +1,34 @@
+<div class="d-flex justify-content-between align-items-center mb-4" id="container-metrica" >
+  <p class="h3">Controle de Metas {% if request.GET.classe %}{{request.GET.classe}}{% endif %}</p>
+  <span class="display-6"><strong>Ano:</strong> {{ request.GET.ano|default:ano_atual }}</span>
+</div>
+
+<!-- Cards de meta -->
+
+<div class="row g-4 mb-4"  id="container-cards">
+  <div class="col-md-3">
+    <div class="card h-100 shadow-lg rounded bg-primary text-white">
+      <p class="card-title mb-0">Meta Geral</p>
+      <h5 class="card-title text-center display-6">{{meta_geral}}</h5>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100 shadow-lg rounded bg-secondary text-dark text-white">
+      <p class="card-title mb-0">Meta do ano</p>
+      <h5 class="card-title text-center display-6">{{meta_anual}} </h5>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100 shadow-lg rounded bg-success text-dark text-white">
+        <p class="card-title mb-0">Meta alcançada</p>
+        <h5 class="card-title text-center display-6">{{meta_alcancada}}</h5>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100 shadow-lg rounded bg-danger text-white">
+        <p class="card-title mb-0">Status</p>
+        <h5 class="card-title display-6">{{meta_status}}</h5>
+    </div>
+  </div>
+</div>
+{% include "plan_metas/partials/form-filter.html" %}

@@ -19,7 +19,7 @@ def obter_cotacao(tickers):
         for ativo in ativos:
             resultados[ativo] = price.get(ativo, {}).get("regularMarketPrice")
 
-        cache.set(cache_key, resultados, timeout=600)  # Armazena todas as cotações por 5 minutos
+        cache.set(cache_key, resultados, timeout=600)  # Armazena todas as cotações por 10 minutos
         return resultados
 
     return cotacao

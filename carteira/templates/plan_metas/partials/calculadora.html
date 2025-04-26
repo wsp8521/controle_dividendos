@@ -28,6 +28,7 @@
     <br>
     <br>
 
+    {% if is_ativo %}
     <table class="table table-bordered text-center align-middle">
         <thead class="table-dark">
             <tr>
@@ -85,7 +86,7 @@
               {% endif %}
           </tr>
           {% endfor %}
-            <tr class="fw-bold">
+            {% comment %} <tr class="fw-bold">
                 <td>Total</td>
                 <td colspan="1">{{soma_total_ativo}}</td>
                 <td></td>
@@ -96,9 +97,14 @@
                   <td class="prov-col">{{soma_prov}}</td>
                   <td class="prov-col">{{soma_total_prov}}</td>
                 {% endif %}
-            </tr>
+            </tr> {% endcomment %}
         </tbody>
     </table>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            <strong class="alert alert-warning" role="alert">ATENÇÃO:</strong> Não há ativos cadastrados para o tipo de investimento selecionado.
+        </div>
+    {% endif %}
 </div>
 
 {% endblock %}

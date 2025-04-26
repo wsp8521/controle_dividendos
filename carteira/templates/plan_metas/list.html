@@ -5,8 +5,6 @@
 <p id="successMessageCotacao" style="display: none;" class="alert alert-success">
     <!-- A mensagem será inserida aqui -->
 </p>
-<p class="h3">Plano de metas Ano: {{ request.GET.ano|default:ano_atual }}</p>
-
     <div class="row mb-3">
         <div class="col-md-6">
             
@@ -16,81 +14,26 @@
                 <i class="bi bi-search"></i> Atualizar cotação
              </a>
 
-            <a href="#" class="btn btn-success float-end ms-2" 
-            data-bs-toggle="modal" 
-            data-bs-target="#cadastroModal"
-            hx-get = {% url "create_plan" %}
-            hx-target = "#addContent"
-            hx-swap = "innerHTML">
-                <i class="bi bi-plus"></i>Cadastrar
-            </a>
+             <a href="#" class="btn btn-primary float-end ms-2" 
+            
+             {% if is_meta_ativos %}
+                data-bs-toggle="modal" 
+                data-bs-target="#cadastroModal"
+                 hx-get = "{% url 'create_plan' %}"
+                 hx-target="#addContent"
+                hx-swap="innerHTML"
+             {% else %}
+                 data-bs-toggle="modal" data-bs-target="#metaModal" <!-- Ativa o modal de mensagem -->
+             {% endif %}
+             ><i class="bi bi-plus"></i>Cadastrar
+          </a>
             
 
-            <a href="{% url "calculadora_plan" %}?tipo_calc=FII" class="btn btn-primary float-end" 
-            {% comment %} data-bs-toggle="modal" 
-            data-bs-target="#cadastroModal"
-            hx-get = ""
-            hx-target = "#addContent"
-
-            hx-swap = "innerHTML" {% endcomment %}
-            >
-                <i class="bi bi-plus"></i>calculadora
+            <a href="{% url "calculadora_plan" %}?tipo_calc=FII" class="btn btn-secondary float-end">
+            <i class="bi bi-calculator"></i></i>calculadora
             </a>
         </div>
     </div>
-    {% comment %} <form action="#"  method="GET" class="filter-product">
-        <div class="input-group">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="classe" id="flexRadioDefault1" value="FII" 
-                {% if request.GET.classe == "FII" %} checked {% endif %} onchange="this.form.submit();">
-                <label class="form-check-label" for="flexRadioDefault1">
-                  Fundos Imobiliários
-                </label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="classe" id="flexRadioDefault2" value="Ação" 
-                {% if request.GET.classe == "Ação" %} checked {% endif %} onchange="this.form.submit();">
-                <label class="form-check-label" for="flexRadioDefault2">
-                  Ações
-                </label>
-            </div>
-    
-           
-            <select class="form-select" name="status" onchange="this.form.submit();">
-                <option value="" {% if not request.GET.status %}selected{% endif %}>Status</option>
-                <option value="Alcançada" {% if request.GET.status == "Alcançada" %}selected{% endif %}>Alcançada</option>
-                <option value="Ultrapassada" {% if request.GET.status == "Ultrapassada" %}selected{% endif %}>Ultrapassada</option>
-                <option value="Não alcançada" {% if request.GET.status == "Não alcançada" %}selected{% endif %}>Não alcançada</option>
-            </select>
-
-            
-            <select class="form-select" name="recomendacao" onchange="this.form.submit();">
-                <option value="" {% if not request.GET.recomendacao %}selected{% endif %}>Recomendação</option>
-                <option value="Comprar" {% if request.GET.recomendacao == "Comprar" %}selected{% endif %}>Comprar</option>
-                <option value="Não comprar" {% if request.GET.recomendacao == "Não comprar" %}selected{% endif %}>Não Comprar</option>
-            </select>
-            
-           
-            <select class="form-select" name="ano" onchange="this.form.submit();">
-                {% with ano_atual=request.GET.ano|default:ano_atual %}
-                    <option value="" {% if not request.GET.ano %}selected{% endif %}>Ano</option>
-                    {% for ano in anos_disponiveis %}
-                        <option value="{{ ano }}" {% if ano_atual == ano|stringformat:"s" %}selected{% endif %}>
-                            {{ ano }}
-                        </option>
-                    {% endfor %}
-                {% endwith %}
-            </select>
-
-        {% if request.GET.classe or request.GET.status or request.GET.recomendacao or request.GET.ano %}
-        <div id="remove-filter">
-        <a href="{% url "list_plan" %}" class="btn btn-primary">
-            <i class="bi bi-x-lg"></i>Remover filtro
-        </a>
-    </div>
-    {% endif %}
-    </div>
-    </form><br/> {% endcomment %}
     
     <div  class="col-md-12  ">
         <div class="row" style="display:flex">
@@ -103,6 +46,7 @@
   
     </div>
 </div>
+{% include "plan_metas/partials/modal-msg.html" %}
     {% include "global/componentes/modal_forms.html" %}
     {% include "global/componentes/pagination.html" %}
 

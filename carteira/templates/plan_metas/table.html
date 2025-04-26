@@ -1,5 +1,9 @@
+{% include "plan_metas/partials/metrica.html" %}
 <div class="box-table">
-  <div class="card-header">📈 Plano de aquisições</div>
+  <div class="card-header d-flex">
+    <span id="header-table">📈 Plano de aquisições {{is_meta_ativos}}</span>
+    <span id="investimento" class="shadow-sm rounded" >Investimento necessário: {{investimento_total}}</span>
+  </div>
   <table class="table table-striped table-dark">
     <thead>
       <!-- TABELA -->
@@ -80,3 +84,4 @@
     </tbody>
   </table>
 </div>
+
