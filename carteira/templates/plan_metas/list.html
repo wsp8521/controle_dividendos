@@ -1,53 +1,43 @@
-{% extends "global/base.html" %}
-{% block title %}Plano de metas{% endblock title %}
+{% extends 'global/base.html' %}
+{% block title %}
+  Plano de metas
+{% endblock %}
 {% block content %}
-{% include "global/componentes/menssage.html" %}
-<p id="successMessageCotacao" style="display: none;" class="alert alert-success">
+  {% include 'global/componentes/menssage.html' %}
+  <p id="successMessageCotacao" style="display: none;" class="alert alert-success">
     <!-- A mensagem será inserida aqui -->
-</p>
-    <div class="row mb-3">
-        <div class="col-md-6">
-            
-        </div>
-        <div class="col-md-6 d-flex justify-content-end gap-2">
-            <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn"  >
-                <i class="bi bi-search"></i> Atualizar cotação
-             </a>
+  </p>
+  <div class="row mb-3">
+    <div class="col-md-6"></div>
+    <div class="col-md-6 d-flex justify-content-end gap-2">
+      <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn"><i class="bi bi-search"></i> Atualizar cotação</a>
 
-             <a href="#" class="btn btn-primary float-end ms-2" 
-            
-             {% if is_meta_ativos %}
-                data-bs-toggle="modal" 
-                data-bs-target="#cadastroModal"
-                 hx-get = "{% url 'create_plan' %}"
-                 hx-target="#addContent"
-                hx-swap="innerHTML"
-             {% else %}
-                 data-bs-toggle="modal" data-bs-target="#metaModal" <!-- Ativa o modal de mensagem -->
-             {% endif %}
-             ><i class="bi bi-plus"></i>Cadastrar
-          </a>
-            
+      {% if is_meta_ativos %}
+        <a href="#" class="btn btn-primary float-end ms-2" data-bs-toggle="modal" data-bs-target="#cadastroModal" hx-get="{% url 'create_plan' %}" hx-target="#addContent" hx-swap="innerHTML"><i class="bi bi-plus"></i>Cadastrar</a>
+      {% else %}
+        <a href="#" class="btn btn-primary float-end ms-2" data-bs-toggle="modal" data-bs-target="#metaModal"><i class="bi bi-plus"></i>Cadastrar</a>
+      {% endif %}
 
-            <a href="{% url "calculadora_plan" %}?tipo_calc=FII" class="btn btn-secondary float-end">
-            <i class="bi bi-calculator"></i></i>calculadora
-            </a>
-        </div>
+      {% comment %} <a href="{% url 'calculadora_plan' %}" class="btn btn-secondary float-end"><i class="bi bi-calculator"></i>calculadora</a> {% endcomment %}
+
+      <a href="" class="btn btn-secondary float-end" hx-get="{% url 'calculadora_plan' %}?tipo_calc=FII" data-bs-toggle="modal" data-bs-target="#modalGeral" hx-target="#ModalGeralContent" hx-swap="innerHTML"><i class="bi bi-calculator"></i>calculadora</a>
     </div>
-    
-    <div  class="col-md-12  ">
-        <div class="row" style="display:flex">
-    {% comment %} {% if lists %} {% endcomment %}
-       {% include "plan_metas/table.html" %}
-       {% comment %} {% include "plan_metas/calculadora_fii.html" %} {% endcomment %}
-    {% comment %} {% else %}
+  </div>
+
+  <div class="col-md-12">
+    <div class="row" style="display:flex">
+      {% comment %} {% if lists %}
+        {% endcomment %}
+        {% include 'plan_metas/table.html' %}
+        {% comment %} {% include 'plan_metas/calculadora_fii.html' %} {% endcomment %}
+        {% comment %}
+      {% else %}
         <p class="h3">Nenhum registro encontrado.</p>
-    {% endif %} {% endcomment %}
-  
+      {% endif %} {% endcomment %}
     </div>
-</div>
-{% include "plan_metas/partials/modal-msg.html" %}
-    {% include "global/componentes/modal_forms.html" %}
-    {% include "global/componentes/pagination.html" %}
-
+  </div>
+  {% include 'plan_metas/partials/modal-msg.html' %}
+  {% include 'global/componentes/modal_forms.html' %}
+  {% include 'global/componentes/modal_geral.html' %}
+  {% include 'global/componentes/pagination.html' %}
 {% endblock %}

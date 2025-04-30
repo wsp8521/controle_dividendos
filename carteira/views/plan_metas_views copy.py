@@ -141,9 +141,6 @@ class PlanMetasRender(ListView):
         context['lists'] = lista_ativos
         context['is_meta_ativos'] = True if meta_ativo else False
         context['anos_disponiveis'] = anos_unicos  # Passando anos agrupados para o template
-        
-        print("xxxxx investiemtno xxxxxxxxxxx")
-        print(context['investimento_total'] )
 
         return context
 

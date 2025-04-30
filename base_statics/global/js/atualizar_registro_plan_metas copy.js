@@ -1,3 +1,4 @@
+import {caluladoraCompraAtivo } from './calculadora.js';
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxx Função para exibir mensagem de sucesso/erro xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 function exibirMensagem(mensagem, tipo) {
@@ -23,9 +24,9 @@ function destacarCelula(elemento, tipo) {
 
 
 
-/***********************************************************
- ************** FUNÇÕES DE ATUALIZAÇÃO *********************
-***********************************************************/
+/********************************************************************************
+ ************** FUNÇÕES DE ATUALIZAÇÃO PÁGINA PLANO DE METAS *********************
+**********************************************************************************/
 
 document.addEventListener("DOMContentLoaded", function() {
     let cells = document.querySelectorAll("[contenteditable=true]");
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     let campo = this.getAttribute("data-field");
                     if (campo === "qtd_calc" || campo === "proventos") {
                         let metaId = this.getAttribute("data-meta-id");
-                        atualziarTotais(metaId);
+                        atualizarTotais(metaId);
                     }
                 }
             }

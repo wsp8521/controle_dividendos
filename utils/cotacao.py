@@ -7,11 +7,12 @@ from django.core.cache import cache
 from yahooquery import Ticker
 
 def obter_cotacao(tickers):
-    cache_key = "cotacao_key"
+    # Definir chave única por ativo
+    ativos = [f"{ticker}.SA" for ticker in tickers]
+    cache_key = f"cotacao_key_{','.join(ativos)}"
     cotacao = cache.get(cache_key)
 
     if not cotacao:
-        ativos = [f"{ticker}.SA" for ticker in tickers]
         tickers_obj = Ticker(ativos)
         price = tickers_obj.price
 
@@ -19,8 +20,8 @@ def obter_cotacao(tickers):
         for ativo in ativos:
             resultados[ativo] = price.get(ativo, {}).get("regularMarketPrice")
 
-        cache.set(cache_key, resultados, timeout=600)  # Armazena todas as cotações por 10 minutos
+        # Cache por mais tempo (ex: 1 hora, se os dados não mudam frequentemente)
+        cache.set(cache_key, resultados, timeout=3600)
         return resultados
 
     return cotacao
-
