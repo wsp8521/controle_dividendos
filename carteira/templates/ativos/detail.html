@@ -1,50 +1,16 @@
-{% extends "global/base.html" %}
+{% extends 'global/base.html' %}
 
 {% load static %}
 
 {% block extra_scripts %}
-<script src="{% static 'global/js/charts/ativos.js' %}"></script>
-<script src="{% static 'global/js/charts/dividendos.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script src="{% static 'global/js/charts/ativos.js' %}"></script>
+  <script src="{% static 'global/js/charts/dividendos.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 {% endblock %}
-{% block title %}Detalhes ativo {{lists.ticket}}{% endblock title %}
+{% block title %}
+  Detalhes ativo {{ lists.ticket }}
+{% endblock %}
 {% block content %}
+{% include "ativos/partials/graficos.html" %}
 
-<div class="container mt-4" id="detalhe-ativo">
-    <p class="display-6">{{lists.ativo}} - {{lists.ticket}} </p>
-    <div class="row">
-    <table class="table">
-        <tr>
-            <td class="lead">CNPJ: {{ lists.cnpj }}</td>
-            <td class="lead">Classe: {{ lists.classe }}</td>
-            <td class="lead">Setor: {{ lists.setor }}</td>
-            <td class="lead">Corretora: {{ lists.corretora.apelido }}</td>
-            <td class="lead">Cotação atual: {{ lists.cotacao }}</td>
-            {% comment %} <td class="lead">Filtrar: </td>
-            <td class="lead">
-                <form id="filter-ano">
-                        <select class="form-select" name="ano" onchange="this.form.submit();">
-                           <option value="">Selecione o ano</option>
-                                <option value="">2023</option>
-                                <option value="">2024</option>
-                                <option value="">2025</option>
-                                <option value="">2026</option>
-                        </select>
-                    </form>
-                    
-            </td> {% endcomment %}
-
-        </tr>
-    </table>
-    <br/>
-    {% include "ativos/partials/metricas.html" %}
-    
-    </div>
-
-          
-    {% comment %} <a href="{% url "list_category" %}" class="btn btn-secondary mt-3">Voltar para lista de categoria</a>
-    {% if perms.sge.change_catagory %}
-        <a href="{% url "update_category" lists.id %}" class="btn btn-warning mt-3">Editar categoria</a>
-    {% endif %} {% endcomment %}
-</div>
-{% endblock content %}
+{% endblock %}

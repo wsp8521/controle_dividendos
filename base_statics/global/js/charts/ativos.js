@@ -157,86 +157,155 @@ function chartAtivoPorSetor(data){
  * PÁGINA DETALHES DOS ATIVOS
  * *****************************************/
 function chartOperacao(data) {
-    document.addEventListener("DOMContentLoaded", function () {
-        let dataCharts = JSON.parse(data);  // Parse do JSON vindo do backend
+  document.addEventListener("DOMContentLoaded", function () {
+    let dataCharts = JSON.parse(data);
+    const valores = dataCharts.valor;
+    const anos = dataCharts.ano;
 
-        const valores = dataCharts.valor;
-        const anos = dataCharts.ano;
+    const maxValor = Math.max(...valores);
 
-        // Encontra o maior valor
-        const maxValor = Math.max(...valores);
-
-        // Constrói os dados da série, destacando o maior valor com a cor vermelha
-        const dadosSerie = valores.map(valor => {
-            if (valor === maxValor) {
-                return {
-                    value: valor,
-                    itemStyle: {
-                        color: '#a90000'  // vermelho
-                    }
-                };
-            }
-            return valor;
-        });
-
-        const grafico = echarts.init(document.getElementById('operaca-ativo'));
-
-        const option = {
-            title: {
-                show: true,
-                text: 'Aquisição de Ativos por Ano',
-                left: '50%',
-                textAlign: 'center',
-                padding: [10, 20],
-                textStyle: {
-                    color: '#FFFFFF'
-                }
-            },
-            tooltip: {
-                show:false,
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            xAxis: {
-                type: 'category',
-                data: anos,
-                axisLabel: {
-                    color: 'white', // Cor dos rótulos do eixo X
-                    rotate: 45,
-                    interval: 0
-                }
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: {
-                    color: 'white', // Cor dos nomes das categorias
-                    //fontWeight: 'bold' // Deixa o texto mais destacado
-                }
-            },
-            series: [
-                {
-                    name: 'Quantidade',
-                    type: 'bar',
-                    data: dadosSerie,
-                    label: {
-                        show: true,
-                        color: '#FFFFFF', // Cor dos rótulos dentro das barras
-                        position: 'top'
-                    },
-                    itemStyle: {
-                        color: '#5470C6'  // cor padrão
-                    }
-                }
-            ]
-        };
-
-        grafico.setOption(option);
-
-        window.addEventListener('resize', function () {
-            grafico.resize();
-        });
+    const dadosSerie = valores.map(valor => {
+      const isMax = valor === maxValor;
+      return {
+        value: valor,
+        itemStyle: {
+          color: isMax ? '#a90000' : '#5470C6'
+        },
+        label: {
+          show: true,
+          position: 'top',
+          color: '#000',
+          fontSize: 13,
+          formatter: val => val.value.toLocaleString('pt-BR') // sem "R$"
+        }
+      };
     });
+
+    const grafico = echarts.init(document.getElementById('operaca-ativo'));
+
+    const option = {
+      title: { show: false },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        formatter: params => {
+          const p = params[0];
+          return `${p.axisValue}: ${p.value.toLocaleString('pt-BR')}`; // sem "R$"
+        }
+      },
+      xAxis: {
+        type: 'category',
+        data: anos,
+        axisLabel: {
+          show: true,
+          color: '#000',
+          fontSize: 13
+        },
+        axisLine: { show: true, lineStyle: { color: '#ccc' } },
+        axisTick: { show: true }
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          show: true,
+          color: '#000',
+          fontSize: 12,
+          formatter: val => val.toLocaleString('pt-BR')
+        },
+        splitLine: { lineStyle: { color: '#ccc' } }
+      },
+      series: [{
+        name: 'ativos',
+        type: 'bar',
+        data: dadosSerie
+      }]
+    };
+
+    grafico.setOption(option);
+    window.addEventListener('resize', () => grafico.resize());
+  });
 }
 
+
+//dividendos
+function chartProventos(data) {
+  document.addEventListener("DOMContentLoaded", function () {
+    const dados = JSON.parse(data);
+    const grafico = echarts.init(document.getElementById('proventos-ativo'));
+
+    const opcoes = {
+      grid: {
+        left: '0%',
+        right: '0%',
+        top: '10%',
+        bottom: '20%',        // espaço para os anos aparecerem
+        containLabel: true    // garante que os rótulos não sejam cortados
+      },
+      xAxis: {
+        type: 'category',
+        data: dados.ano,
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#ccc'
+          }
+        },
+        axisTick: {
+          show: false
+        },
+        axisLabel: {
+          show: true,
+          color: '#3f51b5',
+          fontSize: 14
+        }
+      },
+      yAxis: {
+        type: 'value',
+        show: false
+      },
+      tooltip: {
+        trigger: 'axis',
+        formatter: params => {
+          const valor = params[0].value.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits: 2
+          });
+          return `${params[0].axisValue} — ${valor}`;
+        },
+        axisPointer: {
+          type: 'line'
+        }
+      },
+      series: [{
+        data: dados.valor,
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#3f51b5',
+          width: 2
+        },
+        itemStyle: {
+          color: '#3f51b5'
+        },
+        areaStyle: {
+          color: 'rgba(63, 81, 181, 0.1)'
+        },
+        label: {
+          show: true,
+          position: 'top',
+          formatter: params => {
+            return `R$ ${params.value.toFixed(2).replace('.', ',')}`;
+          },
+          color: '#3f51b5',
+          fontSize: 15
+        }
+      }]
+    };
+
+    grafico.setOption(opcoes);
+    window.addEventListener('resize', () => grafico.resize());
+  });
+}

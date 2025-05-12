@@ -17,9 +17,9 @@
         
         <div class="mb-3">
             <label>Classe do ativo</label>
-            <select id="id_classe" name="classe" class="form-control" onchange="filtrarAtivos('/preco'); hiddenCampoIpca()">
+            <select id="id_classe" name="classe" class="form-control" onchange="hiddenCampoIpca()">
                 {% for value, label in form.fields.classe.choices %}
-                    <option value="{{ value }}">{{ label }}</option>
+                <option value="{{ value }}" {% if form.classe.value == value %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -32,12 +32,12 @@
         </div>
 
         <div class="mb-3">
-            <label>Rentabilidade</label>
+            <label>Rentabilidade desejada</label>
             {{form.rentabilidade}}
         </div>
 
         <div class="mb-3" id="container_ipca">
-            <label>IPCA Tesouro Direto</label>
+            <label>Prêmio de risco (Tesouro Direto 2045)</label>
             {{form.ipca}}
         </div>
 

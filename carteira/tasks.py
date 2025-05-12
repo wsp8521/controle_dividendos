@@ -5,9 +5,12 @@ from utils.cotacao import obter_cotacao
 from carteira.models import Proventos, Ativos
 from django.contrib.auth import get_user_model
 from carteira.tarefas.agenda_dividendos import agenda_dividendos
+from utils.cotacao import obter_cotacao
+from utils.media_dividendos import media_dividendos
     
 
 
+from django.core.cache import cache
 
 @shared_task
 def taks_agenda_pagamento():

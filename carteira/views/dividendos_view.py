@@ -95,6 +95,7 @@ class ProventosRender(ListView):
             })
 
         context['lists'] = dados_tabela
+        context['page_name'] = "Rendimentos"
         context['meses'] = meses
         context['anos'] = ano
         context['url_filter_pagination'] = self.filter_url_pag_nav or ""

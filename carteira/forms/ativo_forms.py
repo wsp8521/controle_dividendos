@@ -169,13 +169,12 @@ class OperacaoForm(forms.ModelForm):
     tipo_operacao = forms.ChoiceField(choices=op_options, widget=forms.Select(attrs={'class': 'form-control'}))
     fonte_recurso = forms.ChoiceField(choices=font_recuso, widget=forms.Select(attrs={'class': 'form-control'}))
    
-    def __init__(self, *args, **kwargs):
-        is_edit = kwargs.pop('is_edit', False)  # Parâmetro extra para verificar o contexto (adição ou edição de registro)
-        super().__init__(*args, **kwargs)
+    # def __init__(self, *args, **kwargs):
+    #     is_edit = kwargs.pop('is_edit', False)  # Parâmetro extra para verificar o contexto (adição ou edição de registro)
+    #     super().__init__(*args, **kwargs)
         
-        if is_edit:
-            
-            print("dfjslkdfjsldfjlsdjfslfjlksdfj")
+    #     if is_edit:
+        
             #     # Filtra por classe caso já tenha sido selecionada
             # classe_selecionada = None
             # if 'classe' in self.data:

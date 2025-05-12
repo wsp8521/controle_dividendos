@@ -7,30 +7,11 @@
 </p>
 <p class="h3">Preço teto</p>
     <div class="row mb-3">
-        <div class="col-md-6">
-            <form action="" method="GET" id="filterForm">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="name" id="flexRadioDefault1" value="FII" 
-                    {% if request.GET.name == "FII" %} checked {% endif %} onchange="this.form.submit();">
-                    <label class="form-check-label" for="flexRadioDefault1">
-                      Fundos Imobiliários
-                    </label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="name" id="flexRadioDefault2" value="Ação" 
-                    {% if request.GET.name == "Ação" %} checked {% endif %} onchange="this.form.submit();">
-                    <label class="form-check-label" for="flexRadioDefault2">
-                      Ações
-                    </label>
-                </div>
-            </form>
-            
-        </div>
-        <div class="col-md-6 d-flex justify-content-end gap-2">
+        <div class="col-md-12 d-flex justify-content-end gap-2">
             <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn"  >
                 <i class="bi bi-search"></i> Atualizar cotação
              </a>
-            <a href="#" class="btn btn-success float-end" 
+            <a href="#" class="btn btn-primary float-end" 
             data-bs-toggle="modal" 
             data-bs-target="#cadastroModal"
             hx-get = {% url "create_preco_teto" %}
@@ -40,17 +21,13 @@
             </a>
         </div>
     </div>
-    <div class="table-responsive">
+ 
     {% if lists %}
        {% include "preco_teto/table.html" %}
     {% else %}
         <p class="h3">Nenhum registro encontrado.</p>
     {% endif %}
-    </div>
+
     {% include "global/componentes/pagination.html" %}
     {% include "global/componentes/modal_forms.html" %}
-
-
-    
-
 {% endblock %}

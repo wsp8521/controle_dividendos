@@ -1,56 +1,106 @@
+<div class="card-header themes-dark">
+  <!-- Título ocupa linha inteira no mobile e no desktop, com borda e alinhamento central -->
+  <div class="row mb-3">
+    <div class="col-12 rounded d-flex justify-content-center align-items-center">
+      <span class="fs-3 text-white">
+       <i class="bi bi-file-earmark-bar-graph me-2"></i> Lista de Ativos
+      </span>
+    </div>
+  </div>
 
-<div class="box-table">
-  <div class="card-header">📈 Lista de Ativos</div>
-    <table class="table table-striped table-dark " id="table-ativo">
-     <thead>
-       <tr>
-         <th class="text-center">Ativo</th>
-         <th class="text-center">Tiket</th>
-         <th class="text-center">Classe</th>
-         <th class="text-center">Setor</th>
-         <th class="text-center">QTD</th>
-         <th class="text-center">Investimento</th>
-         <th class="text-center">Dividendos</th>
-         <th class="text-center">Cotação</th>
-         <th class="text-center">Ações</th>
-       </tr>
-     </thead>
-     <tbody id="tbodyAtivos">
-       {% for list in lists %}
-       <tr>
-         <td >{{ list.ativo }}</td>
-         <td class="text-center">{{ list.ticket }}</td>
-         <td class="text-center">{{ list.classe }}</td>
-         <td class="text-center">{{ list.setor }}</td>
-         <td class="text-center">{{ list.qtd }}</td>
-         <td class="text-center">{{ list.investimento }}</td>
-         <td class="text-center">{{ list.dividendos }}</td>
-         <td class="text-center">{{ list.cotacao }}</td>
-         <td class="text-center" style="min-width: 8em">
-           <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" 
-             data-bs-target="#cadastroModal"
-             hx-get="{% url 'update_ativo' list.pk %}"
-             hx-target="#addContent"
-             hx-swap="innerHTML">
-             <i class="bi bi-pencil-fill"></i>
-           </a>
+  <!-- Formulário em linha no desktop, empilhado no mobile -->
+  <form action="#" method="GET">
+    <div class="row g-2">
+      <!-- Campo de pesquisa -->
+      <div class="col-12 col-md-4">
+        <input type="text" class="form-control" name="ativo" placeholder="Nome ou ticket" value="{{ request.GET.ativo }}">
+      </div>
 
-           <a href="{% url 'detail_ativo' list.pk %}" class="btn btn-info btn-sm">
-             <i class="bi bi-eye-fill"></i>
-           </a>
+      <!-- Classe -->
+      <div class="col-12 col-md-4">
+        <select name="classe_ativos" class="form-select" onchange="this.form.submit()">
+          <option value="">Classe</option>
+          <option value="Ação" {% if request.GET.classe_ativos == "Ação" %}selected{% endif %}>Ação</option>
+          <option value="FII" {% if request.GET.classe_ativos == "FII" %}selected{% endif %}>FII</option>
+          <option value="FII-Infra" {% if request.GET.classe_ativos == "FII-Infra" %}selected{% endif %}>FII-Infra</option>
+          <option value="FII-Agro" {% if request.GET.classe_ativos == "FII-Agro" %}selected{% endif %}>FII-Agro</option>
+        </select>
+      </div>
 
-           <a onclick="modal(this)" 
-             data-page="ativo" 
-             data-name="{{ list.ativo }}" 
-             data-id="{{ list.pk }}"
-             href="#" 
-             class="btn btn-danger btn-sm">
-             <i class="bi bi-trash-fill"></i>
-           </a>
-         </td>
-       </tr>
-       {% endfor %}
-     </tbody>
-   </table>
- </div>
+      <!-- Botão -->
+      <div class="col-12 col-md-4">
+        {% if request.GET.ativo or request.GET.mes or request.GET.anos or request.GET.classe or request.GET.operacao or request.GET.classe_ativos %}
+          <a href="{% url "list_ativo" %}" class="btn btn-primary w-100">
+            <i class="bi bi-x-lg"></i>
+          </a>
+        {% else %}
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-search"></i> Pesquisar
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </form>
+</div>
 
+{% if lists %}
+<!-- Tabela responsiva -->
+<div class="table-responsive mt-3">
+  <table class="table table-striped align-middle fs-5 " id="table-ativo">
+    <thead>
+      <tr class="text-center">
+        <th>Ativo</th>
+        <th>Tiket</th>
+        <th>Classe</th>
+        <th>Setor</th>
+        <th>QTD</th>
+        <th>Investimento</th>
+        <th>Dividendos</th>
+        <th>Cotação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="tbodyAtivos">
+      {% for list in lists %}
+      <tr class="text-center">
+        <td class="text-start" >{{ list.ativo }}</td>
+        <td>{{ list.ticket }}</td>
+        <td>{{ list.classe }}</td>
+        <td>{{ list.setor }}</td>
+        <td>{{ list.qtd }}</td>
+        <td>{{ list.investimento }}</td>
+        <td>{{ list.dividendos }}</td>
+        <td>{{ list.cotacao }}</td>
+        <td>
+          <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-1">
+            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" 
+              data-bs-target="#cadastroModal"
+              hx-get="{% url 'update_ativo' list.pk %}"
+              hx-target="#addContent"
+              hx-swap="innerHTML">
+              <i class="bi bi-pencil-fill"></i>
+            </a>
+
+            <a href="{% url 'detail_ativo' list.pk %}" class="btn btn-info btn-sm">
+              <i class="bi bi-eye-fill"></i>
+            </a>
+
+            <a onclick="modal(this)" 
+              data-page="ativo" 
+              data-name="{{ list.ativo }}" 
+              data-id="{{ list.pk }}"
+              href="#" 
+              class="btn btn-danger btn-sm">
+              <i class="bi bi-trash-fill"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<br />
+<p class="h3">Nenhum registro encontrado.</p>
+{% endif %}

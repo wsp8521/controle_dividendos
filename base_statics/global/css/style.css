@@ -1,138 +1,207 @@
-@import url('charts.css');
+@import url('desh.css');
+@import url('sidebar.css');
+@import url('style_geral.css');
 
-#pagination{margin-top: 20px;}
-.nav-tabs .nav-link.active {
-  background-color: #0d6efd;
-  color: #fff;
+
+
+/* =============================================================================
+   ESTILOS PERSONALIZADOS – GERAL
+   ========================================================================== */
+
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
-/*FORMATAÇAO BARRA DE MENU*/
-.custom-nav-link {
-    color: #adb5bd;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    font-size: 15px;
-  }
-  
-  .custom-nav-link:hover {
-    color: #ffffff;
-    background-color: #343a40;
-    text-decoration: none;
-  }
-  
-  .custom-nav-link.active {
-    background-color: #0d6efd;
-    color: white !important;
-    border-left: 4px solid #0a58ca;
-    font-weight: 500;
-  }
-  
-  .section-title {
-    color: #ced4da;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    padding: 12px 8px 4px 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    margin-top: 16px;
-    margin-bottom: 4px;
-    position: relative;
-  }
-  
-  .section-title::before {
-    content: "•";
-    color: #0d6efd;
-    margin-right: 6px;
-    font-size: 1rem;
-    vertical-align: middle;
-  }
-  
+
+/* Gradiente Azul estilo Bootstrap */
+.gradiente-azul {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  color: white;
+}
+
+/* Gradiente Verde estilo Bootstrap */
+.gradiente-verde {
+  background: linear-gradient(135deg, #198754 0%, #157347 100%);
+  color: white;
+}
+
+/* Gradiente Vermelho estilo Bootstrap */
+.gradiente-vermelho {
+  background: linear-gradient(135deg, #dc3545 0%, #bb2d3b 100%);
+  color: white;
+}
+
+/* Gradiente Roxo estilo Bootstrap */
+.gradiente-roxo {
+  background: linear-gradient(135deg, #8c5cd4 0%, #5936a6 100%);
+  color: white;
+}
+
+
+.themes-dark {
+  border: 1px solid #6b7785;
+  background-color: #212631;
+  color:#ffffff
+}
+.card {
+  padding: 20px !important;
+}
+
+#msgAlert{
+  display: flex;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+/*header*/
+.topbar {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  color: white;
+  border:1px solid #6b778542
+}
+
+.bottombar { padding: 0 3rem;  border-bottom:1px solid #6b778542; display: flex; align-items: center; height: 60px;}
+.bottombar   p{color: #323a49; ;font-size: 1.5em;margin-top: 10px;}
+
+
+.card-header span{font-size: 1.2em;}
+
+
+/*FORMATAÇAO GERAL DO CONTEUDO*/
+
+
+#pagination {
+  margin-top: 20px;
+}
+
+.collapse-menu .bi {
+  margin-right: 0.5rem;
+}
+
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+}
+
 
 /*FORMATAÇAO GERAL DOS FORMULARIOS*/
-input, select{background-color: #FFFFFF !important; color: #343a40 !important;}
-input::placeholder {color: #343a40 !important; opacity: 1; }
+input,
+select {
+  background-color: #FFFFFF !important;
+  color: #343a40 !important;
+}
+
+input::placeholder {
+  color: #343a40 !important;
+  opacity: 1;
+}
 
 
 /*FORMATAÇAO GERAL DAS TABELAS*/
 .box-table {
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 0 !important;
-  }
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0 !important;
+}
 
-  .table{margin: 0 !important; }
+.table {
+  margin: 0 !important;
+}
 
-  .card-header {
-    background-color: transparent;
-    font-weight: bold;
-    font-size: 1.2rem;
-    border-bottom: 1px solid #444;
-    padding: 10px;
-  }
 
-  /* tr th:nth-child(n+2):not(:nth-child(5)):not(:nth-child(7)) {
+
+
+/* .card-header {
+  background-color: transparent;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #444;
+  padding: 10px;
+} */
+
+/* tr th:nth-child(n+2):not(:nth-child(5)):not(:nth-child(7)) {
     background-color: #f0f0f0;
     color: #333;
   }
    */
 
-  /* #table-ativo td:nth-child(n+6){width: 7vw;} aplica formatação a partir do sexto elemtno */
-  #table-ativo td:nth-child(1){width: 30.w !important;}
+/* #table-ativo td:nth-child(n+6){width: 7vw;} aplica formatação a partir do sexto elemtno */
+#table-ativo td:nth-child(1) {
+  width: 30.w !important;
+}
 
- 
+
 /*FORMATAÇAO FORMULÁRIO DE CADASTRO DE ATIVOS*/
-
-.ag-theme-custom {
-    --ag-background-color: #f5f5f5; /* Cor de fundo geral */
-    --ag-header-background-color: #d9edf7; /* Cor de fundo do cabeçalho */
-    --ag-odd-row-background-color: #ffffff; /* Cor para linhas ímpares */
-    --ag-even-row-background-color: #e9ecef; /* Cor para linhas pares */
-}
-#modalAtivoForm{
-    max-height: 400px; overflow-y:auto
+#modalAtivoForm {
+  max-height: 400px;
+  overflow-y: auto
 }
 
+.header-meta {
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid #ffffff;
+  background-color: #d9edf7;
+  color: #000000;
+}
 
-.header-meta{margin:20px; padding:10px; border: 1px solid #ffffff; background-color: #d9edf7; color: #000000;}
-#container_ipca{display: none;}
+#container_ipca {
+  display: none;
+}
 
 /*estilização tabela pagina plan meeta*/
 .editable-meta {
-    display: inline-block;
-    width: 100%;
-    min-width: 60px;
-    padding: 5px;
-    text-align: center;
-    border: 1px solid #ced4da; /* Cor do Bootstrap */
-    border-radius: 5px;
-    
-    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1), /* Sombra interna para baixo relevo */
-                0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra externa para dar profundidade */
-    transition: all 0.2s ease-in-out;
+  display: inline-block;
+  width: 100%;
+  min-width: 60px;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ced4da;
+  /* Cor do Bootstrap */
+  border-radius: 5px;
+
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1),
+    /* Sombra interna para baixo relevo */
+    0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Sombra externa para dar profundidade */
+  transition: all 0.2s ease-in-out;
 }
 
 /* Quando a célula é clicada para edição */
 .editable-meta:focus,
 .editable-meta:active {
-    outline: none;
-    border:2px solid;
-    border-color: #80bdff; /* Azul Bootstrap */
-    box-shadow: inset 1px 1px 3px rgba(12, 73, 194, 0.2), /* Sombra interna para baixo relevo */
-                0 4px 8px rgba(12, 73, 194, 0.2); /* Aumento da sombra externa */
-    
+  outline: none;
+  border: 2px solid;
+  border-color: #80bdff;
+  /* Azul Bootstrap */
+  box-shadow: inset 1px 1px 3px rgba(12, 73, 194, 0.2),
+    /* Sombra interna para baixo relevo */
+    0 4px 8px rgba(12, 73, 194, 0.2);
+  /* Aumento da sombra externa */
+
 }
 
 
 #valor-investimento:empty:before {
-    content: "Valor da aplicação"; /* Texto do placeholder */
-    color: gray; /* Cor do placeholder */
-    font-style: italic; /* Estilização opcional */
-    pointer-events: none; /* Evita que o texto bloqueie a edição */
+  content: "Valor da aplicação";
+  /* Texto do placeholder */
+  color: gray;
+  /* Cor do placeholder */
+  font-style: italic;
+  /* Estilização opcional */
+  pointer-events: none;
+  /* Evita que o texto bloqueie a edição */
 }
 
 /*Estilização pagina pagamento proventos*/
@@ -141,55 +210,43 @@ input::placeholder {color: #343a40 !important; opacity: 1; }
   overflow-y: auto;
   position: relative;
 }
+
 #pgto-pendente {
   max-height: 74vh;
   overflow-y: auto;
   position: relative;
 }
 
-#table-agenda-pagamento table tr{text-align: center;}
-
+#table-agenda-pagamento table tr {
+  text-align: center;
+}
 
 .table tfoot td {
-    position: sticky;
-    font-weight: bold;
-    font-size: large;
-    bottom: 0;
-    z-index: 2;
+  position: sticky;
+  font-weight: bold;
+  font-size: large;
+  bottom: 0;
+  z-index: 2;
 }
 
 
 
 /* CSS para o pop-up de carregamento da pagina dividendos */
 #loading-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: #008080;
-    color: white;
-    border: 1px solid black;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    font-size: 18px;
-    text-align: center;
-    border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #008080;
+  color: white;
+  border: 1px solid black;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  font-size: 18px;
+  text-align: center;
+  border-radius: 5px;
 }
-
-/*formatação detalhes do ativo*/
-#detalhe-ativo table{width:80vw}
-#detalhe-ativo .card{height: 15vh;}
-#line-1{margin-top: 10px;}
-#line-1 .col-md-3:nth-child(2) .card {background-color:#808080;}
-#line-1 .col-md-3:nth-child(3) .card {background-color:#0080c0;}
-#line-1 .col-md-3:nth-child(4) .card {background-color:#8000ff;}
-
-
-#line-2{margin-bottom: 20px;}
-#line-2 .col-md-3:nth-child(1) .card {background-color:#800080;}
-#line-2 .col-md-3:nth-child(2) .card {background-color:#ff8000;}
-#line-2 .col-md-3:nth-child(3) .card {background-color:#ff409f;}
 
 
 /*formatação pagina plano de meta*/
@@ -200,25 +257,38 @@ input::placeholder {color: #343a40 !important; opacity: 1; }
 }
 
 #header-table {
-  width: 60%; /* Define a largura do primeiro elemento */
+  width: 60%;
+  /* Define a largura do primeiro elemento */
 
-  padding: 5px; /* Adiciona um pouco de espaçamento interno */
+  padding: 5px;
+  /* Adiciona um pouco de espaçamento interno */
 }
 
 #investimento {
-  background-color: rgba(12, 55, 76, 0.758); /* Verde com 40% de opacidade */
+  background-color: rgba(12, 55, 76, 0.758);
+  /* Verde com 40% de opacidade */
 
-  width: 40%; /* Define a largura do segundo elemento */
+  width: 40%;
+  /* Define a largura do segundo elemento */
   height: 100%;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 2px; /* Alinha os elementos com um pequeno espaço entre eles */
+  margin-left: 2px;
+  /* Alinha os elementos com um pequeno espaço entre eles */
   border-radius: 5px;
   border: 1px solid #2692a2;
-  padding: 5px; /* Adiciona um pouco de espaçamento interno */
+  padding: 5px;
+  /* Adiciona um pouco de espaçamento interno */
   text-align: justify;
 }
-#container-cards, #container-metrica{margin: 0 !important;}
-#form-filtro{margin:20px 20px;}
+
+#container-cards,
+#container-metrica {
+  margin: 0 !important;
+}
+
+#form-filtro {
+  margin: 20px 20px;
+}

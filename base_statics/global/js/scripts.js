@@ -13,7 +13,7 @@ function modal(element){
   //xxxxxxxxxxxxxxxxxxxxxxxfunção para esconder mensagem de sucesso xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
   function showAndHideSuccessMessage(showTimeout = 0, hideTimeout = 1000) {
-    var message = document.getElementById('successMessage');
+    var message = document.getElementById('msgAlert');
     if (message) {
         // Mostrar a mensagem após um tempo (útil para dar tempo ao DOM de carregar)
         setTimeout(function() {
@@ -39,10 +39,10 @@ function hiddenCampoIpca() {
     let select = document.getElementById("id_classe");
     let campoIpca = document.getElementById("container_ipca");
 
-    if (select.value != "Ação"){
-        campoIpca.style.display = "block"
-    } else{
+    if (select.value === "Ação"){
         campoIpca.style.display = "none"
+    } else{
+        campoIpca.style.display = "block"
    }
 }
 

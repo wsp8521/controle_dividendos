@@ -6,6 +6,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'app.settings') #permite o clery
 
 app = Celery('app')
 app.config_from_object('django.conf:settings', namespace='CELERY')
+app.conf.worker_pool = 'solo'  # Usa o pool solo para Windows
+
 
 # verifica automaticamente tasks registradas nos apps
 app.autodiscover_tasks()

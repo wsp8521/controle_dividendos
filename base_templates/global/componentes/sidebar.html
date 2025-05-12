@@ -1,71 +1,75 @@
-<div class="row flex-nowrap">
-    <div class="col-auto col-md-0 col-xl-0 px-0 bg-dark">
-      <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white">
-        <button class="btn btn-dark d-block d-sm-none mb-3" type="button" data-bs-toggle="collapse"
-          data-bs-target="#menuCollapse" aria-expanded="false" aria-controls="menuCollapse">
-          <i class="bi bi-list fs-4"></i>
-        </button>
-        <div class="collapse d-sm-block" id="menuCollapse">
-          <ul class="nav flex-column w-100" id="menu">
-            <!-- GERAL -->
-            <li class="section-title">Geral</li>
-            {% url 'desh' as desh_url %}
-            <li><a href="{{ desh_url }}" class="nav-link custom-nav-link {% if request.path == desh_url %}active{% endif %}">
-              <i class="bi bi-speedometer2"></i> <span class="ms-2">Dashboard</span></a>
-            </li>
-          
-            {% url 'list_ativo' as ativo_url %}
-            <li><a href="{{ ativo_url }}" class="nav-link custom-nav-link {% if request.path == ativo_url %}active{% endif %}">
-              <i class="bi bi-box"></i> <span class="ms-2">Ativos</span></a>
-            </li>
-          
-            <!-- FINANCEIRO -->
-            <li class="section-title">Financeiro</li>
-          
-            {% url 'list_operacao' as operacao_url %}
-            <li><a href="{{ operacao_url }}" class="nav-link custom-nav-link {% if request.path == operacao_url %}active{% endif %}">
-              <i class="bi bi-arrow-left-right"></i> <span class="ms-2">Operações</span></a>
-            </li>
-          
-            {% url 'list_proventos' as proventos_url %}
-            <li><a href="{{ proventos_url }}" class="nav-link custom-nav-link {% if request.path == proventos_url %}active{% endif %}">
-              <i class="bi bi-cash-coin"></i> <span class="ms-2">Rendimentos</span></a>
-            </li>
-          
-            {% url 'pgto_proventos' as agenda_url %}
-            <li><a href="{{ agenda_url }}" class="nav-link custom-nav-link {% if request.path == agenda_url %}active{% endif %}">
-              <i class="bi bi-calendar-range"></i> <span class="ms-2">Agenda</span></a>
-            </li>
-          
-            <!-- ESTRATÉGIA -->
-            <li class="section-title">Estratégia</li>
-
-            {% url 'list_preco_teto' as preco_url %}
-            <li><a href="{{ preco_url }}" class="nav-link custom-nav-link {% if request.path == preco_url %}active{% endif %}">
-              <i class="bi bi-graph-up"></i> <span class="ms-2">Preço Teto</span></a>
-            </li>
-          
-          
-            {% url 'list_metas' as metas_url %}
-            <li><a href="{{ metas_url }}" class="nav-link custom-nav-link {% if request.path == metas_url %}active{% endif %}">
-              <i class="bi bi-bullseye"></i> <span class="ms-2">Metas</span></a>
-            </li>
-          
-            {% url 'list_plan' as plan_url %}
-            <li><a href="{{ plan_url }}" class="nav-link custom-nav-link {% if request.path == plan_url %}active{% endif %}">
-              <i class="bi bi-journal-richtext"></i> <span class="ms-2">Plano de Metas</span></a>
-            </li>
-          
-          
-            <!-- SISTEMA -->
-            <li class="section-title">Sistema</li>
-            <li><a href="/admin/" class="nav-link custom-nav-link {% if request.path == '/admin/' %}active{% endif %}" target="_blank">
-              <i class="bi bi-gear-wide-connected"></i> <span class="ms-2">Admin</span></a>
-            </li>
-          </ul>
-          
- 
-        </div>
-        <hr>
-      </div>
+<nav class="sidebar d-flex flex-column themes-dark" id="sidebar">
+    <button class="btn btn-sm btn-light d-md-none mb-3 ms-auto me-3" onclick="toggleSidebar()">
+        <i class="bi bi-x-lg"></i>
+    </button>
+    <div class="px-3 mb-3">
+        <h4>COREUI <small class="text-muted">PRO</small></h4>
     </div>
+    <ul class="nav flex-column">
+        <li class="nav-category section-title" data-bs-toggle="collapse" role="button" aria-expanded="true">Geral</li>
+        {% url 'desh' as desh_url %}
+        <li><a href="{{ desh_url }}"
+                class="nav-link custom-nav-link {% if request.path == desh_url %}active{% endif %}">
+                <i class="bi bi-speedometer2"></i> <span class="ms-2">Dashboard</span></a>
+        </li>
+
+        {% url 'list_ativo' as ativo_url %}
+        <li><a href="{{ ativo_url }}"
+                class="nav-link custom-nav-link {% if request.path == ativo_url %}active{% endif %}">
+                <i class="bi bi-box"></i> <span class="ms-2">Ativos</span></a>
+        </li>
+
+        <!-- FINANCEIRO -->
+        <li class="nav-category section-title" data-bs-toggle="collapse" role="button" aria-expanded="true">Financeiro
+        </li>
+
+        {% url 'list_operacao' as operacao_url %}
+        <li><a href="{{ operacao_url }}"
+                class="nav-link custom-nav-link {% if request.path == operacao_url %}active{% endif %}">
+                <i class="bi bi-arrow-left-right"></i> <span class="ms-2">Operações</span></a>
+        </li>
+
+        {% url 'list_proventos' as proventos_url %}
+        <li><a href="{{ proventos_url }}"
+                class="nav-link custom-nav-link {% if request.path == proventos_url %}active{% endif %}">
+                <i class="bi bi-cash-coin"></i> <span class="ms-2">Rendimentos</span></a>
+        </li>
+
+        {% url 'pgto_proventos' as agenda_url %}
+        <li><a href="{{ agenda_url }}"
+                class="nav-link custom-nav-link {% if request.path == agenda_url %}active{% endif %}">
+                <i class="bi bi-calendar-range"></i> <span class="ms-2">Agenda</span></a>
+        </li>
+
+        <!-- ESTRATÉGIA -->
+        <li class="nav-category section-title" data-bs-toggle="collapse" role="button" aria-expanded="true">Estratégia
+        </li>
+
+        {% url 'list_preco_teto' as preco_url %}
+        <li><a href="{{ preco_url }}"
+                class="nav-link custom-nav-link {% if request.path == preco_url %}active{% endif %}">
+                <i class="bi bi-graph-up"></i> <span class="ms-2">Preço Teto</span></a>
+        </li>
+
+
+        {% url 'list_metas' as metas_url %}
+        <li><a href="{{ metas_url }}"
+                class="nav-link custom-nav-link {% if request.path == metas_url %}active{% endif %}">
+                <i class="bi bi-bullseye"></i> <span class="ms-2">Metas</span></a>
+        </li>
+
+        {% url 'list_plan' as plan_url %}
+        <li><a href="{{ plan_url }}"
+                class="nav-link custom-nav-link {% if request.path == plan_url %}active{% endif %}">
+                <i class="bi bi-journal-richtext"></i> <span class="ms-2">Plano de Metas</span></a>
+        </li>
+
+
+        <!-- SISTEMA -->
+        <li class="nav-category section-title" data-bs-toggle="collapse" role="button" aria-expanded="true">Sistema</li>
+        <li><a href="/admin/" class="nav-link custom-nav-link {% if request.path == '/admin/' %}active{% endif %}"
+                target="_blank">
+                <i class="bi bi-gear-wide-connected"></i> <span class="ms-2">Admin</span></a>
+        </li>
+    </ul>
+</nav>

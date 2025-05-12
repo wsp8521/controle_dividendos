@@ -10,7 +10,7 @@ from carteira.models import PlanMetas, PlanMetasCalc
 from babel.numbers import format_currency
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
-from decimal import Decimal,InvalidOperation
+from decimal import Decimal
 from django.contrib import messages
 
 
@@ -27,11 +27,8 @@ def calculadora_ativos(request):
     lista_ativos = []
     tickers = [ativo.id_ativo for ativo in queryset]
 
-    # Recupera cotações do cache ou consulta
-    cache_key = "cotacao_key"
-    cotacoes = cache.get(cache_key)
-    if not cotacoes:
-        cotacoes = obter_cotacao(tickers)
+    # Recupera os dados do cache que foi setado na função obter_cotacao
+    cotacoes = obter_cotacao(tickers)
 
     # Calcula agregados, mesmo se queryset estiver vazio
     soma_total_ativo = queryset.aggregate(Sum('qtd_calc'))['qtd_calc__sum'] or 0

@@ -1,19 +1,98 @@
-<div class="box-table">
-<div class="card-header">📈 Lista de operações</div>
-<table class="table table-striped table-dark " id="table-operacao">
-    <thead>
+<div class="card-header themes-dark">
+  <!-- Título ocupa linha inteira no mobile e no desktop -->
+  <div class="row mb-3">
+      <div class="col-12 rounded d-flex justify-content-center align-items-center">
+      <span class="me-2 fs-3 text-white">
+       <i class="bi bi-arrow-left-right me-2"></i> Lista de operações
+
+
+      </span>
+    </div>
+  </div>
+
+  <!-- Formulário em linha no desktop, empilhado no mobile -->
+  <form action="#" method="GET">
+    <div class="row g-2 align-items-center">
+      <!-- Campo de pesquisa -->
+      <div class="col-md">
+        <input type="text" class="form-control" name="ativo" placeholder="Ativo" value="{{ request.GET.ativo }}">
+      </div>
+
+      <!-- Classe -->
+      <div class="col-md">
+        <select name="classe_ativos" class="form-select" onchange="this.form.submit()">
+          <option value="">Classe</option>
+          <option value="Ação" {% if request.GET.classe_ativos == "Ação" %}selected{% endif %}>Ação</option>
+          <option value="FII" {% if request.GET.classe_ativos == "FII" %}selected{% endif %}>FII</option>
+          <option value="FII-Infra" {% if request.GET.classe_ativos == "FII-Infra" %}selected{% endif %}>FII-Infra</option>
+          <option value="FII-Agro" {% if request.GET.classe_ativos == "FII-Agro" %}selected{% endif %}>FII-Agro</option>
+        </select>
+      </div>
+
+      <!-- Operação -->
+      <div class="col-md-3">
+        <select name="operacao" class="form-select" onchange="this.form.submit()">
+          <option value="">Operação</option>
+          <option value="Compra" {% if request.GET.operacao == "Compra" %}selected{% endif %}>Compra</option>
+          <option value="Venda" {% if request.GET.operacao == "Venda" %}selected{% endif %}>Venda</option>
+          <option value="Bonificação" {% if request.GET.operacao == "Bonificação" %}selected{% endif %}>Bonificação</option>
+          <option value="Desdobramento" {% if request.GET.operacao == "Desdobramento" %}selected{% endif %}>Desdobramento</option>
+        </select>
+      </div>
+
+      <!-- Mês -->
+      <div class="col-md">
+        <select name="mes" class="form-select" onchange="this.form.submit()">
+          <option value="">Mês</option>
+          {% for numero, nome in meses %}
+            <option value="{{ numero }}" {% if request.GET.mes == numero|stringformat:"s" %}selected{% endif %}>{{ nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Ano -->
+      <div class="col-md">
+        <select name="anos" class="form-select" onchange="this.form.submit()">
+          <option value="">Ano</option>
+          {% for ano in anos %}
+            <option value="{{ ano }}" {% if request.GET.anos == ano|stringformat:"s" %}selected{% endif %}>{{ ano }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Botão de ação -->
+      <div class="col-md-auto">
+        {% if request.GET.ativo or request.GET.mes or request.GET.anos or request.GET.classe or request.GET.operacao or request.GET.classe_ativos %}
+          <a href="{% url 'list_operacao' %}" class="btn btn-primary">
+            <i class="bi bi-x-lg"></i>
+          </a>
+        {% else %}
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-search"></i> Pesquisar
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </form>
+</div>
+
+{% if lists %}
+  <!-- Tabela responsiva -->
+  <div class="table-responsive mt-3">
+    <table class="table table-striped align-middle fs-5" id="table-ativo">
+      <thead>
         <tr class="text-center">
-            <th>Ativo</th>
-            <th>Classe</th>
-            <th>Operacção</th>
-            <th>Data Operação</th>
-            <th>Qtde</th>
-            <th>Valor</th>
-            <th>Valor total</th>
-            <th>Ação</th>
+          <th>Ativo</th>
+          <th>Classe</th>
+          <th>Operacção</th>
+          <th>Data Operação</th>
+          <th>Qtde</th>
+          <th>Valor</th>
+          <th>Valor total</th>
+          <th>Ação</th>
         </tr>
-    </thead>
-    <tbody >
+      </thead>
+        <tbody >
         {% for list in lists %}
             <tr class="text-center">
                 <td>{{ list.id_ativo }}</td>
@@ -48,6 +127,9 @@
             </tr>
         {% endfor %}
     </tbody>
-</table>
-</div>
-</div>
+    </table>
+  </div>
+{% else %}
+  <br />
+  <p class="h3">Nenhum registro encontrado.</p>
+{% endif %}

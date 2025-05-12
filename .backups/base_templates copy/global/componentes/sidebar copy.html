@@ -1,0 +1,31 @@
+<div class="row flex-nowrap">
+    <div class="col-auto col-md-0 col-xl-0 px-0 bg-dark">
+      <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white">
+        <button class="btn btn-dark d-block d-sm-none mb-3" type="button" data-bs-toggle="collapse"
+          data-bs-target="#menuCollapse" aria-expanded="false" aria-controls="menuCollapse">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+        <div class="collapse d-sm-block" id="menuCollapse">
+          <ul class="nav flex-column align-items-start" id="menu">
+            <li class="mt-3 mb-1 text-white-50">GERAL</li>
+            <li><a href="{% url 'desh' %}" class="nav-link"><i class="bi bi-speedometer2"></i> <span class="ms-2">Dashboard</span></a></li>
+            <li><a href="{% url 'list_ativo' %}" class="nav-link"><i class="bi bi-box"></i> <span class="ms-2">Ativos</span></a></li>
+            
+            <li class="mt-3 mb-1 text-white-50">FINANCEIRO</li>
+            <li><a href="{% url 'list_operacao' %}" class="nav-link"><i class="bi bi-arrow-left-right"></i> <span class="ms-2">Operações</span></a></li>
+            <li><a href="{% url 'list_proventos' %}" class="nav-link"><i class="bi bi-cash-coin"></i> <span class="ms-2">Rendimentos</span></a></li>
+            <li><a href="{% url 'pgto_proventos' %}" class="nav-link"><i class="bi bi-calendar-range"></i> <span class="ms-2">Agenda</span></a></li>
+          
+            <li class="mt-3 mb-1 text-white-50">ESTRATÉGIA</li>
+            <li><a href="{% url 'list_metas' %}" class="nav-link"><i class="bi bi-bullseye"></i> <span class="ms-2">Metas</span></a></li>
+            <li><a href="{% url 'list_plan' %}" class="nav-link"><i class="bi bi-journal-richtext"></i> <span class="ms-2">Plano de Metas</span></a></li>
+            <li><a href="{% url 'list_preco_teto' %}" class="nav-link"><i class="bi bi-graph-up"></i> <span class="ms-2">Preço Teto</span></a></li>
+          
+            <li class="mt-3 mb-1 text-white-50">SISTEMA</li>
+            <li><a href="/admin/" class="nav-link" target="_blank"><i class="bi bi-gear-wide-connected"></i> <span class="ms-2">Admin</span></a></li>
+          </ul>
+          
+        </div>
+        <hr>
+      </div>
+    </div>

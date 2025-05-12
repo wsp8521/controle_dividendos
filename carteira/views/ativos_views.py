@@ -49,15 +49,11 @@ class AtivoRender(ListView):
         
     
         # Recupera os dados do cache que foi setado na funçao o obter_cotacao
-        cache_key = "cotacao_key"
-        cotacoes = cache.get(cache_key)
-
-        if not cotacoes:
-            cotacoes = obter_cotacao(tickers)  # Busca novas cotações e armazena no cache
+        cotacoes = 0 #obter_cotacao(tickers)
         
         lista_ativos = []
         for ativo in ativos:
-            cotacao = cotacoes.get(f'{ativo.ticket}.SA') if cotacoes else None
+            cotacao = 0 #cotacoes.get(ativo.ticket) if cotacoes else None
             lista_ativos.append({
                 "pk": ativo.id,
                 "ativo": ativo.ativo,
@@ -72,6 +68,7 @@ class AtivoRender(ListView):
             })
 
         context['lists'] = lista_ativos
+        context['page_name'] = "Ativos"
         filter_url = getattr(self, 'filter_url_pag_nav', None)   #url que será aplicado na paginação quado o usuário aplicar algum filtro
         context['url_filter_pagination'] = f'&classe_ativos={filter_url}' if filter_url else ""
         return context
@@ -93,7 +90,7 @@ class AtivoDetail(DetailView):
 
         # Obter cotação atual
         cotacoes = obter_cotacao([ativo.ticket])
-        cotacao = cotacoes.get(f"{ativo.ticket}.SA")
+        cotacao = cotacoes.get(ativo.ticket)
 
         # Valor de mercado = cotação atual * quantidade de cotas
         valor_mercado = Decimal(cotacao) * ativo.qtdAtivo if cotacao and ativo.qtdAtivo else 0
@@ -123,6 +120,8 @@ class AtivoDetail(DetailView):
         }
 
         context['lists'] = dados
+        context['page_name'] = "Detalhes do Ativo - " + ativo.ativo
+        context['is_detalhe'] = "Detalhe" in context['page_name'] 
         context['grafico'] = {
             'grafico_operacao': json.dumps(dados_graficos['chart_operacao']),
             'grafico_proventos': json.dumps(dados_graficos['chart_proventos']),

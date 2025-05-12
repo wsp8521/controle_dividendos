@@ -53,21 +53,17 @@ class PlanMetasRender(ListView):
         tickers = [ativo.id_ativo for ativo in plan_metas]
         
         # Recupera os dados do cache que foi setado na função obter_cotacao
-        cache_key = "cotacao_key"
-        cotacoes = cache.get(cache_key)
-
-        if not cotacoes:
-            cotacoes = obter_cotacao(tickers)  # Busca novas cotações e armazena no cache
-            
+        cotacoes = obter_cotacao(tickers)
+        
         # Busca médias de dividendos de uma só vez para evitar múltiplas chamadas
-        dividendos_cache = {ativo.id_ativo: media_dividendos(ativo.id_ativo, ativo.classe, 5) for ativo in plan_metas}
+        dividendos_cache = {ativo.id_ativo: media_dividendos(self.request.user.id,ativo.id_ativo, ativo.classe, 5) for ativo in plan_metas}
         
         for plan in plan_metas:
             get_preco_teto = PrecoTeto.objects.filter(id_ativo=plan.id_ativo).first()
             ativos = Ativos.objects.filter(ticket=plan.id_ativo).first()
             cota_restante = plan.qtd - ativos.qtdAtivo if (plan.qtd - ativos.qtdAtivo) > 0 else 0
-            cotacao = cotacoes.get(f'{plan.id_ativo}.SA') if cotacoes else None
-            
+            cotacao = cotacoes.get(plan.id_ativo) if cotacoes else None
+                    
             # Busca no dicionário dividendos_cache pelo valor associado à chave ativo.id_ativo.
             dividendos = dividendos_cache.get(plan.id_ativo, Decimal(0))
             rentabilidade = Decimal(get_preco_teto.rentabilidade) if get_preco_teto and get_preco_teto.rentabilidade else 0
@@ -142,8 +138,7 @@ class PlanMetasRender(ListView):
         context['is_meta_ativos'] = True if meta_ativo else False
         context['anos_disponiveis'] = anos_unicos  # Passando anos agrupados para o template
         
-        print("xxxxx investiemtno xxxxxxxxxxx")
-        print(context['investimento_total'] )
+
 
         return context
 

@@ -23,14 +23,14 @@
         </div>
 
         <div class="mb-3">
-            <label>Rentabilidade</label>
+            <label>Rentabilidade desejada</label>
             {{form.rentabilidade}}
         </div>
 
 
         {% if form.classe.value != "Ação" %}
         <div class="mb-3" >
-            <label>IPCA Tesouro Direto</label>
+            <label>Prêmio de risco (Tesouro Direto 2045)</label>
             {{form.ipca}}
         </div>
         {% endif %}

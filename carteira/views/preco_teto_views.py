@@ -29,21 +29,19 @@ class PrecoTetoRender(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ativos = self.get_queryset()  # Queryset já ordenado e filtrado, se necessário
-        lista_ativos = []
+        lista_ativos = {}
         tickers = [ativo.id_ativo for ativo in ativos]
+        lista_ativos_acao = []
+        lista_ativos_fii = []
+        
         # Recupera os dados do cache que foi setado na funçao o obter_cotacao
-        cache_key = "cotacao_key"
-        cotacoes = cache.get(cache_key)
-
-        if not cotacoes:
-            cotacoes = obter_cotacao(tickers)  # Busca novas cotações e armazena no cache
-            
+        cotacoes = obter_cotacao(tickers)
+        
         # Busca médias de dividendos de uma só vez para evitar múltiplas chamadas
-        dividendos_cache = {ativo.id_ativo: media_dividendos(ativo.id_ativo, ativo.classe, 5) for ativo in ativos
-}
+        dividendos_cache = {ativo.id_ativo: media_dividendos(self.request.user.id,ativo.id_ativo, ativo.classe, 5) for ativo in ativos}
         
         for ativo in ativos:
-            cotacao = cotacoes.get(f'{ativo.id_ativo}.SA') if cotacoes else None
+            cotacao = cotacoes.get(ativo.id_ativo) if cotacoes else None
            # Busca no dicionário dividendos_cache pelo valor associado à chave ativo.id_ativo.
             dividendos = dividendos_cache.get(ativo.id_ativo, Decimal(0))
             rentabilidade = Decimal(ativo.rentabilidade)  # Converte string para Decimal
@@ -55,7 +53,7 @@ class PrecoTetoRender(ListView):
             margem_seguranca = ((preco_teto - Decimal(cotacao or 0))/preco_teto)*100
             recomendacao = "Comprar" if diferenca < 0 else "Não comprar"
 
-            lista_ativos.append({
+            lista_ativos={
                 "pk": ativo.id,  # Chave primária
                 "ativo": ativo.id_ativo,
                 "classe": ativo.classe,
@@ -66,9 +64,22 @@ class PrecoTetoRender(ListView):
                 "diferenca": diferenca,
                 "margem_seguranca": margem_seguranca if margem_seguranca >= 1 else 0,
                 "recomendacao": recomendacao,
-            })
+            }
+            
+            if ativo.classe == "Ação":
+                lista_ativos_acao.append(lista_ativos)
+            elif ativo.classe == "FII" or ativo.classe == "FII-Infra":
+                lista_ativos_fii.append(lista_ativos)
+                
 
-        context['lists'] = lista_ativos  # Passando a lista dos ativos para o contexto
+
+        context['lista_ativos_acao'] = lista_ativos_acao
+        context['lista_ativos_fii'] = lista_ativos_fii
+        
+        print(context['lista_ativos_acao'])
+        
+        #context['lists'] = lista_ativos  # Adiciona a lista de ativos ao contexto
+        
         return context
 
 #CRETE

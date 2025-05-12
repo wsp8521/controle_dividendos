@@ -1,8 +1,8 @@
 {% if messages %}
-{% for message in messages %}
-  <div class="alert alert-success" id="successMessage" role="alert">
-    {{message}}
-  </div>
-{% endfor %}
+  {% for message in messages %}
+    <div class="alert alert-success " id="msgAlert" role="alert">
+      <i class="bi bi-check-circle-fill me-2 fs-4"></i>
+      <div>{{ message }}</div>
+    </div>
+  {% endfor %}
 {% endif %}
-

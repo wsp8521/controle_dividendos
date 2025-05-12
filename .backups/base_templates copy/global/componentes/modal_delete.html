@@ -1,0 +1,22 @@
+
+<div class="modal" tabindex="-1" id="modalDel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Exclusão de registro</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="modalBodyContent">modal</p>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</a>
+          <form method="post" id="deleteForm">
+            {% csrf_token %}
+              <button type="submit" class="btn btn-danger ">Excluir</button>
+          </form>
+          <!--<a class="btn btn-primary" href="#" id="confirmDeleteBtn">Excluir</a>-->
+        </div>
+      </div>
+    </div>
+  </div>

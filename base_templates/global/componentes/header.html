@@ -1,5 +1,48 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-dark">
-      <div class="container-fluid">
-        <p class="display-6">Sistema de Gestão de Dividendos</p>
-      </div>
-</nav>
+<!-- header.html -->
+<div class="topbar card d-flex flex-row justify-content-between align-items-center p-3">
+  <!-- Esquerda: Menu de navegação -->
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link text-dark" href="#"><i class="bi bi-speedometer2 me-1 fs-0"></i> Dashboard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark " href="#"><i class="bi bi-gear me-1 fs-0"></i> Configurações</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark " href="#"><i class="bi bi-robot me-1 fs-0"></i> Pergunte à IA</a>
+    </li>
+  </ul>
+
+  <!-- Direita: Ícones -->
+  <div>
+    <i class="bi bi-bell-fill me-3 text-dark fs-3"></i>
+    <i class="bi bi-envelope me-3 text-dark fs-3"></i>
+    <i class="bi bi-person-circle text-dark fs-3"></i>
+  </div>
+</div>
+
+<div class="bottombar d-flex justify-content-between " style="background-color: #ffffff; margin-bottom: 10px;">
+  <p>{{ page_name }}</p>
+
+  {% if page_name == 'Ativos' %}
+    {% url 'create_ativo' as url_create %}
+  {% elif page_name == "Operacões" %}
+    {% url 'create_operacao' as url_create %}
+  {% endif %}
+  <div>
+    <!--   <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn">
+            <i class="bi bi-search"></i> Atualizar cotação
+        </a>   -->
+
+    {% if not is_detalhe %}
+      <a href="#"
+       class="btn btn-primary" 
+       data-bs-toggle="modal" 
+       data-bs-target="#cadastroModal" 
+       hx-get="{{ url_create }}" 
+       hx-target="#addContent" 
+       hx-swap="innerHTML">
+       <i class="bi bi-plus"></i> Cadastrar</a>
+    {% endif %}
+  </div>
+</div>

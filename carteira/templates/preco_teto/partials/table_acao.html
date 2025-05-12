@@ -1,0 +1,62 @@
+
+<div class="box-table">
+  <div class="card-header">📈 PREÇO TETO AÇÕES</div>
+  <table class="table table-striped table-dark text-center">
+    <thead >
+      <tr>
+        <th>Ativo</th>
+        {% comment %} <th>Classe</th>
+        <th>Rentabilidade</th> {% endcomment %}
+        <th>Cotacao</th>
+        <th>Preco Teto</th>
+        <th>Diferença</th>
+        <th>Margem de segurança</th>
+        <th>Recomendação</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="tbodyAtivos">
+      {% for list in lista_ativos_acao %}
+        <tr hx-target="this" hx-swap="outerHTML">
+          <td>{{ list.ativo }}</td>
+          {% comment %} <td>{{ list.classe }}</td>
+          <td>{{ list.rentabilidade }}</td> {% endcomment %}
+          <td>{{ list.cotacao }}</td>
+          <td>R$ {{ list.preco_teto|floatformat:2 }}</td> <!-- Formato de moeda -->
+          <td class="{% if list.diferenca > 0 %}
+              text-success
+            {% else %}
+              text-danger
+            {% endif %}">R$ {{ list.diferenca|floatformat:2 }}</td> <!-- Formato de moeda -->
+          <td class="{% if list.diferenca < 0 %}
+              text-success
+            {% else %}
+              text-danger
+  
+            {% endif %} text-center">{{ list.margem_seguranca|floatformat:2 }}%</td>
+          <td>
+            <span class="badge {% if list.diferenca < 0 %}
+                bg-success
+              {% else %}
+                 bg-danger
+              {% endif %}">
+              {{ list.recomendacao }}
+            </span>
+          </td>
+          <td style="width:8em">
+            <!-- btn visualizar -->
+            <a href="#" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i></a> 
+  
+            <!-- btn Atualizar -->
+            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#cadastroModal" hx-get="{% url 'update_preco_teto' list.pk %}" hx-target="#addContent" hx-swap="innerHTML"><i class="bi bi-pencil-fill"></i></a>
+            <!-- btn deleter -->
+            <a onclick="modal(this)" data-page="preco" data-name="{{ list.ativo }}" data-id="{{ list.pk }}" href="#" class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></a> 
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+  
+  
+  
