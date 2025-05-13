@@ -2,7 +2,7 @@
   <!-- Título ocupa linha inteira no mobile e no desktop, com borda e alinhamento central -->
   <div class="row mb-3">
     <div class="col-12 rounded d-flex justify-content-center align-items-center">
-      <span class="fs-3 text-white">
+      <span class="fs-4 text-white">
        <i class="bi bi-file-earmark-bar-graph me-2"></i> Lista de Ativos
       </span>
     </div>
@@ -30,12 +30,12 @@
       <!-- Botão -->
       <div class="col-12 col-md-4">
         {% if request.GET.ativo or request.GET.mes or request.GET.anos or request.GET.classe or request.GET.operacao or request.GET.classe_ativos %}
-          <a href="{% url "list_ativo" %}" class="btn btn-primary w-100">
+          <a href="{% url "list_ativo" %}" class="btn btn-primary">
             <i class="bi bi-x-lg"></i>
           </a>
         {% else %}
-          <button type="submit" class="btn btn-primary w-100">
-            <i class="bi bi-search"></i> Pesquisar
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-search"></i>
           </button>
         {% endif %}
       </div>
@@ -46,7 +46,7 @@
 {% if lists %}
 <!-- Tabela responsiva -->
 <div class="table-responsive mt-3">
-  <table class="table table-striped align-middle fs-5 " id="table-ativo">
+  <table class="table table-striped align-middle fs-6 " id="table-ativo">
     <thead>
       <tr class="text-center">
         <th>Ativo</th>

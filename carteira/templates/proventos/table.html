@@ -1,9 +1,92 @@
+<div class="card-header themes-dark">
+  <!-- Título -->
+  <div class="row mb-3">
+    <div class="col-12 d-flex align-items-center">
+      <span class="fs-4 text-white">
+        <i class="bi bi-arrow-left-right me-2"></i> Lista de Rendimentos
+      </span>
+    </div>
+  </div>
+
+  <!-- Formulário de filtros -->
+ <!-- Formulário de filtros responsivo -->
+<form action="#" method="GET">
+  <div class="row row-cols-auto g-2 align-items-end">
+    
+    <!-- Ativo -->
+    <div class="col" style="width: 100px;">
+      <input type="text" class="form-control" name="ativo" placeholder="Ativo" value="{{ request.GET.ativo }}">
+    </div>
+
+    <!-- Classe -->
+    <div class="col">
+      <select name="classe_ativos" class="form-select" onchange="this.form.submit()">
+        <option value="">Classe</option>
+        <option value="Ação" {% if request.GET.classe_ativos == "Ação" %}selected{% endif %}>Ação</option>
+        <option value="FII" {% if request.GET.classe_ativos == "FII" %}selected{% endif %}>FII</option>
+        <option value="FII-Infra" {% if request.GET.classe_ativos == "FII-Infra" %}selected{% endif %}>FII-Infra</option>
+        <option value="FII-Agro" {% if request.GET.classe_ativos == "FII-Agro" %}selected{% endif %}>FII-Agro</option>
+      </select>
+    </div>
+
+    <!-- Proventos -->
+    <div class="col">
+      <select name="tipo_proventos" class="form-select" onchange="this.form.submit()">
+        <option value="">Proventos</option>
+        <option value="Dividendos" {% if request.GET.tipo_proventos == "Dividendos" %}selected{% endif %}>Dividendos</option>
+        <option value="JCP" {% if request.GET.tipo_proventos == "JCP" %}selected{% endif %}>JCP</option>
+      </select>
+    </div>
+
+    <!-- Status -->
+    <div class="col">
+      <select name="status" class="form-select" onchange="this.form.submit()">
+        <option value="">Status</option>
+        <option value="PAGO" {% if request.GET.status == "PAGO" %}selected{% endif %}>PAGO</option>
+        <option value="A PAGAR" {% if request.GET.status == "A PAGAR" %}selected{% endif %}>A PAGAR</option>
+      </select>
+    </div>
+
+    <!-- Mês -->
+    <div class="col" style="width: 100px;">
+      <select name="mes" class="form-select" onchange="this.form.submit()">
+        <option value="">Mês</option>
+        {% for numero, nome in meses %}
+          <option value="{{ numero }}" {% if request.GET.mes == numero|stringformat:"s" %}selected{% endif %}>{{ nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Ano -->
+    <div class="col">
+      <select name="anos" class="form-select" onchange="this.form.submit()">
+        <option value="">Ano</option>
+        {% for ano in anos %}
+          <option value="{{ ano }}" {% if request.GET.anos == ano|stringformat:"s" %}selected{% endif %}>{{ ano }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Botão -->
+    <div class="col">
+      {% if request.GET.ativo or request.GET.mes or request.GET.anos or request.GET.classe or request.GET.tipo_proventos or request.GET.classe_ativos or request.GET.status %}
+        <a href="{% url "list_proventos" %}" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>
+      {% else %}
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+      {% endif %}
+    </div>
+
+  </div>
+</form>
+
+</div>
 
 
-<div class="box-table">
-    <div class="card-header">💵 Lista de rendimentos</div>
-    <table class="table table-striped table-dark " id="table-proventos">
-    <thead>
+{% if lists %}
+  <!-- Tabela responsiva -->
+  <div class="table-responsive mt-3">
+    <table class="table table-striped align-middle fs-5" id="table-ativo">
+      <thead>
         <tr class="text-center">
             <th>Ativo</th>
             <th>Classe</th>
@@ -53,4 +136,9 @@
             </tr>
         {% endfor %}
     </tbody>
-</table>
+    </table>
+  </div>
+{% else %}
+  <br />
+  <p class="h3">Nenhum registro encontrado.</p>
+{% endif %}

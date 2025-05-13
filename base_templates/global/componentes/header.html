@@ -6,10 +6,10 @@
       <a class="nav-link text-dark" href="#"><i class="bi bi-speedometer2 me-1 fs-0"></i> Dashboard</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-dark " href="#"><i class="bi bi-gear me-1 fs-0"></i> Configurações</a>
+      <a class="nav-link text-dark" href="#"><i class="bi bi-gear me-1 fs-0"></i> Configurações</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-dark " href="#"><i class="bi bi-robot me-1 fs-0"></i> Pergunte à IA</a>
+      <a class="nav-link text-dark" href="#"><i class="bi bi-robot me-1 fs-0"></i> Pergunte à IA</a>
     </li>
   </ul>
 
@@ -21,28 +21,26 @@
   </div>
 </div>
 
-<div class="bottombar d-flex justify-content-between " style="background-color: #ffffff; margin-bottom: 10px;">
+<div class="bottombar d-flex justify-content-between" style="background-color: #ffffff; margin-bottom: 10px;">
   <p>{{ page_name }}</p>
 
   {% if page_name == 'Ativos' %}
     {% url 'create_ativo' as url_create %}
-  {% elif page_name == "Operacões" %}
+  {% elif page_name == 'Operacões' %}
     {% url 'create_operacao' as url_create %}
+  {% elif page_name == 'Dividendos' %}
+    {% url 'create_proventos' as url_create %}
   {% endif %}
   <div>
-    <!--   <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn">
+    <!--    <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn">
             <i class="bi bi-search"></i> Atualizar cotação
-        </a>   -->
+        </a>    -->
+    {% if page_name == 'Dividendos' %}
+      <a href="#" class="btn btn-success" id="iniciarPesquisaBtn" data-url="{% url 'pesquisar_proventos' %}"><i class="bi bi-search"></i> Pesquisar Pagamento</a>
+    {% endif %}
 
     {% if not is_detalhe %}
-      <a href="#"
-       class="btn btn-primary" 
-       data-bs-toggle="modal" 
-       data-bs-target="#cadastroModal" 
-       hx-get="{{ url_create }}" 
-       hx-target="#addContent" 
-       hx-swap="innerHTML">
-       <i class="bi bi-plus"></i> Cadastrar</a>
+      <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cadastroModal" hx-get="{{ url_create }}" hx-target="#addContent" hx-swap="innerHTML"><i class="bi bi-plus"></i> Cadastrar</a>
     {% endif %}
   </div>
 </div>
