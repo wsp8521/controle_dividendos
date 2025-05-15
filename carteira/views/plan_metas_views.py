@@ -53,11 +53,11 @@ class PlanMetasRender(ListView):
         tickers = [ativo.id_ativo for ativo in plan_metas]
         
         # Recupera os dados do cache que foi setado na função obter_cotacao
-        cotacoes = 0#obter_cotacao(tickers)
+        cotacoes = obter_cotacao(tickers)
         
         # Busca médias de dividendos de uma só vez para evitar múltiplas chamadas
-        #dividendos_cache = {ativo.id_ativo: media_dividendos(self.request.user.id,ativo.id_ativo, ativo.classe, 5) for ativo in plan_metas}
-        dividendos_cache = {ativo.id_ativo: 0 for ativo in plan_metas}
+        dividendos_cache = {ativo.id_ativo: media_dividendos(self.request.user.id,ativo.id_ativo, ativo.classe, 5) for ativo in plan_metas}
+        #dividendos_cache = {ativo.id_ativo: 0 for ativo in plan_metas}
         
         for plan in plan_metas:
             get_preco_teto = PrecoTeto.objects.filter(id_ativo=plan.id_ativo).first()

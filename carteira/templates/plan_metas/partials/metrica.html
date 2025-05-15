@@ -1,7 +1,10 @@
-<div class="d-flex justify-content-between align-items-center mb-4" id="container-metrica">
-  <p class="h3">
-    Controle de Metas {% if request.GET.classe %}{{ request.GET.classe }}{% endif %}
-  </p>
+
+<div class="d-flex justify-content-between  mb-4" id="container-metrica">
+  {% comment %} <p class="h3">
+    Controle de Metas{% if request.GET.classe %}{{ request.GET.classe }}{% endif %}
+  </p> {% endcomment %}
+ <span id="investimento" class="shadow-sm rounded fs-4 text-start ">Investimento necessário: {{ investimento_total }}</span>
+
   <span class="display-6"><strong>Ano:</strong> {{ request.GET.ano|default:ano_atual }}</span>
 </div>
 
@@ -46,5 +49,3 @@
 </div>
 
 
-
-{% include 'plan_metas/partials/form-filter.html' %}

@@ -1,87 +1,133 @@
-{% include "plan_metas/partials/metrica.html" %}
-<div class="box-table">
-  <div class="card-header d-flex">
-    <span id="header-table">📈 Plano de aquisições</span>
-    <span id="investimento" class="shadow-sm rounded" >Investimento necessário: {{investimento_total}}</span>
-  </div>
-  <table class="table table-striped table-dark">
-    <thead>
-      <!-- TABELA -->
+
+{% include 'plan_metas/partials/metrica.html' %}
+
+<div class="card-header themes-dark d-flex fs-5" style="margin-top: 10px;">
+  <span class="d-inline-flex align-items-center">
+      <i class="bi bi-journal-text me-2"></i> <!-- Ícone de plano/anotações --> Plano de compras {% if request.GET.classe %}{{ request.GET.classe }}{% endif %}
+  </span>
+  {% include 'plan_metas/partials/form-filter.html' %}
+</div>
+
+
+
+<table class="table table-striped align-middle fs-6">
+  <thead>
+    <!-- TABELA -->
+    <tr class="text-center">
+      <th>ATIVOS</th>
+      <th>QTD ATUAL</th>
+      <th>METAS DO ANO</th>
+      <th>STATUS</th>
+      <th>QTD. RESTANTE</th>
+      <th>COTAÇÃO</th>
+      <th>TOTAL</th>
+      <th>DIFERENÇA</th>
+      <th>RECOMENDAÇÃO</th>
+      <th>AÇÃO</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for list in lists %}
       <tr class="text-center">
-        <th>ATIVOS</th>
-        <th>QTD ATUAL</th>
-        <th>METAS DO ANO</th>
-        <th>STATUS</th>
-        <th>QTD. RESTANTE</th>
-        <th>COTAÇÃO</th>
-        <th>TOTAL</th>
-        <th>DIFERENÇA</th>
-        <th>RECOMENDAÇÃO</th>
-        <th>AÇÃO</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for list in lists %}
-        <tr class="text-center">
-          <td>{{ list.ativo }}</td>
-          <td>{{ list.qtd_atual }}</td>
-          <td>
-            <span class="form-control editable-meta text-center" contenteditable="true" data-field="qtd" data-meta-id="{{ list.pk }}">{{ list.qtd }}</span>
-          </td>
-          <td>
-            <span class="badge  {% if list.status == 1 %}
+        <td>{{ list.ativo }}</td>
+        <td>{{ list.qtd_atual }}</td>
+        <td>
+          <span class="form-control editable-meta text-center" contenteditable="true" data-field="qtd" data-meta-id="{{ list.pk }}">{{ list.qtd }}</span>
+        </td>
+        <td>
+          <span class="badge  {% if list.status == 1 %}
+              
+              
+              
                 bg-primary
-              {% elif list.status == 2 %}
+
+
+
+            {% elif list.status == 2 %}
+              
+              
+              
                 bg-success
-              {% else %}
+
+
+
+            {% else %}
+              
+              
+              
                 bg-danger
-              {% endif %}">
-              {% if list.status == 1 %}
-                Alcançada
-              {% elif list.status == 2 %}
-                Ultrapassad
-              {% else %}
-                Não alcançada
-              {% endif %}
-            </span>
-          </td>
-          <td>{{ list.cota_restante }}</td>
-          <td>{{ list.cotacao }}</td>
-          <td>R$ {{ list.total|floatformat:2 }}</td>
-          <td>
-            <span class="badge {% if list.diferenca > 0 %}
+
+
+
+            {% endif %}">
+            {% if list.status == 1 %}
+              Alcançada
+            {% elif list.status == 2 %}
+              Ultrapassad
+            {% else %}
+              Não alcançada
+            {% endif %}
+          </span>
+        </td>
+        <td>{{ list.cota_restante }}</td>
+        <td>{{ list.cotacao }}</td>
+        <td>R$ {{ list.total|floatformat:2 }}</td>
+        <td>
+          <span class="badge {% if list.diferenca > 0 %}
+              
+              
+              
                 
               text-success
 
-              {% else %}
+
+
+
+            {% else %}
+              
+              
+              
                 
               text-danger
 
-              {% endif %}">
-              R$ {{ list.diferenca|floatformat:2 }}
-            </span>
-          </td> <!-- Formato de moeda -->
 
-          <td>
-            <span class=" badge {% if list.diferenca < 0 %}
+
+
+            {% endif %}">
+            R$ {{ list.diferenca|floatformat:2 }}
+          </span>
+        </td> <!-- Formato de moeda -->
+
+        <td>
+          <span class=" badge {% if list.diferenca < 0 %}
+              
+              
+              
                 
               bg-success
 
-              {% else %}
+
+
+
+            {% else %}
+              
+              
+              
                 
               bg-danger
 
-              {% endif %}">
-              {{ list.recomendacao }}
-            </span>
-          </td>
-          <td>
-            <!-- btn deleter -->
-            <a onclick="modal(this)" data-page="plan-metas" data-name="{{ list.ativo }}" data-id="{{ list.pk }}" href="#" class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></a>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
 
+
+
+            {% endif %}">
+            {{ list.recomendacao }}
+          </span>
+        </td>
+        <td>
+          <!-- btn deleter -->
+          <a onclick="modal(this)" data-page="plan-metas" data-name="{{ list.ativo }}" data-id="{{ list.pk }}" href="#" class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

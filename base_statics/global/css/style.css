@@ -274,18 +274,18 @@ input::placeholder {
   background-color: rgba(12, 55, 76, 0.758);
   /* Verde com 40% de opacidade */
 
-  width: 40%;
+
+
   /* Define a largura do segundo elemento */
   height: 100%;
   color: white;
   display: flex;
-  align-items: center;
-  justify-content: center;
+
   margin-left: 2px;
   /* Alinha os elementos com um pequeno espaço entre eles */
   border-radius: 5px;
   border: 1px solid #2692a2;
-  padding: 5px;
+  padding: 20px;
   /* Adiciona um pouco de espaçamento interno */
   text-align: justify;
 }
