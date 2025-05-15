@@ -1,34 +1,50 @@
-<div class="d-flex justify-content-between align-items-center mb-4" id="container-metrica" >
-  <p class="h3">Controle de Metas {% if request.GET.classe %}{{request.GET.classe}}{% endif %}</p>
+<div class="d-flex justify-content-between align-items-center mb-4" id="container-metrica">
+  <p class="h3">
+    Controle de Metas {% if request.GET.classe %}{{ request.GET.classe }}{% endif %}
+  </p>
   <span class="display-6"><strong>Ano:</strong> {{ request.GET.ano|default:ano_atual }}</span>
 </div>
 
 <!-- Cards de meta -->
-
-<div class="row g-4 mb-4"  id="container-cards">
+<div class="row g-4 mb-4" id="container-cards">
   <div class="col-md-3">
-    <div class="card h-100 shadow-lg rounded bg-primary text-white">
-      <p class="card-title mb-0">Meta Geral</p>
-      <h5 class="card-title text-center display-6">{{meta_geral}}</h5>
+    <div class="card h-100 shadow-lg rounded text-white gradiente-azul">
+      <p class="card-title mb-0 fs-3 position-relative text-center pe-5">
+        Meta Geral
+        <i class="bi bi-flag position-absolute top-50 end-0 translate-middle-y me-3"></i>
+      </p>
+      <h5 class="card-title text-center display-6">{{ meta_geral }}</h5>
     </div>
   </div>
   <div class="col-md-3">
-    <div class="card h-100 shadow-lg rounded bg-secondary text-dark text-white">
-      <p class="card-title mb-0">Meta do ano</p>
-      <h5 class="card-title text-center display-6">{{meta_anual}} </h5>
+    <div class="card h-100 shadow-lg rounded bg-danger-gradient text-dark text-white">
+      <p class="card-title mb-0 fs-3 position-relative text-center pe-5">
+        Meta do ano
+        <i class="bi bi-calendar position-absolute top-50 end-0 translate-middle-y me-3"></i>
+      </p>
+      <h5 class="card-title text-center display-6">{{ meta_anual }}</h5>
     </div>
   </div>
   <div class="col-md-3">
-    <div class="card h-100 shadow-lg rounded bg-success text-dark text-white">
-        <p class="card-title mb-0">Meta alcançada</p>
-        <h5 class="card-title text-center display-6">{{meta_alcancada}}</h5>
+    <div class="card h-100 shadow-lg rounded gradiente-verde text-dark text-white">
+      <p class="card-title mb-0 fs-3 position-relative text-center pe-5">
+        Meta alcançada
+        <i class="bi bi-check-circle position-absolute top-50 end-0 translate-middle-y me-3"></i>
+      </p>
+      <h5 class="card-title text-center display-6">{{ meta_alcancada }}</h5>
     </div>
   </div>
   <div class="col-md-3">
-    <div class="card h-100 shadow-lg rounded bg-danger text-white">
-        <p class="card-title mb-0">Status</p>
-        <h5 class="card-title display-6">{{meta_status}}</h5>
+    <div class="card h-100 shadow-lg rounded gradiente-roxo text-white">
+      <p class="card-title mb-0 fs-3 position-relative text-center pe-5">
+        Status
+        <i class="bi bi-info-circle position-absolute top-50 end-0 translate-middle-y me-3"></i>
+      </p>
+      <h5 class="card-title text-center display-6">{{ meta_status }}</h5>
     </div>
   </div>
 </div>
-{% include "plan_metas/partials/form-filter.html" %}
+
+
+
+{% include 'plan_metas/partials/form-filter.html' %}

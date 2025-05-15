@@ -23,6 +23,7 @@ class MetaRender(ListView):
         # Filtra os dados por classe
         context["metas_fii"] = self.get_queryset().filter(classe="FII")
         context["metas_acoes"] = self.get_queryset().filter(classe="Ação")
+        context['page_name'] = {'key':5,"page":"Definição de metas"}
         return context
     
 # #CRETE

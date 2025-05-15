@@ -68,9 +68,9 @@ class AtivoRender(ListView):
             })
 
         context['lists'] = lista_ativos
-        context['page_name'] = "Ativos"
         filter_url = getattr(self, 'filter_url_pag_nav', None)   #url que será aplicado na paginação quado o usuário aplicar algum filtro
         context['url_filter_pagination'] = f'&classe_ativos={filter_url}' if filter_url else ""
+        context['page_name'] = {'key':1,"page":"Ativos"}
         return context
 
 #DETAIL
@@ -120,13 +120,14 @@ class AtivoDetail(DetailView):
         }
 
         context['lists'] = dados
-        context['page_name'] = "Detalhes do Ativo - " + ativo.ativo
-        context['is_detalhe'] = "Detalhe" in context['page_name'] 
+        context['page_name'] = {'key':2,"page":f"Detalhes do Ativo - {ativo.ativo}"}
+        context['is_detalhe'] = "Detalhe" in context['page_name'].get('page')
         context['grafico'] = {
             'grafico_operacao': json.dumps(dados_graficos['chart_operacao']),
             'grafico_proventos': json.dumps(dados_graficos['chart_proventos']),
         }
         context['render_grafico_detail_ativo'] = render_grafico
+       
 
         return context
 

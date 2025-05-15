@@ -7,24 +7,9 @@
   <p id="successMessageCotacao" style="display: none;" class="alert alert-success">
     <!-- A mensagem será inserida aqui -->
   </p>
-  <div class="row mb-3">
-    <div class="col-md-6"></div>
-    <div class="col-md-6 d-flex justify-content-end gap-2">
-      <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn"><i class="bi bi-search"></i> Atualizar cotação</a>
 
-      {% if is_meta_ativos %}
-        <a href="#" class="btn btn-primary float-end ms-2" data-bs-toggle="modal" data-bs-target="#cadastroModal" hx-get="{% url 'create_plan' %}" hx-target="#addContent" hx-swap="innerHTML"><i class="bi bi-plus"></i>Cadastrar</a>
-      {% else %}
-        <a href="#" class="btn btn-primary float-end ms-2" data-bs-toggle="modal" data-bs-target="#metaModal"><i class="bi bi-plus"></i>Cadastrar</a>
-      {% endif %}
 
-      {% comment %} <a href="{% url 'calculadora_plan' %}" class="btn btn-secondary float-end"><i class="bi bi-calculator"></i>calculadora</a> {% endcomment %}
-
-      <a href="" class="btn btn-secondary float-end" hx-get="{% url 'calculadora_plan' %}?tipo_calc=FII" data-bs-toggle="modal" data-bs-target="#modalGeral" hx-target="#ModalGeralContent" hx-swap="innerHTML"><i class="bi bi-calculator"></i>calculadora</a>
-    </div>
-  </div>
-
-  <div class="col-md-12">
+  <div class="col-md-12 card">
     <div class="row" style="display:flex">
       {% comment %} {% if lists %}
         {% endcomment %}

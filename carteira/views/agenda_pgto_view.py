@@ -100,6 +100,7 @@ def pgto_proventos(request):
           'proventos_mensais': proventos_mensais,  # Adiciona o resultado da função ao context
           'assoc_pgto_ativo': pgto_fiis  #assoc_pgto_ativo(ativos, queryset_proventos)
      }
+     context['page_name'] = {'key':7,"page":"Agenda de Pagamentos"}
      return render(request, "agenda_pgto/list.html", context)
 
   

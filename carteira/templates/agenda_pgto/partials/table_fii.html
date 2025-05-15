@@ -1,31 +1,37 @@
 <div class="col-lg-6">
-    <div class="box-table">
-      <div class="card-header">💰 Pagamentos FII</div>
-      <div class="card-body p-0 table-pagamentos">
-        <table class="table table-dark table-striped mb-0">
-          <thead class="table-dark">
-            <tr><th>Ativo</th><th>Valor</th><th>Data</th></tr>
-          </thead>
-          <tbody>
-              {% for fii in fiis %}
-              <tr>
-                  <td>{{fii.ativo}}</td>
-                  {% comment %} <td>R$ {{fii.acumulado|floatformat:2}}</td> {% endcomment %}
-                  <td>{{fii.valor_recebido}}</td>
-                  <td>{{fii.data_pgto|date:"d/m/Y"}}</td>
-              </tr>
-              {% endfor %}
-       
-          </tbody>
-          <tfoot class="table-Dark">
-              <tr>
-                  <td colspan="1" class="fw-bold">TOTAL</td>
-                  {% comment %} <td class="fw-bold">R$ {{proventos_acumulados_fii|floatformat:2}}</td> {% endcomment %}
-                  <td class="fw-bold" colspan="1">R$ {{total_proventos|floatformat:2}}</td>
-                  <td colspan="1"></td>
-              </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
+  <div class="card-header themes-dark">
+    <span class="me-2 fs-4 text-white">
+      <i class="bi-cash-coin"></i>
+      Pagamento FII
+    </span>
   </div>
+  <div class="card-body p-0 table-pagamentos">
+    <table class="table table-striped align-middle fs-6">
+      <thead>
+        <tr>
+          <th>Ativo</th>
+          <th>Valor</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fii in fiis %}
+          <tr>
+            <td>{{ fii.ativo }}</td>
+            {% comment %} <td>R$ {{ fii.acumulado|floatformat:2 }}</td> {% endcomment %}
+            <td>{{ fii.valor_recebido }}</td>
+            <td>{{ fii.data_pgto|date:'d/m/Y' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot class="table-Dark">
+        <tr>
+          <td colspan="1" class="fw-bold">TOTAL</td>
+          {% comment %} <td class="fw-bold">R$ {{ proventos_acumulados_fii|floatformat:2 }}</td> {% endcomment %}
+          <td class="fw-bold" colspan="1">R$ {{ total_proventos|floatformat:2 }}</td>
+          <td colspan="1"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

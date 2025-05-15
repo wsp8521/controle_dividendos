@@ -1,33 +1,21 @@
-{% extends "global/base.html" %}
-{% block title %}Preço Teto{% endblock title %}
+{% extends 'global/base.html' %}
+{% block title %}
+  Preço Teto
+{% endblock %}
 {% block content %}
-{% include "global/componentes/menssage.html" %}
-<p id="successMessageCotacao" style="display: none;" class="alert alert-success">
+  {% include 'global/componentes/menssage.html' %}
+  <p id="successMessageCotacao" style="display: none;" class="alert alert-success">
     <!-- A mensagem será inserida aqui -->
-</p>
-<p class="h3">Preço teto</p>
-    <div class="row mb-3">
-        <div class="col-md-12 d-flex justify-content-end gap-2">
-            <a href="{% url 'atualizar_cotacao' %}" class="btn btn-success" id="atualizarCotacaoBtn"  >
-                <i class="bi bi-search"></i> Atualizar cotação
-             </a>
-            <a href="#" class="btn btn-primary float-end" 
-            data-bs-toggle="modal" 
-            data-bs-target="#cadastroModal"
-            hx-get = {% url "create_preco_teto" %}
-            hx-target = "#addContent"
-            hx-swap = "innerHTML">
-                <i class="bi bi-plus"></i>Cadastrar
-            </a>
-        </div>
-    </div>
- 
+  </p>
+
+
     {% if lists %}
-       {% include "preco_teto/table.html" %}
+      {% include 'preco_teto/table.html' %}
     {% else %}
-        <p class="h3">Nenhum registro encontrado.</p>
+      <p class="h3">Nenhum registro encontrado.</p>
     {% endif %}
 
-    {% include "global/componentes/pagination.html" %}
-    {% include "global/componentes/modal_forms.html" %}
+    {% include 'global/componentes/pagination.html' %}
+    {% include 'global/componentes/modal_forms.html' %}
+  
 {% endblock %}

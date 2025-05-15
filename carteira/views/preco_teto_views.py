@@ -35,10 +35,11 @@ class PrecoTetoRender(ListView):
         lista_ativos_fii = []
         
         # Recupera os dados do cache que foi setado na funçao o obter_cotacao
-        cotacoes = obter_cotacao(tickers)
+        cotacoes = 0#obter_cotacao(tickers)
         
         # Busca médias de dividendos de uma só vez para evitar múltiplas chamadas
-        dividendos_cache = {ativo.id_ativo: media_dividendos(self.request.user.id,ativo.id_ativo, ativo.classe, 5) for ativo in ativos}
+        # dividendos_cache = {ativo.id_ativo: media_dividendos(self.request.user.id,ativo.id_ativo, ativo.classe, 5) for ativo in ativos}
+        dividendos_cache = {ativo.id_ativo: 10 for ativo in ativos}
         
         for ativo in ativos:
             cotacao = cotacoes.get(ativo.id_ativo) if cotacoes else None
@@ -75,8 +76,8 @@ class PrecoTetoRender(ListView):
 
         context['lista_ativos_acao'] = lista_ativos_acao
         context['lista_ativos_fii'] = lista_ativos_fii
-        
-        print(context['lista_ativos_acao'])
+        context['page_name'] = {'key':4,"page":"Preço Teto"}
+
         
         #context['lists'] = lista_ativos  # Adiciona a lista de ativos ao contexto
         

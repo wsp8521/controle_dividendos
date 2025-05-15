@@ -1,13 +1,14 @@
 <div class="col-lg-6">
-    <div class="box-table">
-      <div class="card-header">💰 Pagamentos Ações</div>
+      <div class="card-header themes-dark">   <span class="me-2 fs-4 text-white">
+       <i class="bi-cash-coin"></i> Pagamento Ação
+      </span></div>
       <div class="card-body p-0 table-pagamentos">
 
         {% if not acao %}
         <p class="text-center">Não há proventos até o momento</p>
         {% else %}
 
-        <table class="table table-dark table-striped mb-0">
+        <table class="table table-striped align-middle fs-6 ">
           <thead>
             <tr><th>Ativo</th><th>Valor</th><th>Data</th></tr>
           </thead>
@@ -33,4 +34,3 @@
         {% endif %}
       </div>
     </div>
-  </div>

@@ -56,12 +56,12 @@
     </div> {% endcomment %}
 
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-lg"></i> Cancelar</button>
       <button type="submit" class="btn btn-primary">
         {% if form.instance.pk %}
-          Atualizar
+        <i class="bi bi-arrow-clockwise"></i> Atualizar
         {% else %}
-          Cadastrar
+           <i class="bi bi-floppy me-1"></i> Salvar
         {% endif %}
       </button>
     </div>

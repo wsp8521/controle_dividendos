@@ -1,31 +1,24 @@
-<div class="row g-4">
-    <ul class="nav nav-tabs mb-4" id="metaTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" 
-          id="fii-tab" 
-          data-bs-toggle="tab" 
-          data-bs-target="#pgto" type="button" 
-          role="tab">Pagamentos</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link"
-           id="acoes-tab" 
-           data-bs-toggle="tab"
-            data-bs-target="#agenda"
-             type="button" role="tab">Agendas</button>
-        </li>
-      </ul>
-    <div class="tab-content" id="metaTabsContent">
-    <div class="tab-pane fade show active " id="pgto" role="tabpanel">
-        <div class="row">
-            {% include "agenda_pgto/partials/table_fii.html" %} 
-            {% include "agenda_pgto/partials/table_acao.html" %}
-        </div>
+<div class="row g-4 card">
+  <ul class="nav mb-4 nav-pills" id="metaTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="fii-tab" data-bs-toggle="tab" data-bs-target="#pgto" type="button" role="tab">Pagamentos</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="acoes-tab" data-bs-toggle="tab" data-bs-target="#agenda" type="button" role="tab">Agendas</button>
+    </li>
+  </ul>
+  <div class="tab-content" id="metaTabsContent">
+    <div class="tab-pane fade show active" id="pgto" role="tabpanel">
+      <div class="row">
+        {% include 'agenda_pgto/partials/table_fii.html' %}
+        {% include 'agenda_pgto/partials/table_acao.html' %}
+      </div>
     </div>
     <div class="tab-pane fade row" id="agenda" role="tabpanel">
-        <div class="row">
-        {% include "agenda_pgto/partials/pgto_pendente_fii.html" %} 
-        {% include "agenda_pgto/partials/tbl_rend_mensal.html" %}  
+      <div class="row">
+        {% include 'agenda_pgto/partials/pgto_pendente_fii.html' %}
+        {% include 'agenda_pgto/partials/tbl_rend_mensal.html' %}
+      </div>
     </div>
+  </div>
 </div>
-    </div>

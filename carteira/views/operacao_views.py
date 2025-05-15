@@ -66,7 +66,7 @@ class OperacaoRender(ListView):
         anos = Operacao.objects.filter(fk_user_id=self.request.user.id).values_list('ano', flat=True).distinct().order_by('-ano')
 
         context['lists'] = list_operacao
-        context['page_name'] = "Operacões"
+        context['page_name'] = {'key':2,"page":"Operações"}
         context['meses'] = meses
         context['anos'] = anos
 

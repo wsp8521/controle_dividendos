@@ -56,16 +56,22 @@ function iniciarPesquisa() {
     // Mostra o pop-up de carregando
     const loadingPopup = document.createElement("div");
     loadingPopup.id = "loadingPopup";
+    loadingPopup.className = "alert alert-primary";
+    loadingPopup.role = "alert"
     loadingPopup.style.position = "fixed";
     loadingPopup.style.top = "50%";
     loadingPopup.style.left = "50%";
     loadingPopup.style.transform = "translate(-50%, -50%)";
     loadingPopup.style.padding = "20px";
-    loadingPopup.style.backgroundColor = "blue";
-    loadingPopup.style.color = "white";
+    loadingPopup.style.color="#000000"
+    loadingPopup.style.fontWeight="bold"
+    loadingPopup.style.borderRadius="10px"
+
+
+   
     loadingPopup.style.border = "1px solid black";
     loadingPopup.style.zIndex = "1000";
-    loadingPopup.innerText = "Pesquisando datas de pagamento da Web. Por favor aguarde...";
+    loadingPopup.innerText = "Pesquisando datas de pagamento na Web. Por favor aguarde...";
     document.body.appendChild(loadingPopup);
 
     // Faz a requisição para iniciar a tarefa Celery

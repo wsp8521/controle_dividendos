@@ -2,22 +2,9 @@
 {% block title %}Metas{% endblock title %}
 {% block content %}
 {% include "global/componentes/menssage.html" %}
-<p class="h3">Metas</p>
-    <div class="row mb-3">
-        <div class="col-md-6"></div>
-        <div class="col-md-6">
-            <a href="#" class="btn btn-primary float-end" 
-            data-bs-toggle="modal" 
-            data-bs-target="#cadastroModal"
-            hx-get = {% url "create_metas" %}
-            hx-target = "#addContent"
-            hx-swap = "innerHTML">
-                <i class="bi bi-plus"></i>Cadastrar
-            </a>
-        </div>
-    </div>
-    <div  class="col-md-12  ">
-        <ul class="nav nav-tabs mb-4" id="metaTabs" role="tablist">
+
+    <div  class="col-md-12  card  ">
+        <ul class="nav nav-tabs mb-4 nav-pills" id="metaTabs" role="tablist">
             <li class="nav-item" role="presentation">
             <button class="nav-link active" id="fii-tab" data-bs-toggle="tab" data-bs-target="#fii" type="button" role="tab">Meta FII</button>
             </li>

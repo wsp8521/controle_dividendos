@@ -1,36 +1,48 @@
 <div class="col-lg-6">
-    <div class="box-table">
-      <div class="card-header">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-              <span class="mb-0">⏳ FII Pendentes</span>
-              <form method="get" class="d-flex align-items-center">
-                  <h5 for="filtro_ativo" class="me-2 mb-0">Status:</h5>
-                  <select name="filtro_status" id="filtro_ativo" class="form-select">
-                      <option value="todos" {% if request.GET.filtro_status == "todos" %}selected{% endif %}>-- Todos --</option>
-                      <option value="1" {% if request.GET.filtro_status == "1" %}selected{% endif %}>Pagos</option>
-                      <option value="0" {% if request.GET.filtro_status == "0" %}selected{% endif %}>Aguardando</option>
-                  </select>
-              </form>
-          </div>
-      </div>
-      <div class="card-body p-0" id="pgto-pendente">
-        <table class="table table-dark table-striped mb-0">
-          <thead>
-            <tr><th>Ativo</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-              {% for ativo, valor in assoc_pgto_ativo.items %}
-              <tr>
-                  <td>{{ ativo }}</td>
-                  <td>
-                    <span class="{% if valor > 0 %}badge bg-success{% else %}badge bg-danger{% endif %}">
-                      {% if valor > 0 %}R${{ valor }}{% else %}Aguardando pagamento{% endif %}
-                    </span>
-                  </td>
-              </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
+<div class="card-header themes-dark ">
+  <div class="d-flex align-items-center col-md-12">
+    <span class="me-2 fs-4 text-white">
+      <i class="bi bi-hourglass"></i> FII Pendentes
+    </span>
+    <form method="get" class="d-flex align-items-center ms-auto">
+      <select name="filtro_status" id="filtro_ativo" class="form-select">
+        <option value="todos" {% if request.GET.filtro_status == "todos" %}selected{% endif %}>-- Todos --</option>
+        <option value="1" {% if request.GET.filtro_status == "1" %}selected{% endif %}>Pagos</option>
+        <option value="0" {% if request.GET.filtro_status == "0" %}selected{% endif %}>Aguardando</option>
+      </select>
+    </form>
   </div>
+</div>
+
+
+  <div class="card-body p-0" id="pgto-pendente">
+    <table class="table table-striped align-middle fs-6">
+      <thead>
+        <tr>
+          <th>Ativo</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ativo, valor in assoc_pgto_ativo.items %}
+          <tr>
+            <td>{{ ativo }}</td>
+            <td>
+              <span class="{% if valor > 0 %}
+                  badge bg-success
+                {% else %}
+                  badge bg-danger
+                {% endif %}">
+                {% if valor > 0 %}
+                  R${{ valor }}
+                {% else %}
+                  Aguardando pagamento
+                {% endif %}
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

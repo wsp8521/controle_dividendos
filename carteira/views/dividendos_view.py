@@ -95,7 +95,7 @@ class ProventosRender(ListView):
             })
 
         context['lists'] = dados_tabela
-        context['page_name'] = "Dividendos"
+        context['page_name'] = {'key':3,"page":"Dividendos"}
         context['meses'] = meses
         context['anos'] = ano
         context['url_filter_pagination'] = self.filter_url_pag_nav or ""

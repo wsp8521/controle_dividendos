@@ -1,8 +1,10 @@
 <div class="col-lg-6">
-    <div class="box-table ">
-      <div class="card-header">📅 Agenda de Pagamento</div>
+      <div class="card-header  themes-dark">
+         <span class="me-2 fs-4 text-white">
+          <i class="bi bi-calendar-event"></i> Agenda de Pagamento</div>
+         </spna>
       <div class="card-body p-0">
-        <table class="table table-dark table-striped mb-0">
+         <table class="table table-striped align-middle fs-6">
           <thead>
             <tr><th>Mês</th><th>FII</th><th>Ações</th><th>Total</th></tr>
           </thead>
@@ -22,9 +24,9 @@
             </tr>
         {% endfor %}
         </tbody>
-            <tfoot class="table-Dark">
-                <tr class="fw-bold">
-                    <td ><strong>TOTAL</strong></td>
+            <tfoot >
+                <tr class="fw-bold " >
+                    <td  ><strong>TOTAL</strong></td>
                     <td><strong>R$ {{proventos_mensais.total_fii|floatformat:2}}</strong></td>
                     <td><strong>R$ {{proventos_mensais.total_acoes|floatformat:2}}</strong></td>
                     <td><strong>R$ {{proventos_mensais.total_geral|floatformat:2}}</strong></td>
@@ -34,6 +36,5 @@
       </div>
     </div>
     </div>
-    
-      </div>
+
     
