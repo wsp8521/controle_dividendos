@@ -52,15 +52,15 @@
                 SALDO <span id="saldoAtual">R$ {{ saldo }}</span>
             </th>
         </tr>
-        <tr>
-            <th class="bg-info">ATIVOS</th>
-            <th class="bg-info">QTD</th>
-            <th class="bg-info">COTAÇÃO</th>
-            <th class="bg-info">TOTAL</th>
+        <tr class="bg-primary">
+            <th>ATIVOS</th>
+            <th>QTD</th>
+            <th>COTAÇÃO</th>
+            <th>TOTAL</th>
 
             {% if request.GET.tipo_calc == "FII" %}
-                <th class="prov-col bg-info">PROV</th>
-                <th class="prov-col bg-info">TOTAL PROV</th>
+                <th class="prov-col">PROV</th>
+                <th class="prov-col">TOTAL PROV</th>
             {% endif %}
         </tr>
     </thead>
