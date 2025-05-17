@@ -12,32 +12,13 @@
 {% block title %}Sistema controle de dividendos - Dashboard{% endblock title %}
 
 {% block content %}
-<p class="h3">{{ title }}</p>
-<div class="container">
-    <p class="h3">Ativos</p>
-    <div class="graficos-container">
-        <div id="ativo-por-classe" class="grafico"></div>
-        <div class="grafico">
-        {% include "home/charts/filter_ativo.html" %}
-         <div id="ativo-por-setor" class="grafico" ></div>
-        </div>
-    </div> 
-</div>
+<div class="row" id="box-grafico-detalhes">
 
-<div class="container">
-    <p class="h3">Dividendos</p>
-    <div class="graficos-container">
-        <div id="chart-proventos-mensais" class="grafico"></div>
-        {% include "home/partials/metrics_dividendos.html" %}
-    </div> 
-</div>
+  {% include 'home/partials/composicao_patrimonio.html' %}
 
-<div class="container">
-    <p class="h3">Patrimônio</p>
-    <div class="graficos-container">
-        <div id="chart-patrimonio" class="grafico"></div>
-        {% include "home/partials/metrics_patrimonio.html" %}
-    </div> 
+  {% include 'home/partials/rendimentos.html' %}
+
+    {% include 'home/partials/ativos.html' %}
 </div>
 
 {% endblock %}

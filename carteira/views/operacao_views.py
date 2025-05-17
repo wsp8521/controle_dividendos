@@ -9,6 +9,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView,De
 
 
 
+
 #READ
 class OperacaoRender(ListView):
     model = Operacao

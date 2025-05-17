@@ -1,48 +1,62 @@
 <div class="card-header themes-dark">
-  <!-- Título ocupa linha inteira no mobile e no desktop -->
-  <div class="row ">
-      <div class="col-12 rounded d-flex justify-content-center align-items-center">
+  <!-- Título -->
+  <div class="row">
+    <div class="col-12">
       <span class="fs-4 text-white">
-       <i class="bi bi-arrow-left-right"></i> Lista de Ativos
+        <i class="bi bi-arrow-left-right"></i> Lista de Ativos
       </span>
     </div>
   </div>
 
-  <!-- Formulário em linha no desktop, empilhado no mobile -->
-  <form action="#" method="GET">
-    <div class="row g-2 align-items-center">
-      <!-- Campo de pesquisa -->
-      <div class="col-md">
-        <input type="text" class="form-control" name="ativo" placeholder="Nome ou ticket" value="{{ request.GET.ativo }}">
-      </div>
+  <!-- Formulário alinhado à direita -->
+  <div class="row justify-content-end mt-2">
+    <div class="col-auto">
+      <form action="#" method="GET">
+        <div class="row g-2 align-items-center">
+          <!-- Campo de pesquisa -->
+          <div class="col">
+            <input type="text" class="form-control" name="ativo" placeholder="Nome ou ticket" value="{{ request.GET.ativo }}">
+          </div>
 
-      <!-- Classe -->
-       <div class="col-12 col-md-4">
-        <select name="classe_ativos" class="form-select" onchange="this.form.submit()">
-          <option value="">Classe</option>
-          <option value="Ação" {% if request.GET.classe_ativos == "Ação" %}selected{% endif %}>Ação</option>
-          <option value="FII" {% if request.GET.classe_ativos == "FII" %}selected{% endif %}>FII</option>
-          <option value="FII-Infra" {% if request.GET.classe_ativos == "FII-Infra" %}selected{% endif %}>FII-Infra</option>
-          <option value="FII-Agro" {% if request.GET.classe_ativos == "FII-Agro" %}selected{% endif %}>FII-Agro</option>
-        </select>
-      </div>
+          <!-- Classe -->
+          <div class="col">
+            <select name="classe_ativos" class="form-select" onchange="this.form.submit()">
+              <option value="">Classe</option>
+              <option value="Ação" {% if request.GET.classe_ativos == "Ação" %}selected{% endif %}>Ação</option>
+              <option value="FII" {% if request.GET.classe_ativos == "FII" %}selected{% endif %}>FII</option>
+              <option value="FII-Infra" {% if request.GET.classe_ativos == "FII-Infra" %}selected{% endif %}>FII-Infra</option>
+              <option value="FII-Agro" {% if request.GET.classe_ativos == "FII-Agro" %}selected{% endif %}>FII-Agro</option>
+            </select>
+          </div>
 
-      
-      <!-- Botão de ação -->
-      <div class="col-md-auto">
-        {% if request.GET.ativo or request.GET.mes or request.GET.anos or request.GET.classe or request.GET.operacao or request.GET.classe_ativos %}
-          <a href="{% url 'list_operacao' %}" class="btn btn-primary">
-            <i class="bi bi-x-lg"></i>
-          </a>
-        {% else %}
-          <button type="submit" class="btn btn-primary w-100">
-            <i class="bi bi-search"></i>
-          </button>
-        {% endif %}
-      </div>
+          <!-- Setor -->
+          <div class="col">
+            <select name="setor" class="form-select" onchange="this.form.submit()">
+              <option value="">Setor</option>
+              {% for setor in setores %}
+                <option value="{{ setor }}" {% if request.GET.setor == setor %}selected{% endif %}>{{ setor }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Botão de ação -->
+          <div class="col-auto">
+            {% if request.GET.ativo or request.GET.classe or request.GET.setor %}
+              <a href="{% url 'list_ativo' %}" class="btn btn-primary">
+                <i class="bi bi-x-lg"></i>
+              </a>
+            {% else %}
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i>
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
+
 
 {% if lists %}
 <!-- Tabela responsiva -->

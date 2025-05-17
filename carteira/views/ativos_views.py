@@ -26,6 +26,7 @@ class AtivoRender(ListView):
         queryset = Ativos.objects.filter(fk_user_id=self.request.user.id).order_by(self.ordering)
         filter_name = self.request.GET.get('ativo')
         filter_classe = self.request.GET.get('classe_ativos') 
+        filter_setor = self.request.GET.get('setor') 
     
         if filter_name:
             return queryset.filter(
@@ -36,7 +37,12 @@ class AtivoRender(ListView):
             
         if filter_classe:
             self.filter_url_pag_nav = filter_classe
-            queryset = queryset.filter(classe=filter_classe)      
+            queryset = queryset.filter(classe=filter_classe) 
+            
+        if filter_setor:
+            self.filter_url_pag_nav = filter_setor
+            queryset = queryset.filter(setor__setor=filter_setor)  
+                  
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -45,8 +51,10 @@ class AtivoRender(ListView):
         # Use o queryset paginado já fornecido pelo ListView
         page_obj = context['page_obj']  # já paginado
         ativos = page_obj.object_list
-        tickers = [ativo.ticket for ativo in ativos]
-        
+        setores = Ativos.objects.filter(
+            fk_user_id=self.request.user.id,
+            ).select_related('setor').values_list('setor__setor', flat=True).distinct().order_by('-setor__setor')
+
     
         # Recupera os dados do cache que foi setado na funçao o obter_cotacao
         cotacoes = 0 #obter_cotacao(tickers)
@@ -68,6 +76,7 @@ class AtivoRender(ListView):
             })
 
         context['lists'] = lista_ativos
+        context['setores'] = setores
         filter_url = getattr(self, 'filter_url_pag_nav', None)   #url que será aplicado na paginação quado o usuário aplicar algum filtro
         context['url_filter_pagination'] = f'&classe_ativos={filter_url}' if filter_url else ""
         context['page_name'] = {'key':1,"page":"Ativos"}
@@ -100,7 +109,6 @@ class AtivoDetail(DetailView):
 
         # Rentabilidade líquida (exclui dividendos, pois são reinvestidos)
         rentabilidade = (lucro_ou_prejuizo / ativo.investimento * 100) if ativo.investimento else 0
-
         dados = {
             'ativo': ativo.ativo,
             'cotacao': locale.currency(cotacao, grouping=True) if cotacao else 0,
@@ -127,8 +135,6 @@ class AtivoDetail(DetailView):
             'grafico_proventos': json.dumps(dados_graficos['chart_proventos']),
         }
         context['render_grafico_detail_ativo'] = render_grafico
-       
-
         return context
 
         
@@ -150,7 +156,7 @@ class CadastroAtivos(SuccessMessageMixin, CreateView):
         object = form.save(commit=False)
         object.fk_user = self.request.user  # Define o usuário autenticado
         object.save()
-        cache.delete('ativo_listagem')  # Limpa o cache
+        # cache.delete('ativo_listagem')  # Limpa o cache
         return super().form_valid(form) #redirecionar o usuário para a URL de sucesso definida (success_url) 
     
 #UPDATE
