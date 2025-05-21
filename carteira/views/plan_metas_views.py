@@ -13,6 +13,7 @@ from django.views.generic import ListView, DeleteView, CreateView
 from carteira.models import PlanMetas, PrecoTeto, Ativos, MetaAtivo, Operacao
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from utils.decimal import decimal
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
@@ -62,19 +63,23 @@ class PlanMetasRender(ListView):
         for plan in plan_metas:
             get_preco_teto = PrecoTeto.objects.filter(id_ativo=plan.id_ativo).first()
             ativos = Ativos.objects.filter(ticket=plan.id_ativo).first()
+            
+            print("xxxxxxx ATIVOS XXXXXXXXXXXX", ativos)
+            
+            
             cota_restante = plan.qtd - ativos.qtdAtivo if (plan.qtd - ativos.qtdAtivo) > 0 else 0
             cotacao = cotacoes.get(plan.id_ativo) if cotacoes else None
                     
             # Busca no dicionário dividendos_cache pelo valor associado à chave ativo.id_ativo.
             dividendos = dividendos_cache.get(plan.id_ativo, Decimal(0))
-            rentabilidade = Decimal(get_preco_teto.rentabilidade) if get_preco_teto and get_preco_teto.rentabilidade else 0
-            preco_teto_acoes = Decimal(dividendos) / (Decimal(rentabilidade) / Decimal(100)) if rentabilidade != 0 else 0
-            ipca = Decimal(get_preco_teto.ipca) if get_preco_teto and get_preco_teto.ipca else Decimal(0)
-            preco_teto_fii = (Decimal(dividendos) / (ipca + rentabilidade)) * 100 if rentabilidade != 0 else 0
+            rentabilidade = decimal(get_preco_teto.rentabilidade) if get_preco_teto and get_preco_teto.rentabilidade else 0
+            preco_teto_acoes = decimal(dividendos) / (decimal(rentabilidade) / decimal(100)) if rentabilidade != 0 else 0
+            ipca = decimal(get_preco_teto.ipca) if get_preco_teto and get_preco_teto.ipca else decimal(0)
+            preco_teto_fii = (decimal(dividendos) / (ipca + rentabilidade)) * 100 if rentabilidade != 0 else 0
             preco_teto = preco_teto_acoes if plan.classe == "Ação" else preco_teto_fii
-            diferenca = Decimal(cotacao or 0) - preco_teto
+            diferenca = decimal(cotacao or 0) - preco_teto
             if cotacao is not None:
-                total = Decimal(cotacao) * cota_restante if cota_restante > 0 else 0
+                total = decimal(cotacao) * cota_restante if cota_restante > 0 else 0
             else:
                 total = 0
             recomendacao = "Comprar" if diferenca < 0 else "Não comprar"
@@ -139,9 +144,7 @@ class PlanMetasRender(ListView):
         context['is_meta_ativos'] = True if meta_ativo else False
         context['anos_disponiveis'] = anos_unicos  # Passando anos agrupados para o template
         context['page_name'] = {'key':6,"page":"Plano de Metas"}
-        
-
-
+    
         return context
 
 

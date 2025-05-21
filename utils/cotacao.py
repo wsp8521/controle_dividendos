@@ -61,15 +61,6 @@ def obter_cotacao(ativos):
     return cotacoes
 
 
-
-
-
-
-
-
-
-
-
 # from django.core.cache import cache
 # from datetime import timedelta
 # from yahooquery import Ticker

@@ -41,7 +41,7 @@
 
           <!-- Botão de ação -->
           <div class="col-auto">
-            {% if request.GET.ativo or request.GET.classe or request.GET.setor %}
+            {% if request.GET.ativo or request.GET.classe_ativos or request.GET.setor %}
               <a href="{% url 'list_ativo' %}" class="btn btn-primary">
                 <i class="bi bi-x-lg"></i>
               </a>

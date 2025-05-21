@@ -11,6 +11,7 @@
 
 <div class="modal-body">
   <form method="POST"
+     data-url="/operacao"
     action="{% if form.instance.pk %}
       {% url 'update_operacao' form.instance.pk %}
     {% else %}

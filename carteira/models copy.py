@@ -82,7 +82,7 @@ class Proventos(models.Model):
     
     
     def __str__(self):
-        return self.classe
+        return f'{self.id_ativo.ticket if self.id_ativo else "Ativo excluído"} - {self.classe}'
     
 ####################################### OPERACAO #############################################    
 class Operacao(models.Model):
@@ -124,7 +124,7 @@ class Operacao(models.Model):
     
     
     def __str__(self):
-        return self.classe
+        return f'{self.id_ativo.ticket if self.id_ativo else "Ativo excluído"} - {self.classe}'
     
 ####################################### META #############################################    
 class MetaAtivo(models.Model):
@@ -194,9 +194,8 @@ class PrecoTeto(models.Model):
     update_at = models.DateTimeField(auto_now=True, verbose_name='atualizado em')
     
     def __str__(self):
-        return self.classe
-    
-    
+        return f'{self.id_ativo.ticket if self.id_ativo else "Ativo excluído"} - {self.classe}'
+  
 ####################################### RENTABILIDADE #############################################      
 class Rentabilidade(models.Model):
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_rentabilidade",  null=True)
@@ -207,7 +206,7 @@ class Rentabilidade(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='criado em') 
       
     def __str__(self):
-         return str(self.ano)
+        return f'{self.id_ativo.ticket if self.id_ativo else "Ativo excluído"} - {self.ano}'
     
     
 ####################################### CORRETORA #############################################      
