@@ -1,55 +1,62 @@
 function chartDividendosMensal(data) {
-    document.addEventListener("DOMContentLoaded", function() {
+  document.addEventListener("DOMContentLoaded", function() {
     let dados = JSON.parse(data);  // JSON válido  
     var grafico = echarts.init(document.getElementById('chart-proventos-mensais'));
 
-    opcoes = {
-        title: {
-          show: true,
-          text: 'Distribuição de Dividendos do ano',
-          left: '50%',
-          textAlign: 'center',
-          padding: [10, 20],
-          textStyle: {
-              color: '#FFFFFF'
-          }
-      },
-        xAxis: {
-          type: 'category',
-          data: dados.labels,
-          axisLabel: {
-            color: '#fff',
-            interval: 0  // <-- mostra todos os rótulos
+    let opcoes = {
+      title: {
+        show: false,
+        text: 'Distribuição de Dividendos do ano',
+        left: '50%',
+        textAlign: 'center',
+        padding: [10, 20],
+        textStyle: {
+          color: '#000000'
         }
-
+      },
+      xAxis: {
+        type: 'category',
+        data: dados.labels,
+        axisLabel: {
+          color: '#000000',
+          interval: 0, // Mostra todos os rótulos
+          rotate: 0  // ou 45 para rodar os textos se estiverem sobrepostos
         },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: dados.valores,
-            type: 'line',
-            smooth: true
-          }
-        ],
-
-        tooltip: {
-          trigger: 'axis',
-          formatter: params => 'R$ ' + params[0].value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
-        },
-      };
+        splitLine: {
+            show: false,
+            lineStyle: {
+            type: 'solid', // ou 'solid'
+            color: '#ccc'
+            }
+  }
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          formatter: value => 'R$ ' + value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+        }
+      },
+      series: [
+        {
+          data: dados.valores,
+          type: 'line',
+          smooth: true
+        }
+      ],
+      tooltip: {
+        trigger: 'axis',
+        formatter: params => 'R$ ' + params[0].value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+      },
+    };
 
     grafico.setOption(opcoes);
 
-    // Ajusta o gráfico ao redimensionar a tela
     window.addEventListener('resize', function () {
-        grafico.resize();
+      grafico.resize();
     });
-
-    })
-  
+  });
 }
+
 //Grafico tipo pizza composição dos diveidendos
 function chartComposicaoDividendos(data) {
   document.addEventListener("DOMContentLoaded", function() {

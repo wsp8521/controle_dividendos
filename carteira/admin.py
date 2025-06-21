@@ -16,6 +16,8 @@ from carteira.models import (
 class AtivosAdmin(admin.ModelAdmin):
     list_display=("id","ativo", "ticket","classe", "qtdAtivo","created_at","update_at")
     list_display_links=("ativo",)
+    search_fields = ['ticket', 'qtdAtivo',]  # Campos que terão busca ativada
+
     
     
 @admin.register(Proventos)

@@ -63,10 +63,6 @@ class PlanMetasRender(ListView):
         for plan in plan_metas:
             get_preco_teto = PrecoTeto.objects.filter(id_ativo=plan.id_ativo).first()
             ativos = Ativos.objects.filter(ticket=plan.id_ativo).first()
-            
-            print("xxxxxxx ATIVOS XXXXXXXXXXXX", ativos)
-            
-            
             cota_restante = plan.qtd - ativos.qtdAtivo if (plan.qtd - ativos.qtdAtivo) > 0 else 0
             cotacao = cotacoes.get(plan.id_ativo) if cotacoes else None
                     

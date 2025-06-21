@@ -1,14 +1,17 @@
 @import url('variables.css');
 
 /* =============================================================================
-   ESTILOS PERSONALIZADOS – GERAL
+   ESTILOS PERSONALIZADOS – PAGINA HOME
    ========================================================================== */
 
 .grafico{ 
     height: 300px;
     padding: 0 !important;
-    position: relative;
+
    
+}
+#chart-patrimonio{
+   height: 400px;
 }
 
 /* =============================================================================
@@ -33,7 +36,7 @@ border-radius: 5px; border: 1px solid  #e9e9e9 }
 
 /* Gráficos */
 #box-ativo{margin-bottom:10px;}
-#box-proventos{height: 70vh;}
-#box-grafico-proventos { height: 40vh}
+/*#box-proventos{}
+#box-grafico-proventos {}*/
 
 

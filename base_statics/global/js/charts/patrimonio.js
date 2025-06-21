@@ -1,68 +1,105 @@
 function chartComposicaoPatrimonio(data) {
-    document.addEventListener("DOMContentLoaded", function() {
-        let ativiClasse = JSON.parse(data);  // JSON válido  
+    document.addEventListener("DOMContentLoaded", function () {
+        let ativiClasse = JSON.parse(data);
         var grafico = echarts.init(document.getElementById('chart-patrimonio'));
-        
-        var opcoes = {
+
+        const total = ativiClasse.valores.reduce((acc, val) => acc + val, 0);
+
+        const option = {
             title: {
-                show: true,
-                text: 'Composição do Patrimônio',
-                left: '50%',
-                textAlign: 'center',
-                padding: [10, 20],
+                text: 'Composição da Carteira',
+                left: 'center',
+                top: '5%',
                 textStyle: {
-                    color: '#FFFFFF'
+                    color: '#000000',
+                    fontSize: 16,
+                    fontWeight: 'bold'
                 }
             },
-            tooltip: { 
-                show:true,
+            tooltip: {
                 trigger: 'item',
-                formatter: ({value }) => `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+                show: true,
+                formatter: ({ value, percent }) =>
+                    `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</br>${percent}%`
             },
             legend: {
-                show: true,
-                orient: 'horizontal',
+                bottom: '5%',
                 left: 'center',
-                bottom: '10',
-                padding: [10, 0],
                 data: ativiClasse.categorias,
-                textStyle: {
-                    color: '#FFFFFF'
-                }
+                textStyle: { color: '#000000' }
             },
-            series: [{
-                name: 'Composição por Classe',
-                type: 'pie',
-                radius: '50%',
-                data: ativiClasse.classe.map((classe, index) => ({
-                    name: classe,
-                    value: ativiClasse.valores[index]
-                })),
-                label: {
-                    show: true,
-                    formatter: '{d}%', // Exibe o valor em porcentagem no tooltip
-                    textStyle: {
-                        color: '#FFFFFF'
-                    }
-                },
-                emphasis: {
+            series: [
+                {
+                    name: 'Composição por Classe',
+                    type: 'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
                     itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: true,
+                        position: 'center',
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        color: '#000000',
+                        formatter: `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                    },
+                    /*emphasis: {
+                      label: {
+                        show: false,
+                        fontSize: 12,
+                        fontWeight: 'bold',
+                        color: '#000000',
+                        formatter: ({ value, percent }) =>
+                          `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n${percent}%`
+                      },
+                      itemStyle: {
                         shadowBlur: 10,
                         shadowOffsetX: 0,
                         shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
+                      }
+                    },*/
+                    labelLine: { show: false },
+                    data: ativiClasse.classe.map((classe, index) => ({
+                        name: classe,
+                        value: ativiClasse.valores[index]
+                    }))
                 }
-            }],
+            ],
             grid: {
                 top: '20',
                 bottom: '30'
             }
         };
-        grafico.setOption(opcoes);
 
-        // Ajusta o gráfico ao redimensionar a tela
-        window.addEventListener('resize', function () {
-            grafico.resize();
+        grafico.setOption(option);
+
+        // Evento quando passa o mouse em uma fatia (hover)
+        grafico.on('highlight', function (params) {
+            const { value, percent } = params;
+            grafico.setOption({
+                series: [{
+                    label: {
+                        formatter: `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n${percent}%`
+                    }
+                }]
+            });
         });
+
+        // Evento quando tira o mouse (mouse out)
+        grafico.on('downplay', function () {
+            grafico.setOption({
+                series: [{
+                    label: {
+                        formatter: `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                    }
+                }]
+            });
+        });
+
+        window.addEventListener('resize', () => grafico.resize());
     });
 }

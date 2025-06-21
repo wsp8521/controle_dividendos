@@ -27,8 +27,9 @@ def desh(request):
         
         #variaveis de controle
         'render_grafico': render_grafico  # Variável de controle para renderizar o script javaScript
+       
     }
-
+    print(context['proventos_mensais'])
     return render(request, 'home/home.html', context)
 
 

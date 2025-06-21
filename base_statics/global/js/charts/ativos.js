@@ -4,7 +4,7 @@
 function chartAtivoPorClasse(data) {
     document.addEventListener("DOMContentLoaded", function() {
     let ativiClasse = JSON.parse(data);  // JSON válido  
-    var grafico = echarts.init(document.getElementById('ativo-por-classe'));
+    var grafico = echarts.init(document.getElementById('ativo-por-classes'));
     var opcoes = {
         title: {
             show: true,
@@ -256,7 +256,7 @@ function chartProventos(data) {
         axisLabel: {
           show: true,
           color: '#3f51b5',
-          fontSize: 14
+          fontSize: 12
         }
       },
       yAxis: {
@@ -300,7 +300,7 @@ function chartProventos(data) {
             return `R$ ${params.value.toFixed(2).replace('.', ',')}`;
           },
           color: '#3f51b5',
-          fontSize: 15
+          fontSize: 12
         }
       }]
     };

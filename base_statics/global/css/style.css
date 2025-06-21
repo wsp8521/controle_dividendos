@@ -218,7 +218,7 @@ input::placeholder {
 }
 
 #pgto-pendente {
-  max-height: 74vh;
+  max-height: 100vh;
   overflow-y: auto;
   position: relative;
 }

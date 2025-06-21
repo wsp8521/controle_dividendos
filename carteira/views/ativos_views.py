@@ -55,13 +55,13 @@ class AtivoRender(ListView):
             fk_user_id=self.request.user.id,
             ).select_related('setor').values_list('setor__setor', flat=True).distinct().order_by('-setor__setor')
 
-    
+        tickers = [ativo.ticket for ativo in ativos]
         # Recupera os dados do cache que foi setado na funçao o obter_cotacao
-        cotacoes = 0 #obter_cotacao(tickers)
+        cotacoes = obter_cotacao(tickers)
         
         lista_ativos = []
         for ativo in ativos:
-            cotacao = 0 #cotacoes.get(ativo.ticket) if cotacoes else None
+            cotacao = cotacoes.get(ativo.ticket) if cotacoes else None
             lista_ativos.append({
                 "pk": ativo.id,
                 "ativo": ativo.ativo,

@@ -60,7 +60,7 @@ def grafico_proventos_mensais(id_user):
         mes = int(item['mes'])
         nome_mes = month_name[mes][:3].lower()
         if nome_mes in meses:
-            meses[nome_mes] = float(item['total'])
+            meses[nome_mes] = int(item['total'])
          
     # Converter para listas ordenadas para o gráfico
     labels = list(meses.keys())
@@ -82,15 +82,9 @@ def grafico_composicao_dividendos(id_user):
 # =========================================================================================================
 
 #patrimônio
-from collections import defaultdict
-from decimal import Decimal
-from django.db.models import Sum
-import locale
-from datetime import datetime
-
 def metrica_patrimonio(id_user):
     dados_ativo = ativo(id_user)  # Obtendo os dados dos ativos do usuário
-    
+   
     # Total investido (incluindo reinvestimentos)
     total_investido = dados_ativo.aggregate(Sum('investimento'))['investimento__sum'] or Decimal(0)
     total_dividendos = dados_ativo.aggregate(Sum('dividendos'))['dividendos__sum'] or Decimal(0)
@@ -100,16 +94,11 @@ def metrica_patrimonio(id_user):
     ativos_info = [(ativo.ticket, ativo.qtdAtivo, ativo.classe, ativo.dividendos, ativo.investimento) for ativo in dados_ativo]
     tickers = [ticket for ticket, _, _, _, _ in ativos_info]
 
-    # Recupera cotação atual
-    cache_key = "cotacao_key"
-    cotacoes = cache.get(cache_key)
-
-    if not cotacoes:
-        cotacoes = obter_cotacao(tickers)
-        cache.set(cache_key, cotacoes, timeout=3600)
+    cotacoes = obter_cotacao(tickers)
 
     # Cálculo do valor de mercado atual (patrimônio atual)
-    total_valor_mercado = sum((qtd or 0) * Decimal(cotacoes.get(f'{ticker}.SA', 0)) for ticker, qtd, _, _, _ in ativos_info)
+    total_valor_mercado = sum((qtd or 0) * Decimal(cotacoes.get(ticker, 0)) for ticker, qtd, _, _, _ in ativos_info)
+
 
     # Cálculo da valorização (valor de mercado - valor investido)
     lucro_ou_prejuizo = total_valor_mercado - total_investido
@@ -117,14 +106,15 @@ def metrica_patrimonio(id_user):
     # Rentabilidade líquida
     rentabilidade = ((total_valor_mercado - total_investido) / total_investido * 100) if total_investido else Decimal(0)
     rentabilidade = round(rentabilidade, 2)
-
+  
     # Patrimônio por classe
     patrimonio_por_classe = defaultdict(Decimal)
     for ticker, qtd, classe, _, _ in ativos_info:
-        valor_mercado = (qtd or 0) * Decimal(cotacoes.get(f'{ticker}.SA', 0))
+        valor_mercado = (qtd or 0) * Decimal(cotacoes.get(ticker, 0))
         patrimonio_por_classe[classe] += valor_mercado
 
     patrimonio_por_classe = {classe: float(valor) for classe, valor in patrimonio_por_classe.items()}
+
 
     return {
         "total_ativo": '{:,.0f}'.format(total_ativo).replace(',', '.'),  # separador de milhar

@@ -11,80 +11,80 @@ from decimal import Decimal
 #                                 SIGNALS - OPERAÇÃO
 # ==============================================================================
 
-# Armazena quantiade antiga antes de executar a operação
-# @receiver(pre_save, sender=Operacao) 
-# def capture_old_operacao(sender, instance, **kwargs):
-#      # Verifica se o usuário logado corresponde ao usuário da operação
-#     if instance.fk_user != instance.fk_user:
-#         return  # Caso o usuário não corresponda, não faz nada
+#Armazena quantiade antiga antes de executar a operação
+@receiver(pre_save, sender=Operacao) 
+def capture_old_operacao(sender, instance, **kwargs):
+     # Verifica se o usuário logado corresponde ao usuário da operação
+    if instance.fk_user != instance.fk_user:
+        return  # Caso o usuário não corresponda, não faz nada
     
-#     if instance.pk:  # Verifica se a operação já existe (não é criação)
-#         # Captura o estado antigo da operação
-#         instance._old_qtd = Operacao.objects.get(pk=instance.pk).qtd
-#         instance._old_valor_total = Operacao.objects.get(pk=instance.pk).valor_total
-#     else:
-#         # Define como 0 caso seja uma nova operação
-#         instance._old_qtd = 0
-#         instance._old_valor_total = 0
+    if instance.pk:  # Verifica se a operação já existe (não é criação)
+        # Captura o estado antigo da operação
+        instance._old_qtd = Operacao.objects.get(pk=instance.pk).qtd
+        instance._old_valor_total = Operacao.objects.get(pk=instance.pk).valor_total
+    else:
+        # Define como 0 caso seja uma nova operação
+        instance._old_qtd = 0
+        instance._old_valor_total = 0
         
-# # Atualiza campos qtdAtivo e investimentos na tabela ativos ao adicinar nova operação
-# @receiver(post_save, sender=Operacao)  
-# def update_qtd_ativo(sender, instance, created, **kwargs):
+# Atualiza campos qtdAtivo e investimentos na tabela ativos ao adicinar nova operação
+@receiver(post_save, sender=Operacao)  
+def update_qtd_ativo(sender, instance, created, **kwargs):
     
-#     # Verifica se o usuário logado corresponde ao usuário da operação
-#     if instance.fk_user != instance.fk_user:
-#         return  # Caso o usuário não corresponda, não faz nada
+    # Verifica se o usuário logado corresponde ao usuário da operação
+    if instance.fk_user != instance.fk_user:
+        return  # Caso o usuário não corresponda, não faz nada
 
-#     ativo = instance.id_ativo 
+    ativo = instance.id_ativo 
 
-#     # Inicializando os campos
-#     if ativo.qtdAtivo is None: 
-#         ativo.qtdAtivo = 0
-#     if ativo.investimento is None:
-#         ativo.investimento = 0
+    # Inicializando os campos
+    if ativo.qtdAtivo is None: 
+        ativo.qtdAtivo = 0
+    if ativo.investimento is None:
+        ativo.investimento = 0
 
-#     if created:  # Apenas se for uma criação de nova Operação
-#         if instance.tipo_operacao.lower() == "venda":
-#             ativo.qtdAtivo -= instance.qtd
-#             ativo.investimento -= instance.valor_total
-#         else:  
-#             ativo.qtdAtivo += instance.qtd
-#             ativo.investimento += instance.valor_total   
-#     else:  
-#         # Recupera a quantidade antiga do pre_save
-#         qtd_diferenca = instance.qtd - instance._old_qtd
-#         dif_total = instance.valor_total - instance._old_valor_total
+    if created:  # Apenas se for uma criação de nova Operação
+        if instance.tipo_operacao.lower() == "venda":
+            ativo.qtdAtivo -= instance.qtd
+            ativo.investimento -= instance.valor_total
+        else:  
+            ativo.qtdAtivo += instance.qtd
+            ativo.investimento += instance.valor_total   
+    else:  
+        # Recupera a quantidade antiga do pre_save
+        qtd_diferenca = instance.qtd - instance._old_qtd
+        dif_total = instance.valor_total - instance._old_valor_total
         
-#         if instance.tipo_operacao.lower() == "venda":
-#             ativo.qtdAtivo -= qtd_diferenca
-#             ativo.investimento -= dif_total
-#         else:  # Tipo "compra" ou outro
-#             ativo.qtdAtivo += qtd_diferenca
-#             ativo.investimento += dif_total        
-#     ativo.save()
+        if instance.tipo_operacao.lower() == "venda":
+            ativo.qtdAtivo -= qtd_diferenca
+            ativo.investimento -= dif_total
+        else:  # Tipo "compra" ou outro
+            ativo.qtdAtivo += qtd_diferenca
+            ativo.investimento += dif_total        
+    ativo.save()
     
     
-# @receiver(post_delete, sender=Operacao)
-# def update_qtd_ativo_remove(sender, instance, **kwargs):
-#     ativo = instance.id_ativo
+@receiver(post_delete, sender=Operacao)
+def update_qtd_ativo_remove(sender, instance, **kwargs):
+    ativo = instance.id_ativo
 
-#     # Inicializa se vier como None
-#     if ativo.qtdAtivo is None:
-#         ativo.qtdAtivo = 0
-#     if ativo.investimento is None:
-#         ativo.investimento = Decimal("0.00")
+    # Inicializa se vier como None
+    if ativo.qtdAtivo is None:
+        ativo.qtdAtivo = 0
+    if ativo.investimento is None:
+        ativo.investimento = Decimal("0.00")
 
     
-#     ativo.qtdAtivo -= instance.qtd
-#     ativo.investimento -= instance.valor_total
+    ativo.qtdAtivo -= instance.qtd
+    ativo.investimento -= instance.valor_total
 
-#     # Impede valores negativos
-#     if ativo.qtdAtivo < 0:
-#         ativo.qtdAtivo = 0
-#     if ativo.investimento < 0:
-#         ativo.investimento = Decimal("0.00")
+    # Impede valores negativos
+    if ativo.qtdAtivo < 0:
+        ativo.qtdAtivo = 0
+    if ativo.investimento < 0:
+        ativo.investimento = Decimal("0.00")
 
-#     ativo.save()
+    ativo.save()
     
 # Sinais para limpar o cache ao salvar ou deletar +
 @receiver(post_save, sender=Operacao)

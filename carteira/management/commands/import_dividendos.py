@@ -2,7 +2,7 @@ import pandas as pd
 import unicodedata
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from carteira.models import Ativos, Operacao
+from carteira.models import Ativos, Proventos
 
 def normalize_colname(colname):
     nfkd = unicodedata.normalize('NFKD', colname)
@@ -24,18 +24,20 @@ class Command(BaseCommand):
             
             # Configura para mostrar todas as linhas do DataFrame
             pd.set_option('display.max_rows', None)
-            df = pd.read_csv('operacao.csv', sep=';', encoding='utf-8-sig')
+            df = pd.read_csv(caminho_csv, sep=';', encoding='utf-8-sig')
             df['classe'] = df['classe'].str.replace('A��o', 'Ação')
 
+    
             # Normaliza ticket no DataFrame para garantir correspondência
             # df['ticket'] = df['ticket'].str.strip().str.upper()
 
             # Mapeia id do ativo no DataFrame
             df['id_ativo'] = df['ticket'].map(ticket_para_id).astype('Int64')
 
-            # Remove coluna ticket após mapeamento
+            # # Remove coluna ticket após mapeamento
             df = df.drop(columns=['ticket'])
             
+            #self.stdout.write(self.style.SUCCESS(f"{df} operações importadas com sucesso."))
 
         except Exception as e:
             self.stderr.write(f"Erro ao ler o CSV: {e}")
@@ -81,26 +83,22 @@ class Command(BaseCommand):
                     continue
 
                 classe = str(row['classe']).strip() if pd.notna(row['classe']) else ""
-                tipo_operacao = str(row['tipo_operacao']).strip() if pd.notna(row['tipo_operacao']) else None
-
-                data_operacao = parse_data(row.get('data_operacao'))
-
-                qtd = int(row['qtd']) if pd.notna(row['qtd']) else None
-                valor_cota = parse_moeda(row.get('valor_cota'))
-                fonte_recurso = str(row['fonte_recurso']).strip() if pd.notna(row['fonte_recurso']) else None
+                data_pgto = parse_data(row.get('data_pgto'))
+                valor_recebido = parse_moeda(row.get('valor_recebido'))
+                tipo_provento = str(row['tipo_provento']).strip() if pd.notna(row['tipo_provento']) else None
+                status = str(row['status'])
 
                 mes = str(row['mes']).strip() if pd.notna(row['mes']) else None
                 ano = int(row['ano']) if pd.notna(row['ano']) else None
 
-                Operacao.objects.create(
+                Proventos.objects.create(
                     fk_user=user,
                     id_ativo=ativo_obj,
                     classe=classe,
-                    tipo_operacao=tipo_operacao,
-                    data_operacao=data_operacao,
-                    qtd=qtd,
-                    valor_cota=valor_cota,
-                    fonte_recurso=fonte_recurso,
+                    status=status,
+                    tipo_provento=tipo_provento,
+                    valor_recebido=valor_recebido,
+                    data_pgto=data_pgto,
                     mes=mes,
                     ano=ano,
                 )
